@@ -7,9 +7,17 @@ export default {
   },
   computed: {
     ...mapState(["portfolio", "fonts", "portfolioss"]),
+    navbartitre: {
+      get() {
+        return this.removeHtmlTags(this.portfolio.navbar.titre);
+      },
+      set(value) {
+        this.portfolio.navbar.titre = value;
+      }
+    }
   },
   data: () => ({
-    panel: 3,
+    panel: 2,
     colorPick: false,
     colorPickLogo: false,
     colorPickLinks: false,
@@ -37,11 +45,66 @@ export default {
       )}&display=swap`;
       document.head.appendChild(fontLink);
     },
+
+    removeHtmlTags(html) {
+      // Utilisation d'un élément temporaire pour supprimer les balises HTML
+      const tempElement = document.createElement("div");
+      tempElement.innerHTML = html;
+      return tempElement.textContent || tempElement.innerText || "";
+    },
+    formatTextToBold() {
+      const selectedText = window.getSelection().toString();
+      if (selectedText) {
+        if (this.portfolio.navbar.titre.includes(`<b>${selectedText}</b>`)) {
+          this.portfolio.navbar.titre = this.portfolio.navbar.titre.replace(
+            `<b>${selectedText}</b>`,
+            selectedText
+          );
+        } else {
+          this.portfolio.navbar.titre = this.portfolio.navbar.titre.replace(
+            selectedText,
+            `<b>${selectedText}</b>`
+          );
+        }
+      }
+    },
+    formatTextToI() {
+      const selectedText = window.getSelection().toString();
+      if (selectedText) {
+        if (this.portfolio.navbar.titre.includes(`<i>${selectedText}</i>`)) {
+          this.portfolio.navbar.titre = this.portfolio.navbar.titre.replace(
+            `<i>${selectedText}</i>`,
+            selectedText
+          );
+        } else {
+          this.portfolio.navbar.titre = this.portfolio.navbar.titre.replace(
+            selectedText,
+            `<i>${selectedText}</i>`
+          );
+        }
+      }
+    },
+    formatTextToU() {
+      const selectedText = window.getSelection().toString();
+      if (selectedText) {
+        if (this.portfolio.navbar.titre.includes(`<u>${selectedText}</u>`)) {
+          this.portfolio.navbar.titre = this.portfolio.navbar.titre.replace(
+            `<u>${selectedText}</u>`,
+            selectedText
+          );
+        } else {
+          this.portfolio.navbar.titre = this.portfolio.navbar.titre.replace(
+            selectedText,
+            `<u>${selectedText}</u>`
+          );
+        }
+      }
+    },
   },
   mounted() {
     this.fetchFonts();
     this.loadFont();
-  },
+  }, 
   async created() {
     // await this.userAuth();
     this.linkNav = this.portfolioss.portfolios.pages;
@@ -60,7 +123,9 @@ export default {
       v-model="portfolio.sideBarM"
     >
       <v-toolbar color="indigo" class="px-1 mt-14">
-        <v-toolbar-title class="font-weight-bold"> Modifier Bloc </v-toolbar-title>
+        <v-toolbar-title class="font-weight-bold">
+          Modifier Bloc
+        </v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn
           variant="text"
@@ -381,70 +446,63 @@ export default {
                 </v-slider>
               </v-col>
               <v-col cols="12">
-                <v-card max-width="600" class="pa-1">
-                  <v-btn-toggle
-                    v-model="portfolio.navbar.formaTitreNav"
-                    class="e-10"
-                    variant="outlined"
-                    color="blue"
-                    divided
-                    multiple
+                <v-btn-toggle
+                  class="mt-2"
+                  variant="outlined"
+                  color="blue"
+                  divided
+                  multiple
+                >
+                  <v-btn @click="formatTextToI">
+                    <v-icon icon="mdi-format-italic"></v-icon>
+                  </v-btn>
+
+                  <v-btn @click="formatTextToBold">
+                    <v-icon icon="mdi-format-bold"></v-icon>
+                  </v-btn>
+
+                  <v-btn @click="formatTextToU">
+                    <v-icon icon="mdi-format-underline"></v-icon>
+                  </v-btn>
+
+                  <v-btn @click="colorPickTitreNav = !colorPickTitreNav">
+                    <div class="d-flex align-center flex-column justify-center">
+                      <v-icon icon="mdi-format-color-text"></v-icon>
+
+                      <v-sheet
+                        :color="portfolio.navbar.colorTitre"
+                        height="4"
+                        width="26"
+                        tile
+                      ></v-sheet>
+                    </div>
+                  </v-btn>
+                  <v-btn
+                    @click="colorPickBackTitreNav = !colorPickBackTitreNav"
                   >
-                    <v-btn value="font-italic">
-                      <v-icon icon="mdi-format-italic"></v-icon>
-                    </v-btn>
+                    <div class="d-flex align-center flex-column justify-center">
+                      <v-icon icon="mdi-format-color-fill"></v-icon>
 
-                    <v-btn value="font-weight-bold">
-                      <v-icon icon="mdi-format-bold"></v-icon>
-                    </v-btn>
+                      <v-sheet
+                        :color="portfolio.navbar.colorBackTitre"
+                        height="4"
+                        width="26"
+                        tile
+                      ></v-sheet>
+                    </div>
+                  </v-btn>
+                </v-btn-toggle>
 
-                    <v-btn value="text-decoration-underline">
-                      <v-icon icon="mdi-format-underline"></v-icon>
-                    </v-btn>
-
-                    <v-btn @click="colorPickTitreNav = !colorPickTitreNav">
-                      <div
-                        class="d-flex align-center flex-column justify-center"
-                      >
-                        <v-icon icon="mdi-format-color-text"></v-icon>
-
-                        <v-sheet
-                          :color="portfolio.navbar.colorTitre"
-                          height="4"
-                          width="26"
-                          tile
-                        ></v-sheet>
-                      </div>
-                    </v-btn>
-                    <v-btn
-                      @click="colorPickBackTitreNav = !colorPickBackTitreNav"
-                    >
-                      <div
-                        class="d-flex align-center flex-column justify-center"
-                      >
-                        <v-icon icon="mdi-format-color-fill"></v-icon>
-
-                        <v-sheet
-                          :color="portfolio.navbar.colorBackTitre"
-                          height="4"
-                          width="26"
-                          tile
-                        ></v-sheet>
-                      </div>
-                    </v-btn>
-                  </v-btn-toggle>
-
-                  <v-sheet class="pa-4 text-center">
-                    <v-textarea
-                      v-model="portfolio.navbar.titre"
-                      rows="2"
-                      variant="outlined"
-                      auto-grow
-                      full-width
-                      hide-details
-                    ></v-textarea>
-                  </v-sheet>
-                </v-card>
+                <v-sheet class="pa-4 text-center">
+                  <v-textarea
+                    v-model="navbartitre"
+                    rows="2"
+                    variant="outlined"
+                    auto-grow
+                    full-width
+                    hide-details
+                  ></v-textarea>
+                </v-sheet>
               </v-col>
             </v-row>
             <!--  -->

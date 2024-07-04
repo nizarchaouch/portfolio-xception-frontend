@@ -1,6 +1,7 @@
 export default {
   state: {
     selectedPage: null,
+    selectBloc: false,
     portfolios: {
       idCandidat: "65f67e1e555d2e3355947742",
       navbar: {
@@ -47,14 +48,7 @@ export default {
               id: 0,
               type: "CardText",
               content: "Welcome to the homepage!",
-              settings: {
-                card:{
-                  img:"",
-                  nameCand:"nizar chaouch"
-                },
-                fontSize: "16px",
-                color: "blue",
-              },
+              settings: {},
             },
             {
               id: 1,
@@ -110,7 +104,6 @@ export default {
       }
       console.log("moved", state.portfolios.pages);
     },
-    
   },
   getters: {},
   actions: {
@@ -188,6 +181,11 @@ export default {
         state.portfolios.pages[pageIndex].bloc[i].id++;
       }
       console.log("duplBloc", state.portfolios.pages);
+    },
+
+    saveSettings(state, { pageIndex, blocIndex, settings }) {
+      state.portfolios.pages[pageIndex].bloc[blocIndex].settings = settings;
+      console.log("Saved settings:", state.portfolios.pages);
     },
   },
 };

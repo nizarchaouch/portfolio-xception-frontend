@@ -2,13 +2,13 @@
 import { mapState, mapActions } from "vuex";
 import NavBar from "@/components/portfolio/NavBar.vue";
 import PagePort from "@/components/portfolio/PagePort.vue";
-import SidebarA from "@/components/portfolio/sidebar/SideBarA.vue";
+import SideModEntet from "@/components/portfolio/sidebar/SideModEntet.vue";
 import SidebarM from "@/components/portfolio/sidebar/SideBarM.vue";
 export default {
   components: {
     NavBar,
     PagePort,
-    SidebarA,
+    SideModEntet,
     SidebarM,
   },
   data() {
@@ -38,15 +38,15 @@ export default {
     </v-row>
     <v-row class="mt-13">
       <v-col
-        :cols="portfolio.sideBarA || portfolio.sideBarM ? 10 : 12"
-        :class="!(portfolio.sideBarA || portfolio.sideBarM) ? 'mx-auto' : ''"
+        :cols="portfolio.SideModEntet || portfolio.sideBarM ? 10 : 12"
+        :class="!(portfolio.SideModEntet || portfolio.sideBarM) ? 'mx-auto' : ''"
       >
-        <div :class="(portfolio.sideBarA || portfolio.sideBarM) ? 'me-13' : ''">
+        <div :class="(portfolio.SideModEntet || portfolio.sideBarM) ? 'me-13' : ''">
           <PagePort />
         </div>
       </v-col>
-      <v-col cols="3" v-if="portfolio.sideBarA">
-        <SidebarA />
+      <v-col cols="3" v-if="portfolio.SideModEntet">
+        <SideModEntet />
       </v-col>
       <v-col cols="3" v-if="portfolio.sideBarM">
         <SidebarM />

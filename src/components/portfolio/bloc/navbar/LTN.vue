@@ -113,7 +113,7 @@ export default {
               cover
             ></v-img>
           </v-avatar>
-          <p
+          <!-- <p
             v-if="portfolio.navbar.afficheTitre"
             :class="portfolio.navbar.formaTitreNav"
             class="py-1"
@@ -123,7 +123,16 @@ export default {
             }"
           >
             {{ portfolio.navbar.titre }}
-          </p>
+          </p> -->
+          <div
+            v-html="portfolio.navbar.titre"
+            v-if="portfolio.navbar.afficheTitre"
+            class="py-1"
+            :style="{
+              color: portfolio.navbar.colorTitre,
+              'background-color': portfolio.navbar.colorBackTitre,
+            }"
+          ></div>
         </v-tab>
       </v-col>
 
