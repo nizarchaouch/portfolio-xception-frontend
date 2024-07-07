@@ -6,32 +6,35 @@ import BtnMod from "../../BtnBloc/BtnMod.vue";
 import BtnAjou from "../../BtnBloc/BtnAjou.vue";
 
 export default {
-  props: { id: Number },
+  props: { id: Number, ok: Boolean },
   components: { BtnMod, BtnAjou },
   computed: {
-    ...mapState(["portfolio", "portfolioss"]),
-    settingss() {
-      if (this.id !== undefined) {
-        // Si id est défini, enregistrez les paramètres dans le store Vuex
-        this.portfolioss.selectedPage.bloc[this.id].settings = this.settings;
+    ...mapState(["user", "portfolio", "portfolioss"]),
+    settings() {
+      if (!this.ok) {
+        return this.defaultSettings;
+      } else if (
+        this.ok &&
+        this.portfolioss.selectedPage.bloc[this.id]?.settings
+      ) {
+        return (this.portfolioss.selectedPage.bloc[this.id].settings =
+          this.defaultSettings);
+      } else {
+        return this.portfolioss.selectedPage.bloc[this.id].settings;
       }
-
-      // Retournez les paramètres du bloc spécifié, soit depuis le store Vuex, soit localement
-      return this.id !== undefined
-        ? this.portfolioss.selectedPage.bloc[this.id].settings
-        : this.settings;
     },
   },
   data: () => ({
     tab: null,
     showButton: false,
-    settings: {
+    defaultSettings: {
       background: {
         bloc1: { color: "#e6dace", img: "" },
         bloc2: { color: "#FFFFFF", img: "" },
       },
       card: {
         afficheLinksRes: true,
+        afficheImg: true,
         img: "",
         imgarrond: "rounded-circle",
         backgroundColor: "#F4ECE6",
@@ -39,58 +42,47 @@ export default {
         lineSize: 3,
         nom: {
           affiche: true,
-          color: "white",
+          color: "black",
           colorBack: "#0B242400",
           nom: "nizar",
           selectStyle: "Titer 4",
           size: 25,
-          selectPolice: "Potta One",
+          selectPolice: "Courier Prime",
         },
         poste: {
           affiche: true,
-          color: "white",
+          color: "#625E5C",
           colorBack: "#0B242400",
-          poste: "chaouch nizar",
+          nom: "Etudiant génie logiciel",
           selectStyle: "Titer 4",
           size: 25,
-          selectPolice: "Potta One",
+          selectPolice: "Courier Prime",
         },
       },
       titre: {
         affiche: true,
-        color: "white",
+        color: "black",
         colorBack: "#0B242400",
-        poste: "chaouch nizar",
+        nom: "Hello",
         selectStyle: "Titer 4",
-        size: 25,
-        selectPolice: "Potta One",
+        size: 100,
+        selectPolice: "Frank Ruhl Libre",
       },
       sousTitre: {
         affiche: true,
-        color: "white",
+        color: "black",
         colorBack: "#0B242400",
-        poste: "chaouch nizar",
+        nom: "Qui je suis et ce que je fais",
         selectStyle: "Titer 4",
         size: 25,
-        selectPolice: "Potta One",
+        selectPolice: "Luckiest Guy",
       },
     },
   }),
   methods: {
-    ...mapActions([]),
-    ...mapMutations(["saveSettings", "changeSidebarM"]),
+    ...mapActions(["findBlocById"]),
+    ...mapMutations(["changeSidebarM"]),
   },
-  // watch: {
-  //   // Observer les changements dans this.portfolioss.selectedPage.bloc[this.id].settings
-  //   settingss: {
-  //     handler(newSettings) {
-  //       // Mettre à jour this.settings avec les nouvelles valeurs
-  //       this.settings = newSettings;
-  //       // console.log("hh", this.settings);
-  //     },
-  //     deep: true, // Surveiller les changements profonds dans l'objet
-  //   },
-  // },
 };
 </script>
 
@@ -102,42 +94,70 @@ export default {
   >
     <BtnMod :showButton="showButton" :id="id" />
     <v-row no-gutters class="bloc">
-      <v-col cols="12" md="6" lg="5" style="background-color: #e6dace">
+      <v-col
+        cols="12"
+        md="6"
+        lg="5"
+        :style="
+          'background-color:' + (settings.background.bloc1?.color || '#FFFFFF')
+        "
+      >
         <v-sheet
-          color="#F4ECE6"
+          :color="settings.card.backgroundColor"
           class="sheet my-16 pt-3 mx-auto"
           max-width="370"
           elevation="5"
         >
           <v-img
+            v-if="settings.card.afficheImg"
             :width="180"
-            class="rounded-circle mx-auto mt-8"
+            class="mx-auto mt-8"
+            :class="settings.card.imgarrond"
             src="https://scontent.ftun9-1.fna.fbcdn.net/v/t39.30808-6/330180889_1348125799366307_3179994644660910263_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=Wc13879tFrwQ7kNvgEebAql&_nc_ht=scontent.ftun9-1.fna&oh=00_AYDTTWmtOWqPwlDCnp2yphxoftHdIwW7rsBI8nO4aoDqEw&oe=6683B090"
           ></v-img>
-          <p class="text-center mt-4 text-h5 name">
-            <!-- Nizar <br />
-            Chaouch -->
-            {{ settingss.card.nom.nom }}
-          </p>
+          <div
+            v-html="settings.card.nom.nom"
+            v-if="settings.card.nom.affiche"
+            class="text-center mt-4"
+            :style="{
+              'font-size': settings.card.nom.size + 'px',
+              'font-family': settings.card.nom.selectPolice,
+              color: settings.card.nom.color,
+            }"
+          ></div>
           <v-col cols="3" class="mx-auto mt-3">
             <v-progress-linear
               model-value="100"
-              color="blue"
+              :color="settings.card.lineColor"
               :height="3"
               rounded
             ></v-progress-linear>
           </v-col>
-          <p
-            class="text-center text-uppercase mt-4 text-medium-emphasis title"
-            style="font-family: sans-serif 'Courier New', Courier, monospace"
+          <div
+            v-html="settings.card.poste.nom"
+            v-if="settings.card.poste.affiche"
+            class="text-center text-uppercase mt-4 pb-4"
+            :style="{
+              'font-family': settings.card.poste.selectPolice,
+              'font-size': settings.card.poste.size + 'px',
+              color: settings.card.poste.color,
+            }"
+          ></div>
+          <v-col
+            cols="12"
+            class="py-1 mt-16 bg-white d-flex justify-center"
+            v-if="settings.card.afficheLinksRes"
           >
-            Etudiant génie logiciel
-          </p>
-          <v-col cols="12" class="py-2 mt-16 bg-white d-flex justify-center">
-            <v-btn class="ma-1" variant="text" icon="mdi-facebook"></v-btn>
-            <v-btn class="ma-1" variant="text" icon="mdi-linkedin"></v-btn>
-            <v-btn class="ma-1" variant="text" icon="mdi-twitter"></v-btn>
-            <v-btn class="ma-1" variant="text" icon="mdi-instagram"></v-btn>
+            <a
+              :href="'https://' + link.url"
+              target="_blank"
+              class="text-black"
+              v-for="link in this.user.userData.socialLinks"
+              :key="index"
+            >
+              <v-btn class="ma-1" variant="text" :icon="'mdi-' + link.platform">
+              </v-btn>
+            </a>
           </v-col>
         </v-sheet>
       </v-col>
@@ -146,25 +166,33 @@ export default {
         md="6"
         lg="7"
         class="pt-16 ps-lg-16"
-        style="background-color: white; background-image: url('')"
+        :style="
+          'background-color:' + (settings.background.bloc2?.color || '#FFFFFF')
+        "
       >
         <v-row
           class="ps-md-16 mt-2 text-sm-center text-md-justify d-flex flex-column"
         >
-          <v-col
-            cols="11"
-            style="
-              font-size: 100px;
-              font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial,
-                sans-serif;
-            "
-          >
-            Hello
+          <v-col cols="11" v-if="settings.titre.affiche">
+            <div
+              v-html="settings.titre.nom"
+              :style="{
+                'font-size': settings.titre.size + 'px',
+                'font-family': settings.titre.selectPolice,
+                color: settings.titre.color,
+              }"
+            ></div>
           </v-col>
           <v-col cols="11">
-            <p class="title" style="font-size: 25px">
-              Qui je suis et ce que je fais
-            </p>
+            <div
+              v-html="settings.sousTitre.nom"
+              v-if="settings.sousTitre.affiche"
+              :style="{
+                'font-size': settings.sousTitre.size + 'px',
+                'font-family': settings.sousTitre.selectPolice,
+                color: settings.sousTitre.color,
+              }"
+            ></div>
           </v-col>
           <v-col cols="11" class="mb-3">
             <v-btn
@@ -204,7 +232,11 @@ export default {
           </v-col>
         </v-row>
       </v-col>
-      <BtnAjou :showButton="showButton" :id="id" :settings="settings" />
+      <BtnAjou
+        :showButton="showButton"
+        :id="id"
+        :defaultSettings="defaultSettings"
+      />
     </v-row>
   </v-row>
 </template>
@@ -226,7 +258,7 @@ export default {
   &:hover {
     border: 2px solid blue;
   }
-  .name {
+  /*  .name {
     font-family: "Poppins", sans-serif;
     font-weight: 600;
     font-style: normal;
@@ -242,6 +274,6 @@ export default {
   }
   .sheet {
     transition: left 0.3s ease, width 0.3s ease, height 0.3s ease;
-  }
+  } */
 }
 </style>

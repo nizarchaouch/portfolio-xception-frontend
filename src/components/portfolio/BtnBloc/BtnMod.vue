@@ -24,6 +24,11 @@ export default {
         settings: this.portfolioss.selectedPage.bloc[this.id].settings,
       });
     },
+
+    onClickModBloc() {
+      this.portfolio.SideModEntet = true;
+      this.portfolio.blocmodif = this.id;
+    },
   },
 };
 </script>
@@ -51,6 +56,7 @@ export default {
         prepend-icon="mdi-pencil"
         class="text-none"
         elevation="0"
+        @click="onClickModBloc"
       >
         Modifier le bloc
       </v-btn>

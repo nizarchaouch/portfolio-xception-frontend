@@ -5,21 +5,57 @@ export default {
   props: { id: Number },
   computed: {
     ...mapState(["portfolio", "portfolioss"]),
+    settings() {
+      return this.portfolioss.selectedPage.bloc[this.id].settings;
+    },
   },
   data: () => ({
     tab: null,
     showButton: false,
+    // setting: {
+    //   titre: {
+    //     affiche: true,
+    //     color: "black",
+    //     selectStyle: "Titer 4",
+    //     size: 100,
+    //     selectPolice: "Frank Ruhl Libre",
+    //     nom: "Noter Projet",
+    //   },
+    //   parg: {
+    //     affiche: true,
+    //     color: "#6F6F6F",
+    //     selectStyle: "Titer 4",
+    //     size: 20,
+    //     selectPolice: "Average Sans",
+    //     nom: `Non occaecat culpa aliquip duis sunt amet qui pariatur quis ut.
+    //      Officia sit adipisicing proident aute veniam veniam. Irure officia
+    //      esse eu quis mollit consectetur aliqua anim nisi et labore do.
+    //      Incididunt ea consequat duis officia commodo fugiat non.
+    //      Occaecat ea velit esse tempor veniam laborum.`,
+    //   },
+    // },
   }),
   methods: {
-    ...mapActions(["delBloc"]),
     ...mapMutations(["changeSidebarA", "changeSidebarM"]),
+    ...mapActions(["delBloc", "duplBloc"]),
     onClickDeltBloc() {
       this.delBloc({
         pageIndex: this.portfolioss.selectedPage.id,
         blocIndex: this.id,
       });
     },
+    onClickDuplBloc() {
+      this.duplBloc({
+        pageIndex: this.portfolioss.selectedPage.id,
+        blocIndex: this.id,
+        type: this.portfolioss.selectedPage.bloc[this.id].type,
+        settings: this.portfolioss.selectedPage.bloc[this.id].settings,
+      });
+    },
   },
+  // created() {
+  //   this.portfolioss.selectedPage.bloc[this.id].settings = this.settings;
+  // },
 };
 </script>
 
@@ -53,7 +89,10 @@ export default {
           prepend-icon="mdi-pencil"
           class="text-none"
           elevation="0"
-          @click="handleModBlock"
+          @click="
+            (this.portfolio.modAprop = true),
+              (this.portfolio.blocmodif = this.id)
+          "
         >
           Modifier le bloc
         </v-btn>
@@ -89,10 +128,14 @@ export default {
         </v-btn>
       </v-card>
     </v-row>
-    <v-row no-gutters class="bloc" style="background-color: white">
+    <v-row
+      no-gutters
+      class="bloc"
+      style="background-color: white; width: 98.7%"
+    >
       <v-col cols="12" md="6" order="">
         <v-img
-          max-height="760"
+          class="h-100"
           min-height="400"
           cover
           src="https://picsum.photos/500/300?image=232"
@@ -105,14 +148,26 @@ export default {
             md="10"
             class="d-flex flex-column justify-center align-center text-black"
           >
-            <p class="text-h2 mb-4">Notre Projeta</p>
-            <p class="text-justify mb-4">
-              Non occaecat culpa aliquip duis sunt amet qui pariatur quis ut.
-              Officia sit adipisicing proident aute veniam veniam. Irure officia
-              esse eu quis mollit consectetur aliqua anim nisi et labore do.
-              Incididunt ea consequat duis officia commodo fugiat non. Occaecat
-              ea velit esse tempor veniam laborum.
-            </p>
+            <div
+              v-html="settings.titre.nom"
+              v-if="settings.titre.affiche"
+              class="mb-4"
+              :style="{
+                color: settings.titre.color,
+                'font-size': settings.titre.size + 'px',
+                fontFamily: settings.titre.selectPolice,
+              }"
+            ></div>
+            <div
+              v-html="settings.parg.nom"
+              v-if="settings.parg.affiche"
+              class="text-justify mb-4"
+              :style="{
+                color: settings.parg.color,
+                'font-size': settings.parg.size + 'px',
+                fontFamily: settings.parg.selectPolice,
+              }"
+            ></div>
             <v-btn color="success" class="text-none">En savoir plus</v-btn>
           </v-col>
         </div>

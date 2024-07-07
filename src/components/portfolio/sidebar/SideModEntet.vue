@@ -3,26 +3,76 @@ import { mapState, mapMutations, mapActions } from "vuex";
 export default {
   components: {},
   computed: {
-    ...mapState(["portfolio", "fonts", "portfolioss"]),
-    navbartitre: {
+    ...mapState(["user", "portfolio", "fonts", "portfolioss"]),
+    settings() {
+      const index = this.portfolio.blocmodif;
+      return this.portfolioss.selectedPage.bloc[index].settings;
+    },
+    iscard() {
+      const index = this.portfolio.blocmodif;
+      return this.portfolioss.selectedPage.bloc[index].type;
+    },
+    nomCard: {
       get() {
+        const index = this.portfolio.blocmodif;
         return this.removeHtmlTags(
-          this.portfolioss.selectedPage.bloc[0].settings.card.nom.nom
+          this.portfolioss.selectedPage.bloc[index].settings.card.nom.nom
         );
       },
       set(value) {
-        this.portfolioss.selectedPage.bloc[0].settings.card.nom.nom = value;
+        const index = this.portfolio.blocmodif;
+        this.portfolioss.selectedPage.bloc[index].settings.card.nom.nom = value;
+      },
+    },
+    posteCard: {
+      get() {
+        const index = this.portfolio.blocmodif;
+        return this.removeHtmlTags(
+          this.portfolioss.selectedPage.bloc[index].settings.card.poste.nom
+        );
+      },
+      set(value) {
+        const index = this.portfolio.blocmodif;
+        this.portfolioss.selectedPage.bloc[index].settings.card.poste.nom =
+          value;
+      },
+    },
+    titre: {
+      get() {
+        const index = this.portfolio.blocmodif;
+        return this.removeHtmlTags(
+          this.portfolioss.selectedPage.bloc[index].settings.titre.nom
+        );
+      },
+      set(value) {
+        const index = this.portfolio.blocmodif;
+        this.portfolioss.selectedPage.bloc[index].settings.titre.nom = value;
+      },
+    },
+    sousTitre: {
+      get() {
+        const index = this.portfolio.blocmodif;
+        return this.removeHtmlTags(
+          this.portfolioss.selectedPage.bloc[index].settings.sousTitre.nom
+        );
+      },
+      set(value) {
+        const index = this.portfolio.blocmodif;
+        this.portfolioss.selectedPage.bloc[index].settings.sousTitre.nom =
+          value;
       },
     },
   },
   data: () => ({
-    panel: 1,
-    colorPick: false,
-    colorPickLogo: false,
-    colorPickLinks: false,
-    colorPickTitreNav: false,
-    colorPickBackTitreNav: false,
-    linkNav: [],
+    panel: 3,
+    colorBackBloc1: false,
+    colorBackBloc2: false,
+    backgroundColor: false,
+    lineColor: false,
+    colorName: false,
+    colorPoste: false,
+    colorTitre: false,
+    colorSousTitre: false,
     style: [
       { title: "Titre 1", value: 2, px: 100 },
       { title: "Titre 2", value: 3, px: 35 },
@@ -33,16 +83,22 @@ export default {
     ],
   }),
   methods: {
-    ...mapMutations(["changeSidebarM", "addPage", "movePage"]),
+    ...mapMutations(["addPage", "movePage"]),
     ...mapActions(["fetchFonts"]),
     loadFont() {
-      const fontLink = document.createElement("link");
-      fontLink.rel = "stylesheet";
-      fontLink.href = `https://fonts.googleapis.com/css?family=${this.portfolio.navbar.selectPolice.replace(
-        / /g,
-        "+"
-      )}&display=swap`;
-      document.head.appendChild(fontLink);
+      const fonts = [
+        this.settings.card.nom.selectPolice,
+        this.settings.card.poste.selectPolice,
+        this.settings.titre.selectPolice,
+        this.settings.sousTitre.selectPolice
+      ];
+
+      fonts.forEach(font => {
+        const fontLink = document.createElement("link");
+        fontLink.rel = "stylesheet";
+        fontLink.href = `https://fonts.googleapis.com/css?family=${font.replace(/ /g, "+")}&display=swap`;
+        document.head.appendChild(fontLink);
+      });
     },
 
     removeHtmlTags(html) {
@@ -54,13 +110,49 @@ export default {
     formatTextToBold() {
       const selectedText = window.getSelection().toString();
       if (selectedText) {
-        if (this.portfolio.navbar.titre.includes(`<b>${selectedText}</b>`)) {
-          this.portfolio.navbar.titre = this.portfolio.navbar.titre.replace(
+        if (this.settings.card.nom.nom.includes(`<b>${selectedText}</b>`)) {
+          this.settings.card.nom.nom = this.settings.card.nom.nom.replace(
             `<b>${selectedText}</b>`,
             selectedText
           );
         } else {
-          this.portfolio.navbar.titre = this.portfolio.navbar.titre.replace(
+          this.settings.card.nom.nom = this.settings.card.nom.nom.replace(
+            selectedText,
+            `<b>${selectedText}</b>`
+          );
+        }
+        /////
+        if (this.settings.card.poste.nom.includes(`<b>${selectedText}</b>`)) {
+          this.settings.card.poste.nom = this.settings.card.poste.nom.replace(
+            `<b>${selectedText}</b>`,
+            selectedText
+          );
+        } else {
+          this.settings.card.poste.nom = this.settings.card.poste.nom.replace(
+            selectedText,
+            `<b>${selectedText}</b>`
+          );
+        }
+        ///////
+        if (this.settings.titre.nom.includes(`<b>${selectedText}</b>`)) {
+          this.settings.titre.nom = this.settings.titre.nom.replace(
+            `<b>${selectedText}</b>`,
+            selectedText
+          );
+        } else {
+          this.settings.titre.nom = this.settings.titre.nom.replace(
+            selectedText,
+            `<b>${selectedText}</b>`
+          );
+        }
+         ///////
+         if (this.settings.sousTitre.nom.includes(`<b>${selectedText}</b>`)) {
+          this.settings.sousTitre.nom = this.settings.sousTitre.nom.replace(
+            `<b>${selectedText}</b>`,
+            selectedText
+          );
+        } else {
+          this.settings.sousTitre.nom = this.settings.sousTitre.nom.replace(
             selectedText,
             `<b>${selectedText}</b>`
           );
@@ -70,13 +162,49 @@ export default {
     formatTextToI() {
       const selectedText = window.getSelection().toString();
       if (selectedText) {
-        if (this.portfolio.navbar.titre.includes(`<i>${selectedText}</i>`)) {
-          this.portfolio.navbar.titre = this.portfolio.navbar.titre.replace(
+        if (this.settings.card.nom.nom.includes(`<i>${selectedText}</i>`)) {
+          this.settings.card.nom.nom = this.settings.card.nom.nom.replace(
             `<i>${selectedText}</i>`,
             selectedText
           );
         } else {
-          this.portfolio.navbar.titre = this.portfolio.navbar.titre.replace(
+          this.settings.card.nom.nom = this.settings.card.nom.nom.replace(
+            selectedText,
+            `<i>${selectedText}</i>`
+          );
+        }
+        ////////
+        if (this.settings.card.poste.nom.includes(`<i>${selectedText}</i>`)) {
+          this.settings.card.poste.nom = this.settings.card.poste.nom.replace(
+            `<i>${selectedText}</i>`,
+            selectedText
+          );
+        } else {
+          this.settings.card.poste.nom = this.settings.card.poste.nom.replace(
+            selectedText,
+            `<i>${selectedText}</i>`
+          );
+        }
+        //////
+        if (this.settings.titre.nom.includes(`<i>${selectedText}</i>`)) {
+          this.settings.titre.nom = this.settings.titre.nom.replace(
+            `<i>${selectedText}</i>`,
+            selectedText
+          );
+        } else {
+          this.settings.titre.nom = this.settings.titre.nom.replace(
+            selectedText,
+            `<i>${selectedText}</i>`
+          );
+        }
+         //////
+         if (this.settings.sousTitre.nom.includes(`<i>${selectedText}</i>`)) {
+          this.settings.sousTitre.nom = this.settings.sousTitre.nom.replace(
+            `<i>${selectedText}</i>`,
+            selectedText
+          );
+        } else {
+          this.settings.sousTitre.nom = this.settings.sousTitre.nom.replace(
             selectedText,
             `<i>${selectedText}</i>`
           );
@@ -86,13 +214,49 @@ export default {
     formatTextToU() {
       const selectedText = window.getSelection().toString();
       if (selectedText) {
-        if (this.portfolio.navbar.titre.includes(`<u>${selectedText}</u>`)) {
-          this.portfolio.navbar.titre = this.portfolio.navbar.titre.replace(
+        if (this.settings.card.nom.nom.includes(`<u>${selectedText}</u>`)) {
+          this.settings.card.nom.nom = this.settings.card.nom.nom.replace(
             `<u>${selectedText}</u>`,
             selectedText
           );
         } else {
-          this.portfolio.navbar.titre = this.portfolio.navbar.titre.replace(
+          this.settings.card.nom.nom = this.settings.card.nom.nom.replace(
+            selectedText,
+            `<u>${selectedText}</u>`
+          );
+        }
+        /////////
+        if (this.settings.card.poste.nom.includes(`<u>${selectedText}</u>`)) {
+          this.settings.card.poste.nom = this.settings.card.poste.nom.replace(
+            `<u>${selectedText}</u>`,
+            selectedText
+          );
+        } else {
+          this.settings.card.poste.nom = this.settings.card.poste.nom.replace(
+            selectedText,
+            `<u>${selectedText}</u>`
+          );
+        }
+        //////
+        if (this.settings.titre.nom.includes(`<u>${selectedText}</u>`)) {
+          this.settings.titre.nom = this.settings.titre.nom.replace(
+            `<u>${selectedText}</u>`,
+            selectedText
+          );
+        } else {
+          this.settings.titre.nom = this.settings.titre.nom.replace(
+            selectedText,
+            `<u>${selectedText}</u>`
+          );
+        }
+         //////
+         if (this.settings.sousTitre.nom.includes(`<u>${selectedText}</u>`)) {
+          this.settings.sousTitre.nom = this.settings.sousTitre.nom.replace(
+            `<u>${selectedText}</u>`,
+            selectedText
+          );
+        } else {
+          this.settings.sousTitre.nom = this.settings.sousTitre.nom.replace(
             selectedText,
             `<u>${selectedText}</u>`
           );
@@ -103,10 +267,6 @@ export default {
   mounted() {
     this.fetchFonts();
     this.loadFont();
-  },
-  async created() {
-    // await this.userAuth();
-    this.linkNav = this.portfolioss.portfolios.pages;
   },
 };
 </script>
@@ -130,12 +290,11 @@ export default {
           variant="text"
           class="text-none ms-auto"
           icon="mdi-window-close"
-          @click="changeSidebarM"
+          @click="this.portfolio.SideModEntet = false"
         ></v-btn>
       </v-toolbar>
       <!--  -->
       <v-expansion-panels v-model="panel" multiple>
-        <!-- desgin  -->
         <!-- arriere bloc -->
         <v-expansion-panel>
           <template v-slot:title>
@@ -154,15 +313,15 @@ export default {
                   <v-btn
                     variant="tonal"
                     class="my-1 ms-auto"
-                    @click="colorPick = !colorPick"
+                    @click="colorBackBloc1 = !colorBackBloc1"
                   >
                     <v-icon>mdi-format-color-fill</v-icon>
                   </v-btn>
                 </div>
               </v-col>
               <v-color-picker
-                v-if="colorPick"
-                v-model="portfolio.navbar.colorNav"
+                v-if="colorBackBloc1"
+                v-model="settings.background.bloc1.color"
                 :modes="['hexa']"
                 class="mx-auto"
               ></v-color-picker>
@@ -204,15 +363,15 @@ export default {
                   <v-btn
                     variant="tonal"
                     class="my-1 ms-auto"
-                    @click="colorPick = !colorPick"
+                    @click="colorBackBloc2 = !colorBackBloc2"
                   >
                     <v-icon>mdi-format-color-fill</v-icon>
                   </v-btn>
                 </div>
               </v-col>
               <v-color-picker
-                v-if="colorPick"
-                v-model="portfolio.navbar.colorNav"
+                v-if="colorBackBloc2"
+                v-model="settings.background.bloc2.color"
                 :modes="['hexa']"
                 class="mx-auto"
               ></v-color-picker>
@@ -247,7 +406,7 @@ export default {
           </template>
         </v-expansion-panel>
         <!-- card -->
-        <v-expansion-panel>
+        <v-expansion-panel v-if="iscard === 'CardText'">
           <template v-slot:title>
             <v-icon class="me-1" color="indigo" size="large"
               >mdi-alpha-c-circle</v-icon
@@ -260,7 +419,7 @@ export default {
                 <div class="d-flex">
                   <h4 class="mt-4">Afficher les liens réseau</h4>
                   <v-switch
-                    v-model="portfolio.navbar.backgroundImage"
+                    v-model="settings.card.afficheLinksRes"
                     :value="true"
                     color="blue"
                     class="ms-auto"
@@ -273,7 +432,7 @@ export default {
                 <div class="d-flex">
                   <h4 class="mt-4">Affichage Image</h4>
                   <v-switch
-                    v-model="portfolio.logo.logo"
+                    v-model="settings.card.afficheImg"
                     :value="true"
                     color="blue"
                     class="ms-auto"
@@ -286,6 +445,7 @@ export default {
                 <div class="d-flex">
                   <h4 class="mt-4">Image arrondie</h4>
                   <v-select
+                    v-model="settings.card.imgarrond"
                     density="compact"
                     class="mt-2 ms-7"
                     color="blue"
@@ -310,15 +470,15 @@ export default {
                   <v-btn
                     variant="tonal"
                     class="my-1 ms-auto"
-                    @click="colorPick = !colorPick"
+                    @click="backgroundColor = !backgroundColor"
                   >
                     <v-icon>mdi-format-color-fill</v-icon>
                   </v-btn>
                 </div>
               </v-col>
               <v-color-picker
-                v-if="colorPick"
-                v-model="portfolio.navbar.colorNav"
+                v-if="backgroundColor"
+                v-model="settings.card.backgroundColor"
                 :modes="['hexa']"
                 class="mx-auto"
               ></v-color-picker>
@@ -328,59 +488,18 @@ export default {
                   <v-btn
                     variant="tonal"
                     class="my-1 ms-auto"
-                    @click="colorPick = !colorPick"
+                    @click="lineColor = !lineColor"
                   >
                     <v-icon>mdi-format-color-fill</v-icon>
                   </v-btn>
                 </div>
               </v-col>
               <v-color-picker
-                v-if="colorPick"
-                v-model="portfolio.navbar.colorNav"
+                v-if="lineColor"
+                v-model="settings.card.lineColor"
                 :modes="['hexa']"
                 class="mx-auto"
               ></v-color-picker>
-              <!-- taile line -->
-              <v-col cols="12">
-                <h4 class="mt-4">Taille de la police</h4>
-                <v-slider
-                  v-model="portfolio.navbar.sizeTitle"
-                  :max="100"
-                  :min="10"
-                  :step="10"
-                  color="blue"
-                  hide-details
-                >
-                  <template v-slot:append>
-                    <v-text-field
-                      v-model="portfolio.navbar.sizeTitle"
-                      :max="100"
-                      :min="10"
-                      style="width: 100px"
-                      suffix="%"
-                      density="compact"
-                      type="number"
-                      variant="outlined"
-                      hide-details
-                      single-line
-                    ></v-text-field>
-                  </template>
-                </v-slider>
-              </v-col>
-              <v-col cols="12" v-if="portfolio.navbar.backgroundImage">
-                <div class="d-flex">
-                  <h4 class="mt-2">Lien d'image</h4>
-                  <v-text-field
-                    v-model="portfolio.navbar.lineImage"
-                    variant="outlined"
-                    density="compact"
-                    hide-details
-                    single-line
-                    color="blue"
-                    class="mb-4 ms-2"
-                  ></v-text-field>
-                </div>
-              </v-col>
             </v-row>
             <v-expansion-panels>
               <v-expansion-panel>
@@ -393,7 +512,7 @@ export default {
                       <div class="d-flex">
                         <h4 class="mt-4">Affichage Nom</h4>
                         <v-switch
-                          v-model="portfolio.navbar.afficheTitre"
+                          v-model="settings.card.nom.affiche"
                           :value="true"
                           color="blue"
                           class="ms-auto"
@@ -406,7 +525,7 @@ export default {
                       <div class="d-flex">
                         <h4 class="mt-4">Style</h4>
                         <v-select
-                          v-model="portfolio.navbar.selectStyle"
+                          v-model="settings.card.nom.selectStyle"
                           :items="style"
                           class="ms-16 mt-3"
                           density="compact"
@@ -419,7 +538,7 @@ export default {
                             <v-list-item
                               v-bind="props"
                               class="d-flex"
-                              @click="portfolio.navbar.sizeTitle = item.raw.px"
+                              @click="settings.card.nom.size = item.raw.px"
                             >
                               <template v-slot:title>
                                 <div class="d-flex">
@@ -448,7 +567,7 @@ export default {
                       <div class="d-flex mt-5">
                         <h4 class="mt-4">Police</h4>
                         <v-autocomplete
-                          v-model="portfolio.navbar.selectPolice"
+                          v-model="settings.card.nom.selectPolice"
                           :items="fonts.font"
                           class="ms-14 mt-1"
                           density="compact"
@@ -474,7 +593,7 @@ export default {
                     <v-col cols="12">
                       <h4 class="mt-4">Taille de la police</h4>
                       <v-slider
-                        v-model="portfolio.navbar.sizeTitle"
+                        v-model="settings.card.nom.size"
                         :max="170"
                         :min="10"
                         :step="1"
@@ -483,7 +602,7 @@ export default {
                       >
                         <template v-slot:append>
                           <v-text-field
-                            v-model="portfolio.navbar.sizeTitle"
+                            v-model="settings.card.nom.size"
                             :max="170"
                             :min="10"
                             style="width: 100px"
@@ -499,7 +618,7 @@ export default {
                     </v-col>
                     <v-col cols="12">
                       <v-btn-toggle
-                        class="mt-2"
+                        class="mt-2 ms-9"
                         variant="outlined"
                         color="blue"
                         divided
@@ -517,36 +636,14 @@ export default {
                           <v-icon icon="mdi-format-underline"></v-icon>
                         </v-btn>
 
-                        <v-btn
-                          @click="colorPickTitreNav = !colorPickTitreNav"
-                          size="small"
-                        >
+                        <v-btn @click="colorName = !colorName" size="small">
                           <div
                             class="d-flex align-center flex-column justify-center"
                           >
                             <v-icon icon="mdi-format-color-text"></v-icon>
 
                             <v-sheet
-                              :color="portfolio.navbar.colorTitre"
-                              height="4"
-                              width="26"
-                              tile
-                            ></v-sheet>
-                          </div>
-                        </v-btn>
-                        <v-btn
-                          @click="
-                            colorPickBackTitreNav = !colorPickBackTitreNav
-                          "
-                          size="small"
-                        >
-                          <div
-                            class="d-flex align-center flex-column justify-center"
-                          >
-                            <v-icon icon="mdi-format-color-fill"></v-icon>
-
-                            <v-sheet
-                              :color="portfolio.navbar.colorBackTitre"
+                              :color="settings.card.nom.color"
                               height="4"
                               width="26"
                               tile
@@ -557,7 +654,7 @@ export default {
 
                       <v-sheet class="pa-4 text-center">
                         <v-textarea
-                          v-model="navbartitre"
+                          v-model="nomCard"
                           rows="2"
                           variant="outlined"
                           auto-grow
@@ -570,14 +667,8 @@ export default {
                   <!--  -->
                   <v-row>
                     <v-color-picker
-                      v-if="colorPickTitreNav"
-                      v-model="portfolio.navbar.colorTitre"
-                      :modes="['hexa']"
-                      class="mx-auto"
-                    ></v-color-picker>
-                    <v-color-picker
-                      v-if="colorPickBackTitreNav"
-                      v-model="portfolio.navbar.colorBackTitre"
+                      v-if="colorName"
+                      v-model="settings.card.nom.color"
                       :modes="['hexa']"
                       class="mx-auto"
                     ></v-color-picker>
@@ -595,7 +686,7 @@ export default {
                       <div class="d-flex">
                         <h4 class="mt-4">Affichage Nom</h4>
                         <v-switch
-                          v-model="portfolio.navbar.afficheTitre"
+                          v-model="settings.card.poste.affiche"
                           :value="true"
                           color="blue"
                           class="ms-auto"
@@ -608,7 +699,7 @@ export default {
                       <div class="d-flex">
                         <h4 class="mt-4">Style</h4>
                         <v-select
-                          v-model="portfolio.navbar.selectStyle"
+                          v-model="settings.card.poste.selectStyle"
                           :items="style"
                           class="ms-16 mt-3"
                           density="compact"
@@ -621,7 +712,7 @@ export default {
                             <v-list-item
                               v-bind="props"
                               class="d-flex"
-                              @click="portfolio.navbar.sizeTitle = item.raw.px"
+                              @click="settings.card.poste.size = item.raw.px"
                             >
                               <template v-slot:title>
                                 <div class="d-flex">
@@ -650,7 +741,7 @@ export default {
                       <div class="d-flex mt-5">
                         <h4 class="mt-4">Police</h4>
                         <v-autocomplete
-                          v-model="portfolio.navbar.selectPolice"
+                          v-model="settings.card.poste.selectPolice"
                           :items="fonts.font"
                           class="ms-14 mt-1"
                           density="compact"
@@ -676,7 +767,7 @@ export default {
                     <v-col cols="12">
                       <h4 class="mt-4">Taille de la police</h4>
                       <v-slider
-                        v-model="portfolio.navbar.sizeTitle"
+                        v-model="settings.card.poste.size"
                         :max="170"
                         :min="10"
                         :step="1"
@@ -685,7 +776,7 @@ export default {
                       >
                         <template v-slot:append>
                           <v-text-field
-                            v-model="portfolio.navbar.sizeTitle"
+                            v-model="settings.card.poste.size"
                             :max="170"
                             :min="10"
                             style="width: 100px"
@@ -719,36 +810,14 @@ export default {
                           <v-icon icon="mdi-format-underline"></v-icon>
                         </v-btn>
 
-                        <v-btn
-                          @click="colorPickTitreNav = !colorPickTitreNav"
-                          size="small"
-                        >
+                        <v-btn @click="colorPoste = !colorPoste" size="small">
                           <div
                             class="d-flex align-center flex-column justify-center"
                           >
                             <v-icon icon="mdi-format-color-text"></v-icon>
 
                             <v-sheet
-                              :color="portfolio.navbar.colorTitre"
-                              height="4"
-                              width="26"
-                              tile
-                            ></v-sheet>
-                          </div>
-                        </v-btn>
-                        <v-btn
-                          @click="
-                            colorPickBackTitreNav = !colorPickBackTitreNav
-                          "
-                          size="small"
-                        >
-                          <div
-                            class="d-flex align-center flex-column justify-center"
-                          >
-                            <v-icon icon="mdi-format-color-fill"></v-icon>
-
-                            <v-sheet
-                              :color="portfolio.navbar.colorBackTitre"
+                              :color="settings.card.poste.color"
                               height="4"
                               width="26"
                               tile
@@ -759,7 +828,7 @@ export default {
 
                       <v-sheet class="pa-4 text-center">
                         <v-textarea
-                          v-model="navbartitre"
+                          v-model="posteCard"
                           rows="2"
                           variant="outlined"
                           auto-grow
@@ -772,14 +841,8 @@ export default {
                   <!--  -->
                   <v-row>
                     <v-color-picker
-                      v-if="colorPickTitreNav"
-                      v-model="portfolio.navbar.colorTitre"
-                      :modes="['hexa']"
-                      class="mx-auto"
-                    ></v-color-picker>
-                    <v-color-picker
-                      v-if="colorPickBackTitreNav"
-                      v-model="portfolio.navbar.colorBackTitre"
+                      v-if="colorPoste"
+                      v-model="settings.card.poste.color"
                       :modes="['hexa']"
                       class="mx-auto"
                     ></v-color-picker>
@@ -803,7 +866,7 @@ export default {
                 <div class="d-flex">
                   <h4 class="mt-4">Affichage Titre</h4>
                   <v-switch
-                    v-model="portfolio.navbar.afficheTitre"
+                    v-model="settings.titre.affiche"
                     :value="true"
                     color="blue"
                     class="ms-auto"
@@ -816,7 +879,7 @@ export default {
                 <div class="d-flex">
                   <h4 class="mt-4">Style</h4>
                   <v-select
-                    v-model="portfolio.navbar.selectStyle"
+                    v-model="settings.titre.selectStyle"
                     :items="style"
                     class="ms-16 mt-3"
                     density="compact"
@@ -829,7 +892,7 @@ export default {
                       <v-list-item
                         v-bind="props"
                         class="d-flex"
-                        @click="portfolio.navbar.sizeTitle = item.raw.px"
+                        @click="settings.titre.size = item.raw.px"
                       >
                         <template v-slot:title>
                           <div class="d-flex">
@@ -858,7 +921,7 @@ export default {
                 <div class="d-flex mt-5">
                   <h4 class="mt-4">Police</h4>
                   <v-autocomplete
-                    v-model="portfolio.navbar.selectPolice"
+                    v-model="settings.titre.selectPolice"
                     :items="fonts.font"
                     class="ms-14 mt-1"
                     density="compact"
@@ -884,7 +947,7 @@ export default {
               <v-col cols="12">
                 <h4 class="mt-4">Taille de la police</h4>
                 <v-slider
-                  v-model="portfolio.navbar.sizeTitle"
+                  v-model="settings.titre.size"
                   :max="170"
                   :min="10"
                   :step="1"
@@ -893,7 +956,7 @@ export default {
                 >
                   <template v-slot:append>
                     <v-text-field
-                      v-model="portfolio.navbar.sizeTitle"
+                      v-model="settings.titre.size"
                       :max="170"
                       :min="10"
                       style="width: 100px"
@@ -909,7 +972,7 @@ export default {
               </v-col>
               <v-col cols="12">
                 <v-btn-toggle
-                  class="mt-2"
+                  class="mt-2 ms-6"
                   variant="outlined"
                   color="blue"
                   divided
@@ -927,26 +990,12 @@ export default {
                     <v-icon icon="mdi-format-underline"></v-icon>
                   </v-btn>
 
-                  <v-btn @click="colorPickTitreNav = !colorPickTitreNav">
+                  <v-btn @click="colorTitre = !colorTitre">
                     <div class="d-flex align-center flex-column justify-center">
                       <v-icon icon="mdi-format-color-text"></v-icon>
 
                       <v-sheet
-                        :color="portfolio.navbar.colorTitre"
-                        height="4"
-                        width="26"
-                        tile
-                      ></v-sheet>
-                    </div>
-                  </v-btn>
-                  <v-btn
-                    @click="colorPickBackTitreNav = !colorPickBackTitreNav"
-                  >
-                    <div class="d-flex align-center flex-column justify-center">
-                      <v-icon icon="mdi-format-color-fill"></v-icon>
-
-                      <v-sheet
-                        :color="portfolio.navbar.colorBackTitre"
+                        :color="settings.titre.color"
                         height="4"
                         width="26"
                         tile
@@ -957,7 +1006,7 @@ export default {
 
                 <v-sheet class="pa-4 text-center">
                   <v-textarea
-                    v-model="navbartitre"
+                    v-model="titre"
                     rows="2"
                     variant="outlined"
                     auto-grow
@@ -970,14 +1019,8 @@ export default {
             <!--  -->
             <v-row>
               <v-color-picker
-                v-if="colorPickTitreNav"
-                v-model="portfolio.navbar.colorTitre"
-                :modes="['hexa']"
-                class="mx-auto"
-              ></v-color-picker>
-              <v-color-picker
-                v-if="colorPickBackTitreNav"
-                v-model="portfolio.navbar.colorBackTitre"
+                v-if="colorTitre"
+                v-model="settings.titre.color"
                 :modes="['hexa']"
                 class="mx-auto"
               ></v-color-picker>
@@ -998,7 +1041,7 @@ export default {
                 <div class="d-flex">
                   <h4 class="mt-4">Affichage Sous-titre</h4>
                   <v-switch
-                    v-model="portfolio.navbar.afficheTitre"
+                    v-model="settings.sousTitre.affiche"
                     :value="true"
                     color="blue"
                     class="ms-auto"
@@ -1011,7 +1054,7 @@ export default {
                 <div class="d-flex">
                   <h4 class="mt-4">Style</h4>
                   <v-select
-                    v-model="portfolio.navbar.selectStyle"
+                    v-model="settings.sousTitre.selectStyle"
                     :items="style"
                     class="ms-16 mt-3"
                     density="compact"
@@ -1024,7 +1067,7 @@ export default {
                       <v-list-item
                         v-bind="props"
                         class="d-flex"
-                        @click="portfolio.navbar.sizeTitle = item.raw.px"
+                        @click="settings.sousTitre.size = item.raw.px"
                       >
                         <template v-slot:title>
                           <div class="d-flex">
@@ -1053,7 +1096,7 @@ export default {
                 <div class="d-flex mt-5">
                   <h4 class="mt-4">Police</h4>
                   <v-autocomplete
-                    v-model="portfolio.navbar.selectPolice"
+                    v-model="settings.sousTitre.selectPolice"
                     :items="fonts.font"
                     class="ms-14 mt-1"
                     density="compact"
@@ -1079,7 +1122,7 @@ export default {
               <v-col cols="12">
                 <h4 class="mt-4">Taille de la police</h4>
                 <v-slider
-                  v-model="portfolio.navbar.sizeTitle"
+                  v-model="settings.sousTitre.size"
                   :max="170"
                   :min="10"
                   :step="1"
@@ -1088,7 +1131,7 @@ export default {
                 >
                   <template v-slot:append>
                     <v-text-field
-                      v-model="portfolio.navbar.sizeTitle"
+                      v-model="settings.sousTitre.size"
                       :max="170"
                       :min="10"
                       style="width: 100px"
@@ -1104,7 +1147,7 @@ export default {
               </v-col>
               <v-col cols="12">
                 <v-btn-toggle
-                  class="mt-2"
+                  class="mt-2 ms-6"
                   variant="outlined"
                   color="blue"
                   divided
@@ -1122,26 +1165,12 @@ export default {
                     <v-icon icon="mdi-format-underline"></v-icon>
                   </v-btn>
 
-                  <v-btn @click="colorPickTitreNav = !colorPickTitreNav">
+                  <v-btn @click="colorSousTitre = !colorSousTitre">
                     <div class="d-flex align-center flex-column justify-center">
                       <v-icon icon="mdi-format-color-text"></v-icon>
 
                       <v-sheet
-                        :color="portfolio.navbar.colorTitre"
-                        height="4"
-                        width="26"
-                        tile
-                      ></v-sheet>
-                    </div>
-                  </v-btn>
-                  <v-btn
-                    @click="colorPickBackTitreNav = !colorPickBackTitreNav"
-                  >
-                    <div class="d-flex align-center flex-column justify-center">
-                      <v-icon icon="mdi-format-color-fill"></v-icon>
-
-                      <v-sheet
-                        :color="portfolio.navbar.colorBackTitre"
+                        :color="settings.sousTitre.color"
                         height="4"
                         width="26"
                         tile
@@ -1152,7 +1181,7 @@ export default {
 
                 <v-sheet class="pa-4 text-center">
                   <v-textarea
-                    v-model="navbartitre"
+                    v-model="sousTitre"
                     rows="2"
                     variant="outlined"
                     auto-grow
@@ -1165,14 +1194,8 @@ export default {
             <!--  -->
             <v-row>
               <v-color-picker
-                v-if="colorPickTitreNav"
-                v-model="portfolio.navbar.colorTitre"
-                :modes="['hexa']"
-                class="mx-auto"
-              ></v-color-picker>
-              <v-color-picker
-                v-if="colorPickBackTitreNav"
-                v-model="portfolio.navbar.colorBackTitre"
+                v-if="colorSousTitre"
+                v-model="settings.sousTitre.color"
                 :modes="['hexa']"
                 class="mx-auto"
               ></v-color-picker>

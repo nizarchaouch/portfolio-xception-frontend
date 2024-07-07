@@ -1,12 +1,13 @@
 export default {
   state: {
+    modAprop: false,
     dialogA: false,
     sideBarM: false,
-    SideModEntet: true,
-    selectedPage: null,
+    SideModEntet: false,
     isnavbar: false,
     blocindex: 0,
-    settingBloc: null,
+    blocmodif: 0,
+    settingBloc: {},
     linkNav: [
       { model: "NTL", name: "À PROPOS DE MOI", id: 0 },
       { model: "", name: "two", id: 1 },

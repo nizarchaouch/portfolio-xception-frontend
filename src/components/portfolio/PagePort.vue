@@ -41,7 +41,7 @@ export default {
 <template>
   <component :is="navbar.type" />
   <div v-for="(bloc, index) in selectedPage.bloc" :key="index">
-    <component :is="bloc.type" :id="bloc.id"/>
+    <component :is="bloc.type" :id="bloc.id" :ok="true"/>
   </div>
   <!-- {{ pages[0].bloc }} -->
   <!-- {{selectedPage.id }} id page -->

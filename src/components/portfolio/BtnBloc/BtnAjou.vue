@@ -4,7 +4,7 @@
 import { mapState, mapActions } from "vuex";
 import DialogAjouter from "@/components/portfolio/DialogAjouter.vue";
 export default {
-  props: { showButton: Boolean, id: Number },
+  props: { showButton: Boolean, id: Number, defaultSettings: Object },
   components: { DialogAjouter },
   computed: {
     ...mapState(["portfolio", "portfolioss"]),
@@ -29,7 +29,12 @@ export default {
     >
       Ajouter un bloc
     </v-btn>
-    <!-- <DialogAjouter :id="0" :isnavbar="true" :showButton="showButton" /> -->
+    <!-- <DialogAjouter
+      :id="id"
+      :isnavbar="true"
+      :showButton="showButton"
+      :defaultSettings="defaultSettings"
+    /> -->
   </v-row>
 </template>
 <style lang="scss"></style>
