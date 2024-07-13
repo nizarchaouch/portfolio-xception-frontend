@@ -1,8 +1,22 @@
 <script>
+import { cityName } from "../city";
 export default {
   data: () => ({
+    cityName,
     sheet: false,
-    filter: { localite: null, typeContrat: null, langue: null },
+    filter: { localite: [], typeContrat: [], langue: [], genre: [] },
+    typeContrat: [
+      "CDI",
+      "CDD",
+      "CIVP",
+      "Karama",
+      "Temps plein",
+      "Saisonnier",
+      "Freelance / Indépendant",
+      "Temps partiel",
+      "Stage",
+    ],
+    langue: ["Français", "Anglais"],
   }),
   methods: {
     // Méthode pour émettre un événement lorsqu'un filtre est modifié
@@ -33,10 +47,11 @@ export default {
     <v-layout>
       <v-navigation-drawer
         v-model="sheet"
-        :width="320"
+        :width="300"
         location="start"
         elevation="10"
         class="mt-16"
+        color="#e5e5f2"
       >
         <v-row class="ma-4">
           <v-icon size="25" class="mt-1">mdi-tune</v-icon>
@@ -50,42 +65,81 @@ export default {
           ></v-btn>
         </v-row>
         <v-divider></v-divider>
-        <div class="px-7 py-4">
-          <p class="label">Localité</p>
-          <v-combobox
-            v-model="filter.localite"
-            clearable
-            chips
-            multiple
-            density="compact"
-            :items="['Tunisie', 'Sousse', 'Monastir', 'Gafsa']"
-            variant="outlined"
-          ></v-combobox>
-        </div>
-        <div class="px-7 py-4">
-          <p class="label">Type de contrat</p>
-          <v-combobox
-            v-model="filter.typeContrat"
-            clearable
-            chips
-            multiple
-            density="compact"
-            :items="['CDI', 'CDD', 'Stage']"
-            variant="outlined"
-          ></v-combobox>
-        </div>
-        <div class="px-7 py-4">
-          <p class="label">Langue</p>
-          <v-combobox
-            v-model="filter.langue"
-            clearable
-            chips
-            multiple
-            density="compact"
-            :items="['Français', 'Anglais']"
-            variant="outlined"
-          ></v-combobox>
-        </div>
+
+        <v-expansion-panels class="px-2">
+          <v-expansion-panel
+            class="my-2 overflow-auto"
+            rounded="lg"
+            style="max-height: 300px"
+          >
+            <template v-slot:title>
+              <p class="text-body-1 font-weight-bold">Localité</p>
+            </template>
+            <template v-slot:text>
+              <v-checkbox
+                color="blue"
+                v-model="filter.localite"
+                v-for="item in cityName"
+                :key="item"
+                :label="item"
+                :value="item"
+              >
+              </v-checkbox>
+            </template>
+          </v-expansion-panel>
+          <v-expansion-panel
+            class="my-2 overflow-auto"
+            rounded="lg"
+            style="max-height: 300px"
+          >
+            <template v-slot:title>
+              <p class="text-body-1 font-weight-bold">Type de contrat</p>
+            </template>
+            <template v-slot:text>
+              <v-checkbox
+                color="blue"
+                v-model="filter.typeContrat"
+                v-for="item in typeContrat"
+                :key="item"
+                :label="item"
+                :value="item"
+              >
+              </v-checkbox>
+            </template>
+          </v-expansion-panel>
+          <v-expansion-panel class="my-2 overflow-auto" rounded="lg">
+            <template v-slot:title>
+              <p class="text-body-1 font-weight-bold">Langue</p>
+            </template>
+            <template v-slot:text>
+              <v-checkbox
+                color="blue"
+                v-model="filter.langue"
+                v-for="item in langue"
+                :key="item"
+                :label="item"
+                :value="item"
+              >
+              </v-checkbox>
+            </template>
+          </v-expansion-panel>
+          <v-expansion-panel class="my-2 overflow-auto" rounded="lg">
+            <template v-slot:title>
+              <p class="text-body-1 font-weight-bold">Genre</p>
+            </template>
+            <template v-slot:text>
+              <v-checkbox
+                color="blue"
+                v-model="filter.genre"
+                v-for="item in ['homme', 'femme']"
+                :key="item"
+                :label="item"
+                :value="item"
+              >
+              </v-checkbox>
+            </template>
+          </v-expansion-panel>
+        </v-expansion-panels>
       </v-navigation-drawer>
     </v-layout>
   </div>

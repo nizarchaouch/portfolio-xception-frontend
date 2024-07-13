@@ -103,7 +103,7 @@ export default {
                   <p
                     class="text-subtitle-2 text-grey-darken-1 font-weight-bold"
                   >
-                    Date d'expiration
+                    Éducation
                   </p>
                   <p class="font-weight-bold">
                     {{ obj.raw.niveauCand }}

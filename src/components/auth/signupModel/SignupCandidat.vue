@@ -1,7 +1,9 @@
 <script>
 import { mapState, mapActions, mapMutations } from "vuex";
+import { cityName } from "@/components/city";
 export default {
   data: () => ({
+    cityName: cityName,
     form: false,
     visible: false,
     loading: false,
@@ -216,15 +218,22 @@ export default {
                     :disabled="loading"
                   ></v-select>
                 </v-col>
-                <v-col cols="12" sm="6"
-                  ><v-text-field
+                <v-col cols="12" sm="6">
+                  <!-- <v-text-field
                     label="Gouvernorat (Adress)*"
                     placeholder="Tunisie"
                     class="me-2"
                     v-model="data.adress"
                     :rules="[rules.required]"
                     :disabled="loading"
-                  ></v-text-field>
+                  ></v-text-field> -->
+                  <v-autocomplete
+                    :items="cityName"
+                    label="Gouvernorat (Adress)*"
+                    v-model="data.adress"
+                    :rules="[rules.required]"
+                    :disabled="loading"
+                  ></v-autocomplete>
                 </v-col>
               </v-row>
             </v-container>

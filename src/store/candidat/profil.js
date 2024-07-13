@@ -1,9 +1,12 @@
 import axios from "axios";
 export default {
-  state: { alert: false, message: "" },
+  state: { alert: false, message: "", candidats: [] },
   mutations: {
     setMes(state, message) {
       state.message = message;
+    },
+    setCand(state, candidats) {
+      state.candidats = candidats;
     },
   },
   actions: {
@@ -68,6 +71,24 @@ export default {
         console.error("Erreur lors du téléchargement d'un CV :", error);
         ctx.state.alert = true;
         ctx.commit("setMes", "Erreur lors du téléchargement d'un CV");
+      }
+    },
+
+    async getCandidats(ctx) {
+      try {
+        const candidats = await axios.get(
+          `http://localhost:8000/api/user/candidats`,
+          {
+            headers: { "Content-type": "application/json" },
+            withCredentials: true,
+          }
+        );
+        if (candidats.status === 200) {
+          console.log(candidats.data[0]);
+          ctx.commit("setCand", candidats.data);
+        }
+      } catch (error) {
+        console.error("Erreur lors du get candidats :", error);
       }
     },
   },

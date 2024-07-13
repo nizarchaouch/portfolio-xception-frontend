@@ -10,6 +10,10 @@ body {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   background-color: #e5e5f2a3;
 }
+footer {
+  position: relative;
+  bottom: 8px;
+}
 ::-webkit-scrollbar {
   width: 10px;
 }

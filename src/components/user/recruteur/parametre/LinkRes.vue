@@ -85,7 +85,7 @@ export default {
         <v-icon
           @click="removeLink(index)"
           size="x-large"
-          class="ms-3 mb-4"
+          class="ms-3 mt-3"
           color="red"
           >mdi-close-circle-outline</v-icon
         >

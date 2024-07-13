@@ -35,7 +35,7 @@ export default {
 };
 </script>
 <template>
-  <NavBar />
+  <NavBar :hidea="' '" />
   <SideBar />
   <v-container fluid>
     <v-row class="mt-14">

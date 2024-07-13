@@ -3,6 +3,7 @@
 import { mapState, mapActions } from "vuex";
 import NavBar from "@/components/public/NavBar.vue";
 import DialogPwd from "@/components/user/DialogPwd.vue";
+import { cityName } from "@/components/city";
 export default {
   name: "profil",
   computed: {
@@ -15,6 +16,7 @@ export default {
   },
   data() {
     return {
+      cityName,
       loading: false,
       platformOptions: [
         "twitter",
@@ -40,6 +42,9 @@ export default {
   },
   methods: {
     ...mapActions(["userAuth", "updated"]),
+    cleanedEmail() {
+      return this.user.userData.mail.trim().replace(/;$/, "");
+    },
     addLink() {
       this.data.socialLinks.push({ platform: "", url: "" });
     },
@@ -153,21 +158,27 @@ export default {
           </v-col>
           <!-- contact  -->
           <v-col cols="auto" class="ms-3">
-            <p class="mt-4 text-capitalize">
+            <a
+              :href="'mailto:' + this.user.userData.mail"
+              class="mt-4 text-decoration-none text-black"
+            >
               <v-icon>mdi-email-outline</v-icon> {{ this.user.userData.mail }}
-            </p>
-            <p class="mt-4 text-capitalize">
+            </a>
+            <p class="my-4 text-capitalize">
               <v-icon>mdi-calendar-range</v-icon> {{ data.dateNais }}
             </p>
-            <p class="mt-4 text-capitalize">
+            <a
+              :href="'tel:' + data.tel"
+              class="mt-4 text-decoration-none text-black"
+            >
               <v-icon>mdi-phone-outline</v-icon> +216 {{ data.tel }}
-            </p>
+            </a>
             <p class="mt-4 text-capitalize">
               <v-icon>mdi-map-marker</v-icon> {{ data.adress }}
             </p>
             <!-- social Links -->
             <p
-              class="mt-4 text-capitalize"
+              class="mt-4"
               v-for="(link, index) in data.socialLinks"
               :key="index"
             >
@@ -232,12 +243,17 @@ export default {
               <p class="text-subtitle-2 text-medium-emphasis">
                 Gouvernorat (Adress)
               </p>
-              <v-text-field variant="solo-inverted" v-model="data.adress">
-              </v-text-field>
+              <!-- <v-text-field variant="solo-inverted" v-model="data.adress">
+              </v-text-field> -->
+              <v-autocomplete
+                v-model="data.adress"
+                :items="cityName"
+                variant="solo-inverted"
+              ></v-autocomplete>
             </v-col>
             <v-col cols="12" sm="4">
               <p class="text-subtitle-2 text-medium-emphasis">
-                Titre d'emploi
+                Role/Position
                 <v-tooltip text="Votre poste actuel ou profession">
                   <template v-slot:activator="{ props }">
                     <v-icon v-bind="props">mdi-alert-circle</v-icon>

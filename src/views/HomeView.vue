@@ -1,33 +1,66 @@
 <script>
-import NavBar from "@/components/public/NavBar.vue";
 import { mapActions } from "vuex";
+import NavBar from "@/components/public/NavBar.vue";
+import FooterBar from "@/components/public/FooterBar.vue";
+import arrwo1 from "@/assets/arrow-1.png";
+import arrwo2 from "@/assets/arrow-2.png";
+import findjob from "@/assets/findjob.png";
 
 export default {
   name: "home",
   components: {
     NavBar,
+    FooterBar,
   },
   data() {
     return {
-      data: {
-        items: [
-          {
-            sub: "AUCUN CODAGE REQUIS",
-            title: "La façon la plus facile pour créer votre propre site web",
-            desc: "Tous les créateurs de sites web les plus simples utilisent la technologie du glisser-déposer. Chez Portfolio xception, nous avons mis au point un système de grille innovant qui vous permet de modifier facilement les mises en page préconçues sur ordinateur ou sur mobile à votre convenance. Le processus de création de sites web n'a jamais été aussi simple.",
-          },
-          {
-            sub: "templates gratuits",
-            title: "Des templates de portfolio conçus pour vous démarquer",
-            desc: "Gagnez du temps et choisissez l'un de nos 900 templates gratuits, personnalisables et élaborés stratégiquement pour chaque domaine d'activité. Vous pouvez également choisir d'utiliser un canvas vierge pour commencer à créer votre site.",
-          },
-          {
-            sub: " portfolio créés sans effort",
-            title: "Des portfolios créés sans effort",
-            desc: "Créer un portfolio à votre image, avec toutes les fonctionnalités dont vous avez besoin et présenter votre travail, les possibilités sont infinies.",
-          },
-        ],
-      },
+      arrwo1: arrwo1,
+      arrwo2: arrwo2,
+      findjob: findjob,
+      items: [
+        {
+          icon: "mdi-account-plus-outline",
+          title: "Explorer les opportunités",
+          desc: "Parcourez une gamme diversifiée d'offres d'emploi adaptées à vos intérêts et à votre expertise",
+        },
+        {
+          icon: "mdi-cloud-upload-outline",
+          title: "Créez votre portfolio",
+          desc: "Créez un portfolio mettant en valeur vos compétences, votre expérience et vos qualifications.",
+        },
+        {
+          icon: "mdi-magnify-plus-outline",
+          title: "Postulez en toute simplicité",
+          desc: "Postulez sans effort aux emplois qui correspondent à vos préférences en quelques clics",
+        },
+        {
+          icon: "mdi-check-decagram",
+          title: "Postulez en toute simplicité",
+          desc: "Restez informé de vos candidatures et gérez efficacement votre parcours de recherche d'emploi",
+        },
+      ],
+      sheetCard: [
+        {
+          icon: "mdi-briefcase",
+          number: "454",
+          titre: "Total Emploi",
+        },
+        {
+          icon: "mdi-domain",
+          number: "20",
+          titre: "Entreprises",
+        },
+        {
+          icon: "mdi-account-multiple",
+          number: "32",
+          titre: "Candidats",
+        },
+        // {
+        //   icon: "mdi-sticker-check",
+        //   number: "7",
+        //   titre: "Candidat Accepté",
+        // },
+      ],
     };
   },
   methods: {
@@ -42,21 +75,22 @@ export default {
   <NavBar />
   <div style="margin-top: 140px">
     <v-sheet
-      class="mx-auto px-16"
+      class="mx-auto px-lg-16 px-2"
       min-height="200"
       max-width="1200"
       color="transparent"
     >
-      <h1 class="text-h3 font-weight-black text-center">
-        Créer un <span>portfolio d'exception</span> et trouvez des opportunités
+      <h1 class="text-md-h2 text-sm-h5 font-weight-black text-center">
+        Créer un <span class="span">portfolio d'exception</span> et trouvez des
+        opportunités
       </h1>
       <v-sheet
-        class="mx-auto mt-5 text-h6 text-center"
+        class="mx-auto mt-5 text-md-h6 text-center"
         max-width="1000"
         color="#FFFFFF00"
       >
         Bienvenue sur portfolio xception, la platform ultime pour créer un
-        portefeuille professionnel et explorer des possibilités de carrière
+        portfolio professionnel et explorer des possibilités de carrière
         exceptionnelles, offrant une expérience utilisateur intuitive et
         conviviale. <br />
         <v-btn
@@ -78,57 +112,199 @@ export default {
         ></v-img>
       </v-sheet>
     </v-sheet>
-  </div>
-  <div>
-    <v-row
-      class="d-flex justify-center align-center mt-8 bg-light-blue-darken-1"
-    >
-      <v-col cols="9">
-        <h1 class="text-center font-weight-black mt-10">
-          Design -Faites des modèles de portfolio pour mettre en avant vos
-          meilleurs projets.
-        </h1>
-        <div class="mt-5 text-h6 text-center">
-          Les modèles de sites Web de portfolio de Renderforest sont le moyen
-          idéal de mettre en valeur vos meilleurs projets. Avec un choix de
-          plusieurs modèles époustouflants, vous pouvez créer un site web
-          choisir celui qui reflète le mieux votre marque personnelle et votre
-          style.
-        </div>
-        <p class="text-caption"></p>
+    <v-row class="d-flex justify-center align-center mt-8 bg-white" no-gutters>
+      <v-col cols="10">
+        <p class="text-center text-h4 my-8 font-weight-bold">
+          Processus de travail du
+          <span class="text-blue"> portfolio xception</span>
+        </p>
+        <v-row no-gutters justify="center" class="hidden-md-and-down">
+          <v-col cols="6">
+            <v-img :src="arrwo1" max-height="60" max-width="auto"></v-img>
+          </v-col>
+          <v-col cols="6">
+            <v-img
+              :src="arrwo1"
+              max-height="65"
+              max-width="auto"
+              class="me-16"
+            ></v-img>
+          </v-col>
+        </v-row>
+        <v-row no-gutters justify="center">
+          <v-col
+            cols="12"
+            sm="6"
+            lg="3"
+            class=""
+            v-for="(item, index) in items"
+            :key="index"
+          >
+            <v-sheet
+              class="pa-6 mx-4 mb-md-4 mb-lg-0 text-center sheet"
+              min-height="250"
+              max-width="350"
+              color="e5e5f2a3"
+              rounded="lg"
+            >
+              <v-row>
+                <v-col>
+                  <v-btn
+                    :ripple="false"
+                    elevation="0"
+                    icon
+                    size="72"
+                    class="my-3 cursor-default"
+                  >
+                    <v-icon size="40">{{ item.icon }}</v-icon>
+                  </v-btn>
+
+                  <p class="font-weight-bold my-3">{{ item.title }}</p>
+                  <span class="text-caption text-medium-emphasis">
+                    {{ item.desc }}
+                  </span>
+                </v-col>
+              </v-row>
+            </v-sheet>
+          </v-col>
+        </v-row>
+        <v-row no-gutters justify="center" class="mb-4 hidden-md-and-down">
+          <v-col cols="6">
+            <v-img :src="arrwo2" max-height="60"></v-img>
+          </v-col>
+        </v-row>
       </v-col>
     </v-row>
-    <!-- <v-row class="d-flex justify-center align-center">
-        <v-col cols="auto" v-for="(item, index) in data.items" :key="index">
-          <v-sheet
-            min-height="330"
-            max-width="450"
-            border
-            rounded
-            color="transparent"
+    <v-row justify="center" class="d-flex align-center">
+      <v-col cols="12" md="5" class="mb-16">
+        <p
+          class="mt-md-9 ms-4 ms-sm-16 ms-md-0 text-md-h4 text-h5 font-weight-bold"
+        >
+          Découvrez votre emploi idéal: faire correspondre vos intérêts et vos
+          compétences
+        </p>
+        <p class="mt-3 ms-3 ms-sm-16 ms-md-0 text-md-h6 text-medium-emphasis">
+          Libérez votre potentiel, embrassez votre avenir.
+        </p>
+        <v-row class="justify-center justify-md-start">
+          <v-btn
+            class="text-none mt-9 ms-4"
+            variant="tonal"
+            elevation="5"
+            size="large"
+            color="blue"
+            rounded="xl"
+            to="/offer"
+            >Trouver Maintenant</v-btn
           >
-            <div class="pa-2">
-              <p class="text-caption text-disabled text-uppercase ma-2 pa-2">
-                {{ item.sub }}
+        </v-row>
+      </v-col>
+      <v-col cols="12" md="5" class="px-16 py-4">
+        <v-img
+          :src="findjob"
+          max-width="650"
+          max-height="650"
+          class="translate-animation"
+        ></v-img>
+      </v-col>
+    </v-row>
+    <!-- card -->
+    <v-row no-gutters class="mb-16 ms-3 ms-md-16">
+      <v-col
+        cols="12"
+        sm="6"
+        lg="3"
+        class="mx-auto"
+        v-for="(item, index) in sheetCard"
+        :key="index"
+      >
+        <v-sheet
+          class="pa-2 mb-4 mb-md-4 mb-lg-0 sheetCard"
+          max-width="350"
+          color="e5e5f2a3"
+          rounded="lg"
+        >
+          <v-row>
+            <v-col cols="auto">
+              <v-btn
+                :ripple="false"
+                elevation="0"
+                icon
+                rounded
+                size="72"
+                class="ma-3 me-0 cursor-default"
+              >
+                <v-icon size="40">{{ item.icon }}</v-icon>
+              </v-btn>
+            </v-col>
+            <v-col cols="auto">
+              <p class="font-weight-bold text-h5 mt-4">+ {{ item.number }}</p>
+              <p class="text-medium-emphasis mt-2">
+                {{ item.titre }}
               </p>
-              <h3 class="pa-2">{{ item.title }}</h3>
-              <p class="pa-2">
-                {{ item.desc }}
-              </p>
-            </div>
-          </v-sheet>
-        </v-col>
-      </v-row> -->
+            </v-col>
+          </v-row>
+        </v-sheet>
+      </v-col>
+    </v-row>
+    <!-- comment faire protfolio -->
+    <v-row
+      class="d-flex justify-center align-center mt-8 bg-white pb-6"
+      no-gutters
+    >
+      <v-col cols="12" md="3">
+        <p class="text-h3 my-8 ms-2 font-weight-bold">
+          Comment faire un portfolio ?
+        </p>
+        <p class="px-3">
+          Suivez ces quatre étapes afin de créer votre propre site de portfolio
+          :
+        </p>
+        <v-btn
+          class="text-none ms-4 mt-4"
+          color="blue"
+          rounded="xl"
+          to="/signup"
+          >Créer un portfolio</v-btn
+        >
+      </v-col>
+      <v-col cols="11" md="3" offset="1">
+        <ol class="ms-6 mt-15">
+          <li class="my-4 text-body-1">
+            Créez un compte sur portfolio xception
+          </li>
+          <li class="my-4 text-body-1">Créez votre portfolio en ligne</li>
+          <li class="my-4 text-body-1">
+            Personnalisez le contenu et le design sur site
+          </li>
+          <li class="my-4 text-body-1">
+            Publiez et partagez votre nouveau portfolio
+          </li>
+        </ol>
+      </v-col>
+    </v-row>
   </div>
+  <FooterBar />
 </template>
 
 <style lang="scss" scoped>
-span {
+.span {
   background-image: linear-gradient(45deg, #d2001a, #7462ff, #f84e21, #23d5ab);
   color: transparent;
   background-clip: text;
   background-size: 400% 400%;
   animation: color 30s ease infinite;
+}
+.translate-animation {
+  animation: translateXAnimation 3s ease-in-out infinite;
+  @keyframes translateXAnimation {
+    0% {
+      transform: translatey(0);
+    }
+    50% {
+      transform: translatey(-40px);
+    }
+  }
 }
 .btn {
   background-image: linear-gradient(15deg, #d2001a, #7462ff, #f84e21);
@@ -150,5 +326,36 @@ span {
   font-size: 48px;
   line-height: 125%;
   font-family: Euclid Circular, Arial, sans-serif, Helvetica;
+}
+.sheet {
+  .v-btn {
+    background-color: #e5e5f2a3;
+  }
+  &:hover {
+    background-color: #e5e5f2a3;
+    .v-btn {
+      background-color: #0a65cc;
+      .v-icon {
+        color: white;
+      }
+    }
+  }
+}
+.sheetCard {
+  .v-btn {
+    background-color: #0a65cc32;
+    .v-icon {
+      color: #0a65cc;
+    }
+  }
+  &:hover {
+    border: 1px solid #0a65cc;
+    .v-btn {
+      background-color: #0a65cc;
+      .v-icon {
+        color: white;
+      }
+    }
+  }
 }
 </style>

@@ -1,11 +1,13 @@
 <script>
 import { mapState, mapActions } from "vuex";
+import { cityName } from "@/components/city";
 export default {
   computed: {
     ...mapState(["user", "profilRec"]),
   },
   data() {
     return {
+      cityName,
       form: false,
       loading: false,
       logoForUpload: null,
@@ -174,23 +176,30 @@ export default {
           <h4 class="mb-4 text-medium-emphasis">
             Emplacement de l'entreprise<span class="text-red">*</span>
           </h4>
-          <v-text-field
+          <!-- <v-text-field
             v-model="adress"
             variant="outlined"
             color="blue"
             :rules="[rules.required]"
           >
-          </v-text-field>
+          </v-text-field> -->
+          <v-autocomplete
+            v-model="adress"
+            :items="cityName"
+            color="blue"
+            variant="outlined"
+            :rules="[rules.required]"
+          ></v-autocomplete>
         </v-col>
         <!-- tail & tel -->
         <v-col cols="12" md="3">
           <h4 class="mb-4 text-medium-emphasis">Taille de l'entreprise</h4>
           <v-select
-          v-model="taill_ent"
-          :items="taillOptions"
-          variant="outlined"
-          color="blue"
-        ></v-select>
+            v-model="taill_ent"
+            :items="taillOptions"
+            variant="outlined"
+            color="blue"
+          ></v-select>
           <!-- tel -->
           <h4 class="mb-4 text-medium-emphasis">Téléphone</h4>
           <v-text-field

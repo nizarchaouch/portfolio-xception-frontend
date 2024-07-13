@@ -125,9 +125,10 @@ export default {
             <v-sheet
               :max-height="105"
               :max-width="320"
-              class="ma-3 rounded-lg mx-auto"
+              class="ma-3 mx-auto"
               color="#90c1f2b6"
-              rounded
+              rounded="lg"
+              elevation="3"
             >
               <v-container>
                 <v-row>
@@ -156,6 +157,7 @@ export default {
               :max-width="320"
               class="ma-3 rounded-lg mx-auto"
               color="#fdf1d7"
+              elevation="3"
             >
               <v-container>
                 <v-row>
@@ -186,12 +188,15 @@ export default {
               :max-width="320"
               class="ma-3 rounded-lg mx-auto"
               color="#ffdbdb"
+              elevation="3"
             >
               <v-container>
                 <v-row>
                   <v-col cols="9">
                     <v-row>
-                      <h2 class="ms-4 mt-4">{{ this.candOffer.totalCandWait }}</h2>
+                      <h2 class="ms-4 mt-4">
+                        {{ this.candOffer.totalCandWait }}
+                      </h2>
                     </v-row>
                     <v-row>
                       <span class="ms-4 text-body-2 text-medium-emphasis"

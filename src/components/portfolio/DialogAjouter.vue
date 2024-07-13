@@ -4,14 +4,22 @@ import { mapState, mapActions } from "vuex";
 import TTBI from "./bloc/apropos/TTBI.vue";
 import ITTB from "./bloc/apropos/ITTB.vue";
 import CardText from "./bloc/entete/CardText.vue";
-import ImageTTBI from "@/assets/bloc/TTBI.png";
-import ImageITTBI from "@/assets/bloc/ITTB.png";
+import BlocTitre from "./bloc/Titre/BlocTitre.vue";
+import BlocTitreBtn from "./bloc/Titre/BlocTitreBtn.vue";
+import BlocParg from "./bloc/Titre/BlocParg.vue";
+import CardExp from "./bloc/card/CardExp.vue";
+import CardSkil from "./bloc/card/CardSkil.vue";
 export default {
   // props: { defaultSettings: Object },
   components: {
     TTBI,
     ITTB,
     CardText,
+    BlocTitre,
+    BlocTitreBtn,
+    BlocParg,
+    CardExp,
+    CardSkil,
   },
   computed: {
     ...mapState(["portfolio", "portfolioss"]),
@@ -20,83 +28,10 @@ export default {
     },
   },
   data: () => ({
-    tab: 1,
+    tab: 2,
     entete: ["CardText"],
     apropos: ["ITTB"],
-    propos: [ImageTTBI, ImageITTBI],
-    TTBISetting: {
-      titre: {
-        affiche: true,
-        color: "black",
-        selectStyle: "Titer 4",
-        size: 100,
-        selectPolice: "Frank Ruhl Libre",
-        nom: "Noter Projet",
-      },
-      parg: {
-        affiche: true,
-        color: "#6F6F6F",
-        selectStyle: "Titer 4",
-        size: 20,
-        selectPolice: "Average Sans",
-        nom: `Non occaecat culpa aliquip duis sunt amet qui pariatur quis ut.
-         Officia sit adipisicing proident aute veniam veniam. Irure officia
-         esse eu quis mollit consectetur aliqua anim nisi et labore do.
-         Incididunt ea consequat duis officia commodo fugiat non.
-         Occaecat ea velit esse tempor veniam laborum.`,
-      },
-    },
-    defaultSettings: {
-      background: {
-        bloc1: { color: "#e6dace", img: "" },
-        bloc2: { color: "#FFFFFF", img: "" },
-      },
-      card: {
-        afficheLinksRes: true,
-        afficheImg: true,
-        img: "",
-        imgarrond: "rounded-circle",
-        backgroundColor: "#F4ECE6",
-        lineColor: "#2196F3",
-        lineSize: 3,
-        nom: {
-          affiche: true,
-          color: "black",
-          colorBack: "#0B242400",
-          nom: "nizar",
-          selectStyle: "Titer 4",
-          size: 25,
-          selectPolice: "Courier Prime",
-        },
-        poste: {
-          affiche: true,
-          color: "#625E5C",
-          colorBack: "#0B242400",
-          nom: "Etudiant génie logiciel",
-          selectStyle: "Titer 4",
-          size: 25,
-          selectPolice: "Courier Prime",
-        },
-      },
-      titre: {
-        affiche: true,
-        color: "black",
-        colorBack: "#0B242400",
-        nom: "Hello",
-        selectStyle: "Titer 4",
-        size: 100,
-        selectPolice: "Frank Ruhl Libre",
-      },
-      sousTitre: {
-        affiche: true,
-        color: "black",
-        colorBack: "#0B242400",
-        nom: "Qui je suis et ce que je fais",
-        selectStyle: "Titer 4",
-        size: 25,
-        selectPolice: "Luckiest Guy",
-      },
-    },
+    titre: ["BlocTitre", "BlocTitreBtn", "CardExp", "CardSkil", "BlocParg"],
   }),
   methods: {
     ...mapActions(["addBloc", "addBlocNav"]),
@@ -124,15 +59,13 @@ export default {
         this.portfolio.dialogA = false;
       }
     },
-    handleAddBloc(type, settings) {
+    handleAddBloc(type) {
       if (this.portfolio.isnavbar) {
         this.addBlocNav({
           pageIndex: this.portfolioss.selectedPage.id,
           blocIndex: 0,
           type: type,
-          settings: settings,
         });
-        console.log("set", settings);
         this.portfolio.isnavbar = false;
         this.portfolio.dialogA = false;
       } else {
@@ -140,7 +73,6 @@ export default {
           pageIndex: this.portfolioss.selectedPage.id,
           blocIndex: this.portfolio.blocindex,
           type: type,
-          settings: settings,
         });
         this.portfolio.dialogA = false;
       }
@@ -185,7 +117,7 @@ export default {
             ></v-tab>
             <v-tab
               class="text-none font-weight-bold"
-              text="liste"
+              text="Titre"
               :value="3"
             ></v-tab>
           </v-tabs>
@@ -216,23 +148,31 @@ export default {
                 >
                   <component :is="bloc"></component>
                 </v-col>
+                <v-col
+                  v-for="(bloc, index) in titre"
+                  :key="index"
+                  cols="12"
+                  @click="onClickAddBloc(bloc)"
+                  class="pa-16 pt-3 mx-auto cursor-pointer"
+                  style="max-width: 1900px"
+                >
+                  <component :is="bloc"></component>
+                </v-col>
               </v-row>
             </v-window-item>
             <v-window-item :value="3">
-              <!-- <v-img
-                @click="handleAddBloc(extractFileName(comp))"
-                v-for="comp in propos"
-                :key="index"
-                class="my-6 ms-6 cursor-pointer"
-                width="auto"
-                :src="comp"
-              ></v-img> -->
-              <v-img
-                @click="handleAddBloc(extractFileName(propos[0]), TTBISetting)"
-                class="my-6 ms-6 cursor-pointer"
-                width="auto"
-                :src="propos[0]"
-              ></v-img>
+              <v-row no-gutters>
+                <v-col
+                  v-for="(bloc, index) in titre"
+                  :key="index"
+                  cols="12"
+                  @click="onClickAddBloc(bloc)"
+                  class="pa-16 pt-3 cursor-pointer"
+                  style="max-width: 900px"
+                >
+                  <component :is="bloc"></component>
+                </v-col>
+              </v-row>
             </v-window-item>
           </v-window>
         </div>

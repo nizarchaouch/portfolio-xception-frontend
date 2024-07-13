@@ -7,6 +7,11 @@ import NTL from "./bloc/navbar/NTL.vue";
 import CardText from "./bloc/entete/CardText.vue";
 import ITTB from "./bloc/apropos/ITTB.vue";
 import TTBI from "./bloc/apropos/TTBI.vue";
+import BlocTitre from "./bloc/Titre/BlocTitre.vue";
+import BlocParg from "./bloc/Titre/BlocParg.vue";
+import BlocTitreBtn from "./bloc/Titre/BlocTitreBtn.vue";
+import CardExp from "./bloc/card/CardExp.vue";
+import CardSkil from "./bloc/card/CardSkil.vue";
 export default {
   components: {
     CardText,
@@ -14,6 +19,11 @@ export default {
     NTL,
     ITTB,
     TTBI,
+    BlocTitre,
+    BlocTitreBtn,
+    BlocParg,
+    CardExp,
+    CardSkil,
   },
   computed: {
     ...mapState(["portfolio", "portfolioss"]),
@@ -41,7 +51,7 @@ export default {
 <template>
   <component :is="navbar.type" />
   <div v-for="(bloc, index) in selectedPage.bloc" :key="index">
-    <component :is="bloc.type" :id="bloc.id" :ok="true"/>
+    <component :is="bloc.type" :id="bloc.id" :ok="true" />
   </div>
   <!-- {{ pages[0].bloc }} -->
   <!-- {{selectedPage.id }} id page -->
@@ -55,6 +65,9 @@ export default {
   <!-- <CardText /> -->
   <!-- <TTBI />
   <ITTB /> -->
+  <!-- <BlocTitreBtn /> -->
+  <!-- <CardExp /> -->
+   <!-- <BlocParg /> -->
 </template>
 
 <style lang="scss" scoped></style>

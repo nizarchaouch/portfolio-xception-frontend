@@ -1,26 +1,73 @@
 <script>
+import { mapState, mapActions } from "vuex";
 import DialogDetail from "@/components/offer/DialogDetail.vue";
 import NavBar from "@/components/public/NavBar.vue";
 import FilterOffer from "@/components/offer/FilterOffer.vue";
-import { mapState, mapActions } from "vuex";
 export default {
   name: "offer",
-  computed: {
-    ...mapState(["offer","candOffer"]),
-    offerShow() {
-      return this.offer.offerData;
-    },
-  },
   components: {
     NavBar,
     DialogDetail,
     FilterOffer,
   },
+  computed: {
+    ...mapState(["offer", "candOffer"]),
+    offerShow() {
+      return this.offer.offerData;
+    },
+    filteredOffers() {
+      let filtered = this.offerShow;
+
+      // Appliquer le filtre par recherche
+      if (this.search.trim() !== "") {
+        filtered = filtered.filter((item) => {
+          if (item) {
+            return (
+              item.nomEntreprise
+                .toLowerCase()
+                .includes(this.search.toLowerCase()) ||
+              item.titre.toLowerCase().includes(this.search.toLowerCase()) ||
+              item.description.toLowerCase().includes(this.search.toLowerCase())
+            );
+          } else {
+            return false;
+          }
+        });
+      }
+
+      // Appliquer le filtre par localite, typeContrat, langue
+      if (this.filter.localite.length > 0) {
+        filtered = filtered.filter((item) =>
+          this.filter.localite.includes(item.position)
+        );
+      }
+
+      if (this.filter.typeContrat.length > 0) {
+        filtered = filtered.filter((item) =>
+          this.filter.typeContrat.includes(item.typeOffer)
+        );
+      }
+
+      if (this.filter.langue.length > 0) {
+        filtered = filtered.filter((item) =>
+          this.filter.langue.includes(item.langue)
+        );
+      }
+
+      if (this.filter.genre.length > 0) {
+        filtered = filtered.filter((item) =>
+          this.filter.genre.includes(item.genre)
+        );
+      }
+
+      return filtered;
+    },
+  },
   data: () => ({
     toggle: "card",
     search: "",
     tab: 1,
-    filter: { localite: null, typeContrat: null, langue: null },
+    filter: { localite: [], typeContrat: [], langue: [], genre: [] },
   }),
   methods: {
     ...mapActions(["userAuth", "showOffer"]),
@@ -45,8 +92,12 @@ export default {
     {{ candOffer.message }}
   </v-snackbar>
   <NavBar />
-  <v-card class="mt-16 bg-transparent">
-    <v-data-iterator :items="offerShow" :items-per-page="6" :search="search">
+  <v-card class="mt-16 bg-transparent" flat>
+    <v-data-iterator
+      :items="filteredOffers"
+      :items-per-page="6"
+      :search="search"
+    >
       <template v-slot:header>
         <v-container fluid>
           <v-row class="mt-4">
@@ -86,7 +137,6 @@ export default {
           </v-row>
         </v-container>
       </template>
-
       <template v-slot:default="{ items }">
         <v-container class="pa-2" fluid v-if="toggle === 'card'">
           <v-row dense>
@@ -206,4 +256,4 @@ export default {
     </v-data-iterator>
   </v-card>
 </template>
-<style lang=""></style>
+<style lang="scss"></style>

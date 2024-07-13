@@ -52,19 +52,18 @@ export default {
             // {
             //   id: 0,
             //   type: "ITTB",
-            //   content: "Welcome to the homepage!",
-            //   setting: {
+            //   settings: {
             //     titre: {
             //       affiche: true,
-            //       color: "black",
+            //       color: "white",
             //       selectStyle: "Titer 4",
             //       size: 100,
             //       selectPolice: "Frank Ruhl Libre",
-            //       nom: "Noter Projet",
+            //       nom: "Noter ",
             //     },
             //     parg: {
             //       affiche: true,
-            //       color: "#6F6F6F",
+            //       color: "white",
             //       selectStyle: "Titer 4",
             //       size: 20,
             //       selectPolice: "Average Sans",
@@ -179,5 +178,22 @@ export default {
         state.portfolios.pages[pageIndex].bloc[i].id++;
       }
     },
+
+    // async upload(ctx, data) {
+    //   try {
+    //     let formData = new FormData();
+    //     formData.append("file", data.file);
+
+    //     const uploadResponse = await axios.post(
+    //       "http://localhost:8000/uploadCv",
+    //       formData
+    //     );
+    //     data.cvPath = uploadResponse.data.cvpath;
+    //   } catch (error) {
+    //     console.error("Erreur lors du téléchargement d'un file :", error);
+    //     ctx.state.alert = true;
+    //     ctx.commit("setMes", "Erreur lors du téléchargement d'un file");
+    //   }
+    // },
   },
 };
