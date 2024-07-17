@@ -1,12 +1,14 @@
 <script>
 import { mapState, mapActions, mapMutations } from "vuex";
 import { cityName } from "@/components/city";
+import { secteurName } from "@/components/secteur";
 export default {
   data: () => ({
     form: true,
     visible: false,
     loading: false,
     cityName,
+    secteurName,
     passwordcheck: "",
     data: {
       imageUrl: "https://shorter.me/pW1kn",
@@ -250,14 +252,22 @@ export default {
                 ></v-text-field>
               </v-col>
               <v-col cols="12" sm="6">
-                <v-text-field
+                <!-- <v-text-field
                   label="Secteur*"
                   placeholder="Informatique"
                   class="me-2"
                   v-model="data.secteur"
                   :rules="[rules.required]"
                   :disabled="loading"
-                ></v-text-field>
+                ></v-text-field> -->
+                <v-autocomplete
+                  :items="secteurName"
+                  label="Secteur*"
+                  placeholder="Informatique"
+                  v-model="data.secteur"
+                  :rules="[rules.required]"
+                  :disabled="loading"
+                ></v-autocomplete>
               </v-col>
             </v-row>
             <!-- identifiant unique and logo -->

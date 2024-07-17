@@ -1,16 +1,55 @@
 import axios from "axios";
 export default {
-  state: { alert: false, message: "", InfoRec: [] },
+  state: {
+    alert: false,
+    message: "",
+    InfoRec: [],
+    recruteurs: [],
+    recuVerif: 0,
+  },
+  getters: {
+    recuCount(state) {
+      return state.recruteurs.length;
+    },
+  },
   mutations: {
     setMes(state, message) {
       state.message = message;
     },
     setInfo(state, info) {
       state.InfoRec = info;
-      console.log('inforec',info);
+      // console.log("inforec", info);
+    },
+    setRecu(state, recruteurs) {
+      state.recruteurs = recruteurs;
+      recruteurs.forEach((recruteur) => {
+        if (recruteur.verifier) {
+          state.recuVerif++;
+        }
+      });
+    },
+    RestCountRecu(state) {
+      state.recuVerif = 0;
     },
   },
   actions: {
+    async getRecruteurs(ctx) {
+      try {
+        const recruteurs = await axios.get(
+          `http://localhost:8000/api/user/recruteurs`,
+          {
+            headers: { "Content-type": "application/json" },
+            withCredentials: true,
+          }
+        );
+        if (recruteurs.status === 200) {
+          // console.log(recruteurs.data[0]);
+          ctx.commit("setRecu", recruteurs.data);
+        }
+      } catch (error) {
+        console.error("Erreur lors du get candidats :", error);
+      }
+    },
     async infoRec(ctx, id) {
       try {
         const response = await axios.get(

@@ -80,7 +80,8 @@ export default {
     await this.userAuth();
     if (
       this.user.authenticated === false ||
-      this.user.userData.role === "candidat"
+      this.user.userData.role === "candidat" ||
+      this.user.userData.role === "admin"
     ) {
       this.$router.push("login");
     } else {

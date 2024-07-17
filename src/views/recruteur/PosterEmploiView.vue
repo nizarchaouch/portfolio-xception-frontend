@@ -15,19 +15,23 @@ export default {
       drawer: true,
       form: false,
       typeEmploi: [
-        "CDI",
-        "CDD",
+        "CDI ",
+        "CDD ",
         "CIVP",
         "Karama",
         "Temps plein",
         "Saisonnier",
-        "Freelance / Indépendant",
         "Temps partiel",
+        "Freelance / Indépendant",
         "Stage",
+        "Alternance ",
+        "Contrat saisonnier",
+        "Contrat d'apprentissage",
       ],
       data: {
         idRec: "",
         nomEntreprise: "",
+        secteur: "",
         logo: "",
         position: "",
         titre: "",
@@ -54,6 +58,7 @@ export default {
       if (this.form) {
         this.data.idRec = this.userData._id;
         this.data.nomEntreprise = this.userData.nomEntreprise;
+        this.data.secteur = this.userData.secteur;
         this.data.logo = this.userData.logoPath;
         this.data.position = this.userData.adress;
         await this.addOffer(this.data);
@@ -67,7 +72,8 @@ export default {
     await this.userAuth();
     if (
       this.user.authenticated === false ||
-      this.user.userData.role === "candidat"
+      this.user.userData.role === "candidat" ||
+      this.user.userData.role === "admin"
     ) {
       this.$router.push("login");
     }

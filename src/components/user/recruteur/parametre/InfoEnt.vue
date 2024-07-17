@@ -1,6 +1,7 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import { cityName } from "@/components/city";
+import { secteurName } from "@/components/secteur";
 export default {
   computed: {
     ...mapState(["user", "profilRec"]),
@@ -8,6 +9,7 @@ export default {
   data() {
     return {
       cityName,
+      secteurName,
       form: false,
       loading: false,
       logoForUpload: null,
@@ -154,13 +156,20 @@ export default {
           <h4 class="mb-4 text-medium-emphasis">
             Secteur <span class="text-red">*</span>
           </h4>
-          <v-text-field
+          <!-- <v-text-field
             v-model="secteur"
             variant="outlined"
             color="blue"
             :rules="[rules.required]"
           >
-          </v-text-field>
+          </v-text-field> -->
+          <v-autocomplete
+            v-model="secteur"
+            :items="secteurName"
+            color="blue"
+            variant="outlined"
+            :rules="[rules.required]"
+          ></v-autocomplete>
         </v-col>
         <!-- fondee & adress -->
         <v-col cols="12" md="3">

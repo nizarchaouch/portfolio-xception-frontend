@@ -1,20 +1,31 @@
 <script>
 import { cityName } from "../city";
+import { secteurName } from "../secteur";
 export default {
   data: () => ({
     cityName,
+    secteurName,
     sheet: false,
-    filter: { localite: [], typeContrat: [], langue: [], genre: [] },
+    filter: {
+      localite: [],
+      typeContrat: [],
+      secteur: [],
+      langue: [],
+      genre: [],
+    },
     typeContrat: [
-      "CDI",
-      "CDD",
+      "CDI ",
+      "CDD ",
       "CIVP",
       "Karama",
       "Temps plein",
       "Saisonnier",
-      "Freelance / Indépendant",
       "Temps partiel",
+      "Freelance / Indépendant",
       "Stage",
+      "Alternance ",
+      "Contrat saisonnier",
+      "Contrat d'apprentissage",
     ],
     langue: ["Français", "Anglais"],
   }),
@@ -100,6 +111,26 @@ export default {
                 color="blue"
                 v-model="filter.typeContrat"
                 v-for="item in typeContrat"
+                :key="item"
+                :label="item"
+                :value="item"
+              >
+              </v-checkbox>
+            </template>
+          </v-expansion-panel>
+          <v-expansion-panel
+            class="my-2 overflow-auto"
+            rounded="lg"
+            style="max-height: 300px"
+          >
+            <template v-slot:title>
+              <p class="text-body-1 font-weight-bold">Secteur</p>
+            </template>
+            <template v-slot:text>
+              <v-checkbox
+                color="blue"
+                v-model="filter.secteur"
+                v-for="item in secteurName"
                 :key="item"
                 :label="item"
                 :value="item"

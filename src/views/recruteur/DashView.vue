@@ -18,6 +18,9 @@ export default {
     countApp() {
       return this.candOffer.countApp || [];
     },
+    AppPerMonth() {
+      return this.candOffer.AppPerMonth;
+    },
   },
   data() {
     return {
@@ -52,18 +55,34 @@ export default {
         window.location.reload();
       }, 1000);
     },
+
+    OffersPerMonth() {
+      const offersPerMonth = new Array(12).fill(0);
+      this.offerData.forEach((offer) => {
+        const month = new Date(offer.date_creation).getMonth() + 1;
+        offersPerMonth[month]++;
+      });
+      return (this.offersPerMonth = offersPerMonth);
+      // console.log(offersPerMonth);
+    },
   },
   async mounted() {
     await this.userAuth();
     if (
       this.user.authenticated === false ||
-      this.user.userData.role === "candidat"
+      this.user.userData.role === "candidat" ||
+      this.user.userData.role === "admin"
     ) {
       this.$router.push("login");
     } else {
       await this.showOfferRec(this.user.userData._id);
-      this.initializeChart();
       this.extractOfferIds();
+      setTimeout(() => {
+        this.initializeChart({
+          offer: this.OffersPerMonth(),
+          applique: this.AppPerMonth,
+        });
+      }, 10);
     }
   },
 };
@@ -258,7 +277,7 @@ export default {
           <v-col cols="12" class="px-5">
             <v-table hover>
               <thead>
-                <tr class="bg-grey-lighten-2">
+                <tr  class="bg-blue-lighten-4">
                   <th class="text-left" style="width: 30%">Emploi</th>
                   <th class="text-left" style="width: 20%">Date de création</th>
                   <th class="text-left" style="width: 20%">Applications</th>

@@ -14,29 +14,47 @@ export default {
     },
   },
   actions: {
-    initializeChart({ commit }) {
+    initializeChart({ commit }, { offer, applique }) {
       const ctx = document.getElementById("myChart");
       const ctx2 = document.getElementById("myChart2");
+      // console.log("applique:", applique);
+      // console.log("offer:", offer);
 
       const chartInstance = new Chart(ctx, {
         type: "bar",
         data: {
-          labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+          labels: [
+            "Janvier",
+            "Février",
+            "Mars",
+            "Avril",
+            "Mai",
+            "Juin",
+            "Juillet",
+            "Août",
+            "Septembre",
+            "Octobre",
+            "Novembre",
+            "Décembre",
+          ],
           datasets: [
             {
-              type: "bar",
-              label: "Bar Dataset",
-              data: [20, 10, 30, 15],
-            },
-            {
-              type: "bar",
-              label: "Bar Dataset",
-              data: [20, 10, 30, 15],
-            },
-            {
+              order: 1,
               type: "line",
-              label: "Line Dataset",
-              data: [10, 30, 10, 5],
+              label: "Offres",
+              data: offer,
+            },
+            {
+              type: "bar",
+              label: "Bar Dataset",
+              data: [0,0,0,0,0,0,0.5,2,0],
+              order: 2,
+            },
+            {
+              type: "bar",
+              label: "Candidats",
+              data: applique,
+              order: 2,
             },
           ],
         },

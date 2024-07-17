@@ -10,6 +10,7 @@ export default {
     alert: false,
     message: "",
     color: "",
+    AppPerMonth: new Array(12).fill(0),
   },
   mutations: {
     setCandData(state, candata) {
@@ -22,17 +23,26 @@ export default {
       state.countApp.push({ id, count });
       state.totalCandOffers += count;
       for (let index = 0; index < etat.length; index++) {
+        const month = new Date(etat[index].date).getMonth();
+        if (!state.AppPerMonth[month]) {
+          state.AppPerMonth[month] = 0;
+        }
+        state.AppPerMonth[month + 1]++;
+
         if (etat[index].etat == "En Attend") {
           state.totalCandWait += 1;
-          // console.log("count etat attend", etat.length);
         }
+        // console.log("count etat attend", etat.length);
       }
+      // console.log(state.AppPerMonth);
+      // console.log(state.totalCandWait);
       // console.log("Total candOffers count:", state.totalCandOffers);
     },
     RestCountApp(state) {
       state.countApp = [];
       state.totalCandOffers = 0;
       state.totalCandWait = 0;
+      state.AppPerMonth = new Array(12).fill(0);
     },
     setMes(state, { message, color }) {
       state.message = message;
@@ -100,7 +110,7 @@ export default {
         const count = response.data.candOffers.length || 0;
         const etat = response.data.candOffers;
         ctx.commit("setCountApp", { id, count, etat });
-        console.log("tt", etat);
+        // console.log("tt", etat);
       } catch (error) {
         console.error("Erreur lors de l'affichage des candidateurs :", error);
       }

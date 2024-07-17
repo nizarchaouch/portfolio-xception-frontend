@@ -44,8 +44,9 @@ export default {
           v-for="(item, i) in itemsRec"
           :key="i"
           :value="item"
-          color="primary"
+          color="indigo"
           :to="item.to"
+          style="border-radius: 30px 0 0 30px;"
         >
           <template v-slot:prepend>
             <v-icon :icon="item.icon" class="mt-2" size="27"></v-icon>

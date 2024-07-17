@@ -13,6 +13,7 @@ export default {
   computed: {
     ...mapState(["offer", "candOffer"]),
     offerShow() {
+      console.log(this.offer.offerData);
       return this.offer.offerData;
     },
     filteredOffers() {
@@ -47,6 +48,11 @@ export default {
           this.filter.typeContrat.includes(item.typeOffer)
         );
       }
+      if (this.filter.secteur.length > 0) {
+        filtered = filtered.filter((item) =>
+          this.filter.secteur.includes(item.secteur)
+        );
+      }
 
       if (this.filter.langue.length > 0) {
         filtered = filtered.filter((item) =>
@@ -67,7 +73,13 @@ export default {
     toggle: "card",
     search: "",
     tab: 1,
-    filter: { localite: [], typeContrat: [], langue: [], genre: [] },
+    filter: {
+      localite: [],
+      typeContrat: [],
+      secteur: [],
+      langue: [],
+      genre: [],
+    },
   }),
   methods: {
     ...mapActions(["userAuth", "showOffer"]),

@@ -1,12 +1,36 @@
 import axios from "axios";
 export default {
-  state: { alert: false, message: "", candidats: [] },
+  state: {
+    alert: false,
+    message: "",
+    candidats: [],
+    lasteUser: [],
+    candVerif: 0,
+  },
+  getters: {
+    candCount(state) {
+      return state.candidats.length;
+    },
+  },
   mutations: {
     setMes(state, message) {
       state.message = message;
     },
+    setLastUser(state, lasteUser) {
+      state.lasteUser = lasteUser;
+    },
     setCand(state, candidats) {
       state.candidats = candidats;
+      // console.log(candidats);
+      candidats.forEach((candidat) => {
+        if (candidat.verifier) {
+          state.candVerif++;
+        }
+      });
+      // console.log(state.candVerif);
+    },
+    RestCountCand(state) {
+      state.candVerif = 0;
     },
   },
   actions: {
@@ -22,7 +46,7 @@ export default {
         if (uploadResponse.data.imagepath != "") {
           data.imagePath = uploadResponse.data.imagepath;
         }
-        console.log("data", data);
+        // console.log("data", data);
 
         const updateUserResponse = await axios.put(
           `http://localhost:8000/api/user/update/${data.id}`,
@@ -84,11 +108,28 @@ export default {
           }
         );
         if (candidats.status === 200) {
-          console.log(candidats.data[0]);
+          // console.log(candidats.data[0]);
           ctx.commit("setCand", candidats.data);
         }
       } catch (error) {
         console.error("Erreur lors du get candidats :", error);
+      }
+    },
+    async getLastUser(ctx) {
+      try {
+        const users = await axios.get(
+          `http://localhost:8000/api/user/laste_user`,
+          {
+            headers: { "Content-type": "application/json" },
+            withCredentials: true,
+          }
+        );
+        if (users.status === 200) {
+          // console.log(users.data[0]);
+          ctx.commit("setLastUser", users.data);
+        }
+      } catch (error) {
+        console.error("Erreur lors du get users :", error);
       }
     },
   },

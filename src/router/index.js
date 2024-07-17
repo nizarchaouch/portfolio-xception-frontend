@@ -1,15 +1,19 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import Login from "@/views/auth/LoginView.vue";
+import LoginAddmin from "@/views/admin/auth/LoginView.vue";
 import Signup from "@/views/auth/SignupView";
 import ForgotPwd from "@/views/auth/ForgotView.vue";
+import ForgotPwdAdmin from "@/views/admin/auth/ForgotView.vue";
 import ResetPwd from "@/views/auth/RestView.vue";
+import ResetPwdAdmin from "@/views/admin/auth/RestView.vue";
 import ProfilView from "@/views/candidat/profil/ProfilView.vue";
 import TemplateView from "@/views/TemplateView.vue";
 import OfferView from "@/views/OfferView.vue";
 import PortfolioView from "@/views/candidat/portfolio/PortfolioView.vue";
 import CandidatureView from "@/views/candidat/CandidatureView.vue";
 import DashView from "@/views/recruteur/DashView.vue";
+import DashAdmin from "@/views/admin/DashView.vue";
 import PosterEmploi from "@/views/recruteur/PosterEmploiView.vue";
 import MonProfil from "@/views/recruteur/ProfilView.vue";
 import MesEmplois from "@/views/recruteur/EmploisView.vue";
@@ -21,6 +25,11 @@ const routes = [
     path: "/",
     name: "home",
     component: HomeView,
+  },
+  {
+    path: "/admin/Login",
+    name: "loginAddmin",
+    component: LoginAddmin,
   },
   {
     path: "/Login",
@@ -38,9 +47,19 @@ const routes = [
     component: ForgotPwd,
   },
   {
+    path: "/admin/forgot_password",
+    name: "forgotpwd",
+    component: ForgotPwdAdmin,
+  },
+  {
     path: "/reset_password/:token",
     name: "resetpwd",
     component: ResetPwd,
+  },
+  {
+    path: "/admin/reset_password/:token",
+    name: "resetpwd",
+    component: ResetPwdAdmin,
   },
   {
     path: "/profil",
@@ -71,6 +90,11 @@ const routes = [
     path: "/dashboard",
     name: "dashboard",
     component: DashView,
+  },
+  {
+    path: "/admin/dashboard",
+    name: "dashboardAdmin",
+    component: DashAdmin,
   },
   {
     path: "/PosterEmploi",

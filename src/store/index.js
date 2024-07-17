@@ -10,6 +10,7 @@ import portfolio from "./portfolio/elements";
 import fonts from "./portfolio/fonts";
 import candOffer from "./Candidature/candOffer";
 import chartRec from "./recruteur/chart";
+import chartAdmin from "./admin/chart";
 import profilRec from "./recruteur/profil";
 // import usersUpdate from "./users/profil";
 
@@ -29,6 +30,7 @@ export default createStore({
     fonts,
     candOffer,
     chartRec,
+    chartAdmin,
     profilRec,
     // usersUpdate,
   },

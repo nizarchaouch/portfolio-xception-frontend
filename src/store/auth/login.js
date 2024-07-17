@@ -2,7 +2,7 @@ import router from "@/router";
 import axios from "axios";
 
 export default {
-  state: { alert: false, message: "", userData: "" },
+  state: { alert: false, message: "", userData: "", adminData: "" },
   getters: {},
   mutations: {
     setMes(state, message) {
@@ -41,6 +41,34 @@ export default {
         } else {
           ctx.state.alert = true;
           ctx.commit("setMes", "utilisateur non trouvé");
+        }
+      }
+    },
+
+    async loginAdmin(ctx, data) {
+      try {
+        const response = await axios.post(
+          "http://localhost:8000/api/admin/login",
+          JSON.stringify(data),
+          {
+            headers: { "Content-type": "application/json" },
+            withCredentials: true,
+          }
+        );
+        console.log(data);
+        if (response.status === 200) {
+          console.log("Login successful");
+
+          await router.push("/admin/dashboard");
+        }
+      } catch (error) {
+        console.log("Error during login:", error.message);
+        if (error.response.status === 400) {
+          ctx.state.alert = true;
+          ctx.commit("setMes", "E-mail ou Mot de passe incorrect");
+        } else {
+          ctx.state.alert = true;
+          ctx.commit("setMes", "admin non trouvé");
         }
       }
     },
