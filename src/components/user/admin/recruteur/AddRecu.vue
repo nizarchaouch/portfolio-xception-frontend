@@ -4,7 +4,7 @@ import { secteurName } from "@/components/secteur";
 import { cityName } from "@/components/city";
 import defaultprofil from "@/assets/defaultprofil.png";
 export default {
-  props: { obj: String },
+  props: { obj: Object, role: Boolean },
   computed: {
     ...mapState(["user", "offer", "profilRec"]),
   },
@@ -16,7 +16,7 @@ export default {
       secteurName,
       loading: false,
       logoForUpload: null,
-      logoPath: defaultprofil,
+      logoPath: "/defaultprofil.png",
       nomEntreprise: "",
       fondee: null,
       taill_ent: "",
@@ -33,7 +33,7 @@ export default {
       tel: null,
       civilite: "",
       password: "",
-      socialLinks: [],
+      socialLinks: [{ platform: "", url: "" }],
       platformOptions: [
         "Twitter",
         "Facebook",
@@ -65,7 +65,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["userAuth", "updatedOffer", "addRecu"]),
+    ...mapActions(["userAuth", "updatedOffer", "addRecu", "updated"]),
     addLink() {
       this.socialLinks.push({ platform: "", url: "" });
     },
@@ -116,7 +116,15 @@ export default {
           password: this.password,
         };
         this.loading = true;
-        this.addRecu(data);
+        if (this.obj) {
+          data.id = this.obj._id;
+          if (!data.password) {
+            delete data.password;
+          }
+          this.updated(data);
+        } else {
+          this.addRecu(data);
+        }
         setTimeout(() => {
           this.loading = false;
           if (this.profilRec.message === "Ajouté avec succès") {
@@ -129,9 +137,26 @@ export default {
     },
   },
   created() {
-    this.socialLinks = this.user.userData.socialLinks || [
-      { platform: "LinkedIn", url: "" },
-    ];
+    if (this.obj) {
+      this.socialLinks = this.obj.socialLinks || [
+        { platform: "LinkedIn", url: "" },
+      ];
+      this.logoPath = this.obj.logoPath;
+      this.nomEntreprise = this.obj.nomEntreprise;
+      this.secteur = this.obj.secteur;
+      this.description = this.obj.description;
+      this.adress = this.obj.adress;
+      this.identifiant = this.obj.identifiant;
+      this.fondee = this.obj.fondee;
+      this.taill_ent = this.obj.taill_ent;
+      this.imagePath = "http://localhost:8000" + this.obj.imagePath;
+      this.nom = this.obj.nom;
+      this.prenom = this.obj.prenom;
+      this.civilite = this.obj.civilite;
+      this.dateNais = this.obj.dateNais;
+      this.tel = this.obj.tel;
+      this.mail = this.obj.mail;
+    }
   },
   async mounted() {
     await this.userAuth();
@@ -155,27 +180,34 @@ export default {
     {{ profilRec.message }}
   </v-snackbar>
   <v-dialog v-model="dialog" transition="dialog-bottom-transition" fullscreen>
+    {{ console.log(obj) }}
     <template v-slot:activator="{ props: activatorProps }">
       <v-btn
+        v-if="this.role"
         v-bind="activatorProps"
         class="text-none"
         color="blue"
         variant="tonal"
         rounded
         prepend-icon="mdi-plus"
-        >Ajouter</v-btn
       >
+        Ajouter
+      </v-btn>
+      <v-btn v-else v-bind="activatorProps" variant="plain" class="mt-1" icon>
+        <v-icon size="30">mdi-progress-pencil</v-icon>
+      </v-btn>
     </template>
     <v-form @submit.prevent="submitForm" v-model="form">
       <v-toolbar color="white">
         <v-btn icon="mdi-close" @click="this.dialog = false"></v-btn>
 
-        <v-toolbar-title>Ajouter un recruteur</v-toolbar-title>
+        <v-toolbar-title v-if="this.role">Ajouter un recruteur</v-toolbar-title>
+        <v-toolbar-title v-else>Modifier le recruteur</v-toolbar-title>
         <v-spacer></v-spacer>
 
         <v-toolbar-items>
           <v-btn
-            text="Enregistrer le recruteur"
+            text="Enregistrer"
             color="indigo"
             type="submit"
             class="text-none font-weight-bold"
@@ -214,13 +246,17 @@ export default {
                           floating
                           color="blue"
                           icon="mdi-image-edit-outline"
-                          offset-y="15"
-                          offset-x="30"
+                          offset-y="12"
+                          offset-x="8"
                         >
                           <v-avatar
                             size="150"
                             rounded="0"
-                            :image="logoPreviewUrl || logoPath"
+                            :image="
+                              defaultprofil ||
+                              logoPreviewUrl ||
+                              'http://localhost:8000' + logoPath
+                            "
                           >
                           </v-avatar>
                         </v-badge>
@@ -299,7 +335,8 @@ export default {
                   ></v-select>
                   <!-- tel -->
                   <h4 class="mb-4 text-medium-emphasis">
-                    Identifiant Unique (RC/ RNE / MF) *
+                    Identifiant Unique (RC/ RNE / MF)
+                    <span class="text-red">*</span>
                   </h4>
                   <v-text-field
                     v-model="identifiant"
@@ -349,8 +386,8 @@ export default {
                           floating
                           color="blue"
                           icon="mdi-image-edit-outline"
-                          offset-y="15"
-                          offset-x="30"
+                          offset-y="12"
+                          offset-x="8"
                         >
                           <v-avatar
                             size="150"
@@ -445,7 +482,7 @@ export default {
                 </v-col>
               </v-row>
               <v-row no-gutters>
-                <v-col cols="12">
+                <v-col cols="12" v-if="this.role">
                   <!-- pwd -->
                   <h4 class="mb-4 text-medium-emphasis">
                     Mots de passe<span class="text-red">*</span>
@@ -456,6 +493,16 @@ export default {
                     color="blue"
                     variant="outlined"
                     :rules="[rules.required, rules.counter]"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" v-else>
+                  <!-- pwd -->
+                  <h4 class="mb-4 text-medium-emphasis">Mots de passe</h4>
+                  <v-text-field
+                    v-model="password"
+                    density="comfortable"
+                    color="blue"
+                    variant="outlined"
                   ></v-text-field>
                 </v-col>
               </v-row>

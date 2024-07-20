@@ -10,7 +10,13 @@ import DialogDetail from "@/components/user/recruteur/para_offer/DialogVoirDeta.
 import DialogModifier from "@/components/user/recruteur/para_offer/ModifierOffer.vue";
 import AddRecu from "@/components/user/admin/recruteur/AddRecu.vue";
 export default {
-  components: { NavBar, SideAdmin, DialogDetail, DialogModifier, AddRecu },
+  components: {
+    NavBar,
+    SideAdmin,
+    DialogDetail,
+    DialogModifier,
+    AddRecu,
+  },
   computed: {
     ...mapState(["user", "offer", "candOffer", "profilRec"]),
     ...mapGetters(["offerCount", "latestOffers", "getrecu", "recuCount"]),
@@ -207,7 +213,7 @@ export default {
                     Liste d'entreprises
                     <span class="text-grey-darken-2">({{ recuCount }})</span>
                   </h3>
-                  <AddRecu />
+                  <AddRecu :role="true" />
                 </v-col>
                 <v-col cols="12" md="3" class="mb-2">
                   <h5 class="ms-1">Recherche</h5>
@@ -363,15 +369,21 @@ export default {
                         variant="text"
                         append-icon="mdi-chevron-right"
                         color="light-blue-darken-4"
+                        target="_blank"
+                        :to="{
+                          name: 'profilRec',
+                          params: {
+                            name: item.nomEntreprise,
+                            id: item._id,
+                          },
+                        }"
                       >
                         <p class="text-subtitle-1 font-weight-bold">
                           Voir le profil
                         </p>
                       </v-btn>
                       <!-- setting -->
-                      <v-btn variant="plain" class="mt-1" icon>
-                        <v-icon size="30">mdi-progress-pencil</v-icon>
-                      </v-btn>
+                      <AddRecu :obj="item" />
                       <v-btn
                         variant="plain"
                         class="mt-1"

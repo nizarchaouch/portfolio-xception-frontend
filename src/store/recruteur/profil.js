@@ -85,6 +85,17 @@ export default {
         if (uploadResponse.data.imagepath != "") {
           data.imagePath = uploadResponse.data.imagepath;
         }
+        let formDataLogo = new FormData();
+        formDataLogo.append("logo", data.logoForUpload);
+
+        const uploadLogoResponse = await axios.post(
+          "http://localhost:8000/upload/logo",
+          formDataLogo
+        );
+        // if (uploadLogoResponse.data.logopath != "") {
+          data.logoPath = uploadLogoResponse.data.logopath;
+        // }
+
         console.log("data", data);
 
         const updateUserResponse = await axios.put(
@@ -96,15 +107,21 @@ export default {
           }
         );
 
-        if (updateUserResponse.status === 201) {
+        if (updateUserResponse.status === 200) {
           console.log("Mise à jour réussie");
           ctx.state.alert = true;
-          ctx.commit("setMes", "Mise à jour réussie");
+          ctx.commit("setMes", {
+            message: "Mise à jour réussie",
+            color: "blue-darken-2",
+          });
         }
       } catch (error) {
         console.error("Erreur lors de la mise à jour :", error);
         ctx.state.alert = true;
-        ctx.commit("setMes", "Erreur lors de la mise à jour");
+        ctx.commit("setMes", {
+          message: "Erreur lors de la mise à jour",
+          color: "red",
+        });
       }
     },
     async upload(ctx, data) {

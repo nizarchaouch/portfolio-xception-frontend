@@ -1,8 +1,8 @@
 <script>
+import { mapState, mapActions, mapGetters } from "vuex";
 import DialogDetail from "@/components/offer/DialogDetail.vue";
 import NavBar from "@/components/public/NavBar.vue";
 import SideBar from "@/components/user/recruteur/SideBar.vue";
-import { mapState, mapActions, mapGetters } from "vuex";
 export default {
   props: { id: String },
   components: { NavBar, SideBar, DialogDetail },
@@ -21,12 +21,20 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["userAuth", "showOfferRec", "infoRec"]),
+    ...mapActions(["userAuth", "showOfferRec", "infoRec", "updateVerif"]),
     scrollToOffer() {
       const element = document.getElementById("listeOffer");
       if (element) {
         element.scrollIntoView({ behavior: "smooth" });
       }
+    },
+    changeEtat(id, verifier, statut) {
+      const data = {
+        id: id,
+        verifier: verifier,
+        statut: statut,
+      };
+      this.updateVerif(data);
     },
   },
   async mounted() {
@@ -88,12 +96,60 @@ export default {
                   <span class="text-subtitle-1 text-medium-emphasis">
                     {{ userData.secteur }}
                   </span>
+                  <div
+                    class="d-flex"
+                    v-if="this.user.userData.role === 'admin'"
+                  >
+                    <v-switch
+                      hide-details
+                      color="green"
+                      class="me-4"
+                      v-model="userData.verifier"
+                      @change="
+                        changeEtat(
+                          userData._id,
+                          userData.verifier,
+                          userData.statut
+                        )
+                      "
+                    >
+                      <template v-slot:label>
+                        <p class="text-black">
+                          {{ userData.verifier ? "vérifié" : "non vérifié" }}
+                        </p>
+                      </template>
+                    </v-switch>
+                    <v-switch
+                      hide-details
+                      color="green"
+                      v-model="userData.statut"
+                      @change="
+                        changeEtat(
+                          userData._id,
+                          userData.verifier,
+                          userData.statut
+                        )
+                      "
+                    >
+                      <template v-slot:label>
+                        <p class="text-black">
+                          {{ userData.statut ? "activé" : "désactivé" }}
+                        </p>
+                      </template>
+                    </v-switch>
+                  </div>
                 </v-col>
                 <!-- Suivez-nous sur -->
                 <v-col cols="auto">
                   <v-row class="mt-2" no-gutters>
                     <v-col cols="auto" class="mt-1">
-                      <span class="font-weight-bold text-h6 ms-lg-9">
+                      <span
+                        class="font-weight-bold text-h6 ms-lg-9"
+                        v-if="
+                          userData.socialLinks &&
+                          userData.socialLinks.length > 0
+                        "
+                      >
                         Suivez-nous sur:
                       </span>
                     </v-col>
