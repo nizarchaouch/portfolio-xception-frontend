@@ -115,5 +115,22 @@ export default {
         console.error("Erreur lors de l'affichage des candidateurs :", error);
       }
     },
+
+    async deleteCandOffer(ctx, id) {
+      try {
+        const response = await axios.delete(
+          `http://localhost:8000/api/candidature/deleteCandOffer/${id}`,
+          {
+            headers: { "Content-type": "application/json" },
+            withCredentials: true,
+          }
+        );
+        if (response.status === 200) {
+          console.log("supprime");
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    },
   },
 };

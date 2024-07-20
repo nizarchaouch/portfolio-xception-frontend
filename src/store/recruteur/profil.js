@@ -3,6 +3,7 @@ export default {
   state: {
     alert: false,
     message: "",
+    color: "",
     InfoRec: [],
     recruteurs: [],
     recuVerif: 0,
@@ -11,10 +12,15 @@ export default {
     recuCount(state) {
       return state.recruteurs.length;
     },
+    getrecu(state) {
+      // console.log(state.recruteurs[0]);
+      return state.recruteurs;
+    },
   },
   mutations: {
-    setMes(state, message) {
-      state.message = message;
+    setMes(state, payload) {
+      state.message = payload.message;
+      state.color = payload.color;
     },
     setInfo(state, info) {
       state.InfoRec = info;
@@ -127,6 +133,109 @@ export default {
         console.error("Erreur lors du changement de logo :", error);
         ctx.state.alert = true;
         ctx.commit("setMes", "Erreur lors du changement de logo");
+      }
+    },
+    async addRecu(ctx, data) {
+      try {
+        let formData = new FormData();
+        formData.append("image", data.fileForUpload);
+
+        const uploadResponse = await axios.post(
+          "http://localhost:8000/upload",
+          formData
+        );
+        data.imagePath = uploadResponse.data.imagepath;
+
+        let formDataLogo = new FormData();
+        formDataLogo.append("logo", data.logoForUpload);
+
+        const uploadLogoResponse = await axios.post(
+          "http://localhost:8000/upload/logo",
+          formDataLogo
+        );
+        data.logoPath = uploadLogoResponse.data.logopath;
+        // console.log("data", data);
+        const response = await axios.post(
+          "http://localhost:8000/api/user/add_recruteur",
+          JSON.stringify(data),
+          {
+            headers: { "Content-type": "application/json" },
+            withCredentials: true,
+          }
+        );
+        // console.log(updateUserResponse);
+        // console.log("data", data);
+        if (response.status === 201) {
+          console.log("Add recu successful");
+          ctx.state.alert = true;
+          ctx.commit("setMes", {
+            message: "Ajouté avec succès",
+            color: "blue-darken-2",
+          });
+        }
+      } catch (error) {
+        console.error(
+          "Erreur lors de l'inscription :",
+          error.response.data.error
+        );
+        ctx.state.alert = true;
+        ctx.commit("setMes", {
+          message: error.response.data.error,
+          color: "red",
+        });
+      }
+    },
+    async deltRecu(ctx, id) {
+      try {
+        const response = await axios.delete(
+          `http://localhost:8000/api/user/delete_recruteur/${id}`,
+          {
+            headers: { "Content-type": "application/json" },
+            withCredentials: true,
+          }
+        );
+        console.log(response);
+        if (response.status === 200) {
+          ctx.state.alert = true;
+          ctx.commit("setMes", {
+            message: response.data.message,
+            color: "blue-darken-2",
+          });
+        }
+      } catch (error) {
+        console.error("Erreur lors de l'inscription :", error);
+        ctx.state.alert = true;
+        ctx.commit("setMes", {
+          message: error.response.data.error,
+          color: "red",
+        });
+      }
+    },
+    async updateVerif(ctx, data) {
+      try {
+        const response = await axios.put(
+          `http://localhost:8000/api/user/update_verifier/${data.id}`,
+          JSON.stringify(data),
+          {
+            headers: { "Content-type": "application/json" },
+            withCredentials: true,
+          }
+        );
+        console.log(response);
+        if (response.status === 200) {
+          ctx.state.alert = true;
+          ctx.commit("setMes", {
+            message: response.data.message,
+            color: "blue-darken-2",
+          });
+        }
+      } catch (error) {
+        console.error("Erreur lors de l'inscription :", error);
+        ctx.state.alert = true;
+        ctx.commit("setMes", {
+          message: error.response.data.error,
+          color: "red",
+        });
       }
     },
   },

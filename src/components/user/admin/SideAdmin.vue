@@ -1,5 +1,5 @@
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 export default {
   computed: {
     ...mapState(["user"]),
@@ -8,11 +8,17 @@ export default {
     },
   },
   data: () => ({
-    itemsRec: [
-      { text: "Aperçu", icon: "mdi-view-dashboard", to: "dashboard" },
-      { text: "Mon Profil", icon: "mdi-account-circle", to: "/MonProfil" },
+    itemsAdmin: [
+      { text: "Aperçu", icon: "mdi-view-dashboard", to: "/admin/dashboard" },
+      { text: "Recruteur", icon: "mdi-domain", to: "/admin/recruteur" },
+      { text: "Utilisateurs", icon: "mdi-account-group", to: "" },
+      { text: "Emplois", icon: "mdi-briefcase-variant", to: "" },
+      { text: "Mon Profil", icon: "mdi-account-circle", to: "" },
     ],
   }),
+  methods: {
+    ...mapActions(["Logout"]),
+  },
 };
 </script>
 <template>
@@ -29,7 +35,9 @@ export default {
             </v-avatar>
           </v-col>
           <v-col cols="auto">
-            <v-row no-gutters> <h3>Chaouch Nizar</h3></v-row>
+            <v-row no-gutters>
+              <h3>{{ userData.nom }} {{ userData.prenom }}</h3></v-row
+            >
             <v-row no-gutters><p>Admin</p></v-row>
           </v-col>
         </v-row>
@@ -37,7 +45,7 @@ export default {
       <v-divider></v-divider>
       <v-list lines="one" class="mx-5">
         <v-list-item
-          v-for="(item, i) in itemsRec"
+          v-for="(item, i) in itemsAdmin"
           :key="i"
           :value="item"
           class="my-2 rounded-lg"
@@ -56,6 +64,48 @@ export default {
           ></v-list-item-title>
         </v-list-item>
       </v-list>
+      <v-col class="h-50 d-flex flex-column justify-end">
+        <v-divider class="border-opacity-50 mb-2"></v-divider>
+        <v-btn
+          to="/"
+          variant="elevated"
+          elevation="0"
+          color="#435ebe"
+          size="large"
+          class="text-none my-2 rounded-lg w-100"
+        >
+          <template v-slot:prepend>
+            <v-icon size="large">mdi-web</v-icon>
+          </template>
+          Visiter site Web
+        </v-btn>
+        <v-btn
+          to="/"
+          variant="outlined"
+          elevation="0"
+          color="#435ebe"
+          size="large"
+          class="text-none my-2 rounded-lg w-100"
+        >
+          <template v-slot:prepend>
+            <v-icon size="large" class="pe-7">mdi-cog</v-icon>
+          </template>
+          Paramètres
+        </v-btn>
+        <v-btn
+          variant="outlined"
+          elevation="0"
+          color="red"
+          size="large"
+          class="text-none my-2 rounded-lg w-100"
+          @click="Logout()"
+        >
+          <template v-slot:prepend>
+            <v-icon size="large" class="pe-7">mdi-logout</v-icon>
+          </template>
+          Se déconnecter
+        </v-btn>
+      </v-col>
     </v-navigation-drawer>
   </v-layout>
 </template>

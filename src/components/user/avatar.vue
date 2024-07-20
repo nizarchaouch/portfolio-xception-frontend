@@ -31,8 +31,16 @@ export default {
     },
     itemsRec() {
       return [
-        { text: "Tableau de bord", icon: "mdi-view-dashboard", to: "/dashboard" },
-        { text: "Mes emplois", icon: "mdi-briefcase-variant", to: "/MesEmplois" },
+        {
+          text: "Tableau de bord",
+          icon: "mdi-view-dashboard",
+          to: "/dashboard",
+        },
+        {
+          text: "Mes emplois",
+          icon: "mdi-briefcase-variant",
+          to: "/MesEmplois",
+        },
         {
           text: "Poster un emploi",
           icon: "mdi-plus-circle",
@@ -69,7 +77,7 @@ export default {
       <v-card>
         <v-list>
           <v-list-item
-            :title="userData.nom + ' ' + userData.prenom"
+            :title="(userData.nom || '') + ' ' + (userData.prenom || '')"
             :subtitle="userData.mail"
           >
             <template v-slot:prepend>

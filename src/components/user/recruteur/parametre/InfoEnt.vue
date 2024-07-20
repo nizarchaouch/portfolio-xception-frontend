@@ -18,7 +18,7 @@ export default {
       secteur: "",
       description: "",
       adress: "",
-      tel: null,
+      identifiant: "",
       fondee: "",
       taill_ent: "",
       rules: {
@@ -59,7 +59,7 @@ export default {
         secteur: this.secteur,
         description: this.description,
         adress: this.adress,
-        tel: this.tel,
+        identifiant: this.identifiant,
         fondee: this.fondee,
         taill_ent: this.taill_ent,
       };
@@ -79,7 +79,7 @@ export default {
     this.secteur = this.user.userData.secteur;
     this.description = this.user.userData.description;
     this.adress = this.user.userData.adress;
-    this.tel = this.user.userData.tel;
+    this.identifiant = this.user.userData.identifiant;
     this.fondee = this.user.userData.fondee;
     this.taill_ent = this.user.userData.taill_ent;
   },
@@ -156,13 +156,6 @@ export default {
           <h4 class="mb-4 text-medium-emphasis">
             Secteur <span class="text-red">*</span>
           </h4>
-          <!-- <v-text-field
-            v-model="secteur"
-            variant="outlined"
-            color="blue"
-            :rules="[rules.required]"
-          >
-          </v-text-field> -->
           <v-autocomplete
             v-model="secteur"
             :items="secteurName"
@@ -185,13 +178,6 @@ export default {
           <h4 class="mb-4 text-medium-emphasis">
             Emplacement de l'entreprise<span class="text-red">*</span>
           </h4>
-          <!-- <v-text-field
-            v-model="adress"
-            variant="outlined"
-            color="blue"
-            :rules="[rules.required]"
-          >
-          </v-text-field> -->
           <v-autocomplete
             v-model="adress"
             :items="cityName"
@@ -210,12 +196,14 @@ export default {
             color="blue"
           ></v-select>
           <!-- tel -->
-          <h4 class="mb-4 text-medium-emphasis">Téléphone</h4>
+          <h4 class="mb-4 text-medium-emphasis">
+            Identifiant Unique (RC/ RNE / MF)
+          </h4>
           <v-text-field
-            v-model="tel"
+            v-model="identifiant"
+            readonly
             variant="outlined"
-            color="blue"
-            type="Number"
+            color="grey"
           >
           </v-text-field>
         </v-col>

@@ -17,6 +17,7 @@ import DashAdmin from "@/views/admin/DashView.vue";
 import PosterEmploi from "@/views/recruteur/PosterEmploiView.vue";
 import MonProfil from "@/views/recruteur/ProfilView.vue";
 import MesEmplois from "@/views/recruteur/EmploisView.vue";
+import RecView from "@/views/admin/RecView.vue";
 import TrouveCandidat from "@/views/recruteur/TrouveCandidatView.vue";
 import ParametreRec from "@/views/recruteur/ParametreView.vue";
 
@@ -116,6 +117,11 @@ const routes = [
     path: "/MesEmplois",
     name: "MesEmplois",
     component: MesEmplois,
+  },
+  {
+    path: "/admin/recruteur",
+    name: "RecView",
+    component: RecView,
   },
   {
     path: "/TrouveCandidat",

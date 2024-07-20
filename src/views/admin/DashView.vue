@@ -127,6 +127,7 @@ export default {
     }, 15);
     if (
       this.user.authenticated === false ||
+      this.user.userData.role === "recruteur" ||
       this.user.userData.role === "candidat"
     ) {
       this.$router.push("login");
@@ -266,10 +267,10 @@ export default {
             <v-table hover>
               <thead>
                 <tr style="background-color: #435ebe" class="text-white">
-                  <th class="text-left" style="width: 30%">Emploi</th>
-                  <th class="text-left" style="width: 20%">Date de création</th>
-                  <th class="text-left" style="width: 20%">Applications</th>
-                  <th class="text-left ps-14">Action</th>
+                  <th class="text-left font-weight-bold" style="width: 30%">Emploi</th>
+                  <th class="text-left font-weight-bold" style="width: 20%">Date de création</th>
+                  <th class="text-left font-weight-bold" style="width: 20%">Applications</th>
+                  <th class="text-left font-weight-bold ps-14">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -342,16 +343,8 @@ export default {
         </v-row>
         <!-- tableau user -->
         <v-row no-gutters>
-          <v-col cols="12" class="d-flex justify-space-between px-5">
+          <v-col cols="12" class="d-flex justify-space-between px-5 my-3">
             <h4>Derniers utilisateurs</h4>
-            <v-btn
-              variant="plain"
-              class="text-none"
-              append-icon="mdi-arrow-right"
-              :ripple="false"
-              to="MesEmplois"
-              >Voir tout</v-btn
-            >
           </v-col>
         </v-row>
         <v-row class="mb-16" no-gutters>
@@ -368,11 +361,14 @@ export default {
                   <th class="text-left font-weight-bold" style="width: 30%">
                     E-mail
                   </th>
-                  <th class="text-left font-weight-bold ps-7" style="width: 12%">
+                  <th
+                    class="text-left font-weight-bold ps-7"
+                    style="width: 12%"
+                  >
                     Role
                   </th>
                   <th class="text-left font-weight-bold" style="width: 12%">
-                    Statut
+                    Verification
                   </th>
                   <th
                     class="text-left ps-7 font-weight-bold"
@@ -410,7 +406,8 @@ export default {
                     </span>
                   </td>
                   <td class="text-subtitle-1 text-medium-emphasis">
-                    {{ item.verifier ? "Active" : "Inactive" }}
+                    <!-- <v-icon>{{item.verifier?'mdi-check':"mdi-close"}}</v-icon> -->
+                    {{ item.verifier ? "vérifié" : "non vérifié" }}
                   </td>
                   <td>
                     <div class="d-flex">

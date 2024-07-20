@@ -16,19 +16,33 @@ export default {
   },
 
   methods: {
-    ...mapActions(["userAuth", "updated", "getAll"]),
+    ...mapActions([
+      "userAuth",
+      "updated",
+      "getAll",
+      "delOffer",
+      "deleteCandOffer",
+    ]),
 
     updateItemsData() {
-      this.items = this.candOffer.candData.map((item, index) => {
-        return {
-          img: this.candOffer.infoData[index].logo,
-          nomEntreprise: this.candOffer.infoData[index].nomEntreprise,
-          titre: this.candOffer.infoData[index].titre,
-          date: item.date.split("T")[0],
-          etat: item.etat,
-          reponse: item.etat,
-        };
-      });
+      this.items = this.candOffer.candData
+        .map((item, index) => {
+          const info = this.candOffer.infoData[index];
+          if (info) {
+            return {
+              img: info.logo || "",
+              nomEntreprise: info.nomEntreprise || "",
+              titre: info.titre || "No title",
+              date: item.date.split("T")[0],
+              etat: item.etat,
+              reponse: item.etat,
+            };
+          } else {
+            this.deleteCandOffer(item._id);
+            return null;
+          }
+        })
+        .filter((item) => item !== null); // Filter out any null entries
     },
 
     filterItems() {
@@ -46,7 +60,7 @@ export default {
     await this.userAuth();
     if (
       this.user.authenticated === false ||
-      this.user.userData.role === "recruteur"||
+      this.user.userData.role === "recruteur" ||
       this.user.userData.role === "admin"
     ) {
       this.$router.push("login");
