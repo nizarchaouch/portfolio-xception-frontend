@@ -49,6 +49,13 @@ export default {
         { text: "Paramétres", icon: "mdi-cog", to: "/ParametreRec" },
       ];
     },
+    itemsAdmin() {
+      return [
+        { text: "Aperçu", icon: "mdi-view-dashboard", to: "/admin/dashboard" },
+        { text: "Mon Profil", icon: "mdi-account-circle", to: "" },
+        { text: "Paramètres", icon: "mdi-cog", to: "" },
+      ];
+    },
   },
   data: () => ({
     menu: false,
@@ -78,7 +85,7 @@ export default {
         <v-list>
           <v-list-item
             :title="(userData.nom || '') + ' ' + (userData.prenom || '')"
-            :subtitle="userData.mail"
+            :subtitle="userData.mail || ''"
           >
             <template v-slot:prepend>
               <v-avatar :image="'http://localhost:8000' + userData.imagePath">
@@ -115,6 +122,25 @@ export default {
               <v-icon icon="mdi-upload"></v-icon>
             </template>
             <TeleCv />
+          </v-list-item>
+        </v-list>
+        <!-- menu  admin -->
+        <v-list
+          density="compact"
+          nav
+          v-else-if="this.user.userData.role === 'admin'"
+        >
+          <v-list-item
+            v-for="(item, i) in itemsAdmin"
+            :key="i"
+            color="primary"
+            :to="item.to"
+          >
+            <template v-slot:prepend>
+              <v-icon :icon="item.icon"></v-icon>
+            </template>
+
+            <v-list-item-title v-text="item.text"></v-list-item-title>
           </v-list-item>
         </v-list>
         <!-- menu recruteur -->

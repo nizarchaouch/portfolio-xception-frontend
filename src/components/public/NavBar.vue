@@ -2,9 +2,13 @@
 import logo from "@/assets/logo_text.png";
 import Avatar from "@/components/user/avatar.vue";
 import Notfi from "@/components/user/Notfi.vue";
+import { mapState, mapActions } from "vuex";
 export default {
-  components: { Avatar, Notfi },
   props: { hidea: String },
+  components: { Avatar, Notfi },
+  computed: {
+    ...mapState(["user"]),
+  },
   data: () => ({
     logo: logo,
     nav: null,
@@ -22,7 +26,20 @@ export default {
       },
       { text: "Paramétres", icon: "mdi-cog", to: "ParametreRec" },
     ],
+    itemsAdmin: [
+      { text: "Aperçu", icon: "mdi-view-dashboard", to: "/admin/dashboard" },
+      { text: "Recruteur", icon: "mdi-domain", to: "/admin/recruteur" },
+      { text: "Candidat", icon: "mdi-account-group", to: "/admin/candidat" },
+      { text: "Emplois", icon: "mdi-briefcase-variant", to: "" },
+      { text: "Mon Profil", icon: "mdi-account-circle", to: "" },
+    ],
   }),
+  methods: {
+    ...mapActions(["userAuth"]),
+  },
+  async mounted() {
+    await this.userAuth();
+  },
 };
 </script>
 
@@ -104,7 +121,7 @@ export default {
   <!-- nav drawer candidat  -->
   <v-layout>
     <v-navigation-drawer
-      v-if="hidea != ' '"
+      v-if="hidea != ' ' && this.user.userData.role === 'candidat'"
       v-model="drawer"
       location="top"
       elevation="10"
@@ -120,7 +137,7 @@ export default {
     </v-navigation-drawer>
     <!-- nav drawer recruteur  -->
     <v-navigation-drawer
-      v-else
+      v-if="this.user.userData.role === 'recruteur'"
       v-model="drawer"
       location="top"
       elevation="10"
@@ -132,6 +149,38 @@ export default {
           <v-list density="compact" lines="one">
             <v-list-item
               v-for="(item, i) in itemsRec"
+              :key="i"
+              :value="item"
+              color="primary"
+              :to="item.to"
+            >
+              <template v-slot:prepend>
+                <v-icon :icon="item.icon"></v-icon>
+              </template>
+
+              <v-list-item-title v-text="item.text"></v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-col>
+        <v-col cols="1">
+          <v-icon @click="drawer = !drawer" class="ma-3">mdi-close</v-icon>
+        </v-col>
+      </v-row>
+    </v-navigation-drawer>
+    <!-- admin -->
+    <v-navigation-drawer
+      v-if="this.user.userData.role === 'admin'"
+      v-model="drawer"
+      location="top"
+      elevation="10"
+      temporary
+      permanent
+    >
+      <v-row>
+        <v-col cols="10">
+          <v-list density="compact" lines="one">
+            <v-list-item
+              v-for="(item, i) in itemsAdmin"
               :key="i"
               :value="item"
               color="primary"
