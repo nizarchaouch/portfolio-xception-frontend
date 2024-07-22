@@ -66,7 +66,7 @@ export default {
       "getRecruteurs",
       "getLastUser",
     ]),
-    ...mapMutations(["RestCountApp", "RestCountRecu", "RestCountCand"]),
+    ...mapMutations(["RestCountApp"]),
     typeParOffre() {
       const count = {};
       this.offerData.forEach((offre) => {
@@ -112,19 +112,16 @@ export default {
       }, 1000);
     },
     updateCards() {
+      const count= this.profilRec.recuVerif + this.candidat.candVerif
       this.cards[0].number = this.candCount;
       this.cards[1].number = this.recuCount;
-      this.cards[2].number = this.profilRec.recuVerif + this.candidat.candVerif;
+      this.cards[2].number = count ;
       this.cards[3].number = this.offerCount;
-      this.RestCountRecu();
-      this.RestCountCand();
     },
   },
   async mounted() {
     await this.userAuth();
-    setTimeout(() => {
-      this.updateCards();
-    }, 15);
+    setTimeout(() => {}, 15);
     if (
       this.user.authenticated === false ||
       this.user.userData.role === "recruteur" ||
@@ -138,7 +135,8 @@ export default {
           offresParSecteur: this.offresParSecteur(),
           typeParOffre: this.typeParOffre(),
         });
-      }, 10);
+        this.updateCards();
+      }, 15);
       this.showOffer();
       this.getCandidats();
       this.getRecruteurs();
@@ -267,9 +265,15 @@ export default {
             <v-table hover>
               <thead>
                 <tr style="background-color: #435ebe" class="text-white">
-                  <th class="text-left font-weight-bold" style="width: 30%">Emploi</th>
-                  <th class="text-left font-weight-bold" style="width: 20%">Date de création</th>
-                  <th class="text-left font-weight-bold" style="width: 20%">Applications</th>
+                  <th class="text-left font-weight-bold" style="width: 30%">
+                    Emploi
+                  </th>
+                  <th class="text-left font-weight-bold" style="width: 20%">
+                    Date de création
+                  </th>
+                  <th class="text-left font-weight-bold" style="width: 20%">
+                    Applications
+                  </th>
                   <th class="text-left font-weight-bold ps-14">Action</th>
                 </tr>
               </thead>

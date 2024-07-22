@@ -28,15 +28,14 @@ export default {
     },
     setRecu(state, recruteurs) {
       state.recruteurs = recruteurs;
+      state.recuVerif = 0;
       recruteurs.forEach((recruteur) => {
         if (recruteur.verifier) {
           state.recuVerif++;
         }
       });
     },
-    RestCountRecu(state) {
-      state.recuVerif = 0;
-    },
+
   },
   actions: {
     async getRecruteurs(ctx) {

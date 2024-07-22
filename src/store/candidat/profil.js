@@ -26,15 +26,13 @@ export default {
     setCand(state, candidats) {
       state.candidats = candidats;
       // console.log(candidats);
+      state.candVerif = 0; 
       candidats.forEach((candidat) => {
         if (candidat.verifier) {
           state.candVerif++;
         }
       });
       // console.log(state.candVerif);
-    },
-    RestCountCand(state) {
-      state.candVerif = 0;
     },
   },
   actions: {
