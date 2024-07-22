@@ -39,7 +39,6 @@ export default {
       "infoRec",
       "updateVerif",
       "getAll",
-      "showOfferById",
     ]),
     changeEtat(id, verifier, statut) {
       const data = {
