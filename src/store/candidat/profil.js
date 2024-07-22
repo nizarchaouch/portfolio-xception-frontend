@@ -11,10 +11,14 @@ export default {
     candCount(state) {
       return state.candidats.length;
     },
+    getcand(state) {
+      return state.candidats;
+    },
   },
   mutations: {
-    setMes(state, message) {
-      state.message = message;
+    setMes(state, payload) {
+      state.message = payload.message;
+      state.color = payload.color;
     },
     setLastUser(state, lasteUser) {
       state.lasteUser = lasteUser;
@@ -57,15 +61,21 @@ export default {
           }
         );
 
-        if (updateUserResponse.status === 201) {
+        if (updateUserResponse.status === 200) {
           console.log("Mise à jour réussie");
           ctx.state.alert = true;
-          ctx.commit("setMes", "Mise à jour réussie");
+          ctx.commit("setMes", {
+            message: "Mise à jour réussie",
+            color: "blue-darken-2",
+          });
         }
       } catch (error) {
         console.error("Erreur lors de la mise à jour :", error);
         ctx.state.alert = true;
-        ctx.commit("setMes", "Erreur lors de la mise à jour");
+        ctx.commit("setMes", {
+          message: "Erreur lors de la mise à jour",
+          color: "red",
+        });
       }
     },
     async upload(ctx, data) {
@@ -130,6 +140,47 @@ export default {
         }
       } catch (error) {
         console.error("Erreur lors du get users :", error);
+      }
+    },
+    async addCand(ctx, data) {
+      try {
+        let formData = new FormData();
+        formData.append("image", data.fileForUpload);
+
+        const uploadResponse = await axios.post(
+          "http://localhost:8000/upload",
+          formData
+        );
+        data.imagePath = uploadResponse.data.imagepath;
+        console.log("data", data);
+        const response = await axios.post(
+          "http://localhost:8000/api/user/add_candidat",
+          JSON.stringify(data),
+          {
+            headers: { "Content-type": "application/json" },
+            withCredentials: true,
+          }
+        );
+        // console.log(updateUserResponse);
+        // console.log("data", data);
+        if (response.status === 201) {
+          console.log("Add recu successful");
+          ctx.state.alert = true;
+          ctx.commit("setMes", {
+            message: "Ajouté avec succès",
+            color: "blue-darken-2",
+          });
+        }
+      } catch (error) {
+        console.error(
+          "Erreur lors de l'inscription :",
+          error.response.data.error
+        );
+        ctx.state.alert = true;
+        ctx.commit("setMes", {
+          message: error.response.data.error,
+          color: "red",
+        });
       }
     },
   },

@@ -5,6 +5,7 @@ import { mapState, mapActions } from "vuex";
 import DialogDetail from "@/components/offer/DialogDetail.vue";
 import NavBar from "@/components/public/NavBar.vue";
 import SideBar from "@/components/user/recruteur/SideBar.vue";
+
 export default {
   name: "offer",
   components: {
@@ -17,63 +18,29 @@ export default {
     candShow() {
       return this.candidat.candidats;
     },
-    filteredOffers() {
-      let filtered = this.offerShow;
-
-      // Appliquer le filtre par recherche
-      if (this.search.trim() !== "") {
-        filtered = filtered.filter((item) => {
-          if (item) {
-            return (
-              item.nomEntreprise
-                .toLowerCase()
-                .includes(this.search.toLowerCase()) ||
-              item.titre.toLowerCase().includes(this.search.toLowerCase()) ||
-              item.description.toLowerCase().includes(this.search.toLowerCase())
-            );
-          } else {
-            return false;
-          }
-        });
-      }
-
-      // Appliquer le filtre par localite, typeContrat, langue
-      if (this.filter.localite.length > 0) {
-        filtered = filtered.filter((item) =>
-          this.filter.localite.includes(item.position)
-        );
-      }
-
-      if (this.filter.typeContrat.length > 0) {
-        filtered = filtered.filter((item) =>
-          this.filter.typeContrat.includes(item.typeOffer)
-        );
-      }
-
-      if (this.filter.langue.length > 0) {
-        filtered = filtered.filter((item) =>
-          this.filter.langue.includes(item.langue)
-        );
-      }
-
-      if (this.filter.genre.length > 0) {
-        filtered = filtered.filter((item) =>
-          this.filter.genre.includes(item.genre)
-        );
-      }
-
-      return filtered;
-    },
   },
   data: () => ({
     toggle: "list",
     search: "",
     tab: 1,
+    screenWidth: window.innerWidth,
   }),
   methods: {
     ...mapActions(["userAuth", "getCandidats"]),
-    updateFilter(newFilter) {
-      this.filter = newFilter;
+    handleResize() {
+      this.screenWidth = window.innerWidth;
+      if (this.screenWidth <= 600) {
+        this.toggle = "card";
+      }
+    },
+  },
+  watch: {
+    screenWidth(newWidth) {
+      if (newWidth <= 600) {
+        this.toggle = "card";
+      } else {
+        this.toggle = "list";
+      }
     },
   },
   async mounted() {
@@ -87,9 +54,13 @@ export default {
     } else {
       this.getCandidats();
     }
+    window.addEventListener('resize', this.handleResize);
+    this.handleResize(); // Ensure correct initial state
   },
+ 
 };
 </script>
+
 
 <template>
   <NavBar hidea=" " />
@@ -187,7 +158,9 @@ export default {
                       <v-banner lines="one">
                         <p>
                           <v-icon class="me-2">mdi-calendar-range</v-icon
-                          >{{ item.raw.dateNais.split("T")[0] }}
+                          >{{
+                            item.raw.dateNais && item.raw.dateNais.split("T")[0]
+                          }}
                         </p>
                         <p class="ms-auto">
                           <v-icon class="pb-1">mdi-map-marker</v-icon
@@ -366,7 +339,9 @@ export default {
                         </p>
                         <p>
                           <v-icon class="me-2">mdi-calendar-range</v-icon
-                          >{{ item.raw.dateNais.split("T")[0] }}
+                          >{{
+                            item.raw.dateNais && item.raw.dateNais.split("T")[0]
+                          }}
                         </p>
                       </div>
                     </v-list-item>

@@ -11,7 +11,7 @@ export default {
     itemsAdmin: [
       { text: "Aperçu", icon: "mdi-view-dashboard", to: "/admin/dashboard" },
       { text: "Recruteur", icon: "mdi-domain", to: "/admin/recruteur" },
-      { text: "Utilisateurs", icon: "mdi-account-group", to: "" },
+      { text: "Candidat", icon: "mdi-account-group", to: "/admin/candidat" },
       { text: "Emplois", icon: "mdi-briefcase-variant", to: "" },
       { text: "Mon Profil", icon: "mdi-account-circle", to: "" },
     ],

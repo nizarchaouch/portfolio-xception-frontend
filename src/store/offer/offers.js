@@ -46,6 +46,20 @@ export default {
         console.error("Erreur lors de l'affichage des offres :", error);
       }
     },
+    async showOfferById(ctx, id) {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/api/offer/showById/${id}`,
+          {
+            headers: { "Content-type": "application/json" },
+            withCredentials: true,
+          }
+        );
+        ctx.commit("setOffers", response.data);
+      } catch (error) {
+        console.error("Erreur lors de l'affichage des offres :", error);
+      }
+    },
     async addOffer(ctx, data) {
       try {
         const AddOfferResponse = await axios.post(

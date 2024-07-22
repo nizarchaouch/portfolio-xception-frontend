@@ -42,7 +42,7 @@ export default {
             return null;
           }
         })
-        .filter((item) => item !== null); // Filter out any null entries
+        .filter((item) => item !== null); 
     },
 
     filterItems() {

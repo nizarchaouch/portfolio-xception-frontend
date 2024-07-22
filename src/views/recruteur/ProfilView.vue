@@ -56,9 +56,16 @@ export default {
 };
 </script>
 <template>
-  <template v-if="this.user.userData.role === 'recruteur'">
+  <template
+    v-if="
+      this.user.userData.role === 'recruteur' ||
+      this.user.userData.role === 'admin'
+    "
+  >
     <NavBar hidea=" " />
-    <SideBar />
+    <template v-if="this.user.userData.role === 'recruteur'">
+      <SideBar />
+    </template>
   </template>
   <template v-else>
     <NavBar />
@@ -71,30 +78,31 @@ export default {
         xl="10"
         :offset-lg="this.user.userData.role === 'recruteur' ? 2 : 1"
       >
-        <v-row>
+        <!-- détails du recruteur -->
+        <v-row v-if="this.user.userData.role === 'admin'">
           <v-col cols="12" sm="11" class="mx-auto">
-            <h3>Détails de l'entreprise</h3>
+            <h3>Détails du recruteur</h3>
           </v-col>
         </v-row>
-        <v-row>
+        <v-row v-if="this.user.userData.role === 'admin'">
           <v-col cols="12" sm="11" class="mx-auto">
             <v-sheet :elevation="4" class="rounded-lg pa-8">
               <v-row>
                 <v-col cols="auto">
                   <v-avatar
-                    size="68"
+                    size="100"
                     rounded="0"
                     class="rounded-lg ms-4"
-                    :image="'http://localhost:8000' + userData.logoPath"
+                    :image="'http://localhost:8000' + userData.imagePath"
                   >
                   </v-avatar>
                 </v-col>
                 <v-col cols="12" md="3">
                   <p class="font-weight-bold text-h6">
-                    {{ userData.nomEntreprise }}
+                    {{ userData.prenom }} {{ userData.nom }}
                   </p>
                   <span class="text-subtitle-1 text-medium-emphasis">
-                    {{ userData.secteur }}
+                    {{ userData.mail }}
                   </span>
                   <div
                     class="d-flex"
@@ -138,6 +146,51 @@ export default {
                       </template>
                     </v-switch>
                   </div>
+                </v-col>
+                <!--dtat& tel& szxe -->
+                <v-col cols="12" md="3">
+                  <p class="mb-3">
+                    <span class="font-weight-bold">Date de Naissance:</span>
+                    {{ userData.dateNais && userData.dateNais.split("T")[0] }}
+                  </p>
+                  <p class="mb-3">
+                    <span class="font-weight-bold"> Civilité:</span>
+                    {{ userData.civilite }}
+                  </p>
+                </v-col>
+              </v-row>
+            </v-sheet>
+          </v-col>
+        </v-row>
+        <!-- détails du enter -->
+        <v-row>
+          <v-col cols="12" sm="11" class="mx-auto">
+            <h3>Détails de l'entreprise</h3>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12" sm="11" class="mx-auto">
+            <v-sheet :elevation="4" class="rounded-lg pa-8">
+              <v-row>
+                <v-col cols="auto">
+                  <v-avatar
+                    size="68"
+                    rounded="0"
+                    class="rounded-lg ms-4"
+                    :image="'http://localhost:8000' + userData.logoPath"
+                  >
+                  </v-avatar>
+                </v-col>
+                <v-col cols="12" md="3">
+                  <p class="font-weight-bold text-h6">
+                    {{ userData.nomEntreprise }}
+                  </p>
+                  <span class="text-subtitle-1 text-medium-emphasis">
+                    {{ userData.secteur }}
+                  </span>
+                  <h4 v-if="this.user.userData.role === 'admin'" class="">
+                    Identifiant: {{ userData.identifiant }}
+                  </h4>
                 </v-col>
                 <!-- Suivez-nous sur -->
                 <v-col cols="auto">

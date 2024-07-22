@@ -8,21 +8,18 @@ import NavBar from "@/components/public/NavBar.vue";
 import SideAdmin from "@/components/user/admin/SideAdmin.vue";
 import DialogDetail from "@/components/user/recruteur/para_offer/DialogVoirDeta.vue";
 import DialogModifier from "@/components/user/recruteur/para_offer/ModifierOffer.vue";
-import AddRecu from "@/components/user/admin/recruteur/AddRecu.vue";
+import AddCand from "@/components/user/admin/candidat/AddCand.vue";
 export default {
   components: {
     NavBar,
     SideAdmin,
     DialogDetail,
     DialogModifier,
-    AddRecu,
+    AddCand,
   },
   computed: {
-    ...mapState(["user", "offer", "candOffer", "profilRec"]),
-    ...mapGetters(["offerCount", "latestOffers", "getrecu", "recuCount"]),
-    userData() {
-      return this.user.userData;
-    },
+    ...mapState(["user", "offer", "candOffer", "candidat"]),
+    ...mapGetters(["offerCount", "latestOffers", "getcand", "candCount"]),
     offerData() {
       return this.offer.offerData;
     },
@@ -30,17 +27,16 @@ export default {
       return this.candOffer.countApp || [];
     },
 
-    filteredRecu() {
-      let filtered = this.getrecu;
+    filteredCand() {
+      let filtered = this.getcand;
 
-      // Apply search filter
+      // Apply search filter getCandidats
       if (this.search.trim() !== "") {
         filtered = filtered.filter((item) => {
           if (item) {
             return (
-              item.nomEntreprise
-                .toLowerCase()
-                .includes(this.search.toLowerCase()) ||
+              item.nom.toLowerCase().includes(this.search.toLowerCase()) ||
+              item.prenom.toLowerCase().includes(this.search.toLowerCase()) ||
               item.mail.includes(this.search)
             );
           } else {
@@ -50,12 +46,6 @@ export default {
       }
 
       // Apply sector filter only if selectedSecteur is not empty or null
-      if (this.selectedSecteur && this.selectedSecteur.length > 0) {
-        filtered = filtered.filter((item) =>
-          this.selectedSecteur.includes(item.secteur)
-        );
-      }
-
       if (this.selectedEmplacement && this.selectedEmplacement.length > 0) {
         filtered = filtered.filter((item) =>
           this.selectedEmplacement.includes(item.adress)
@@ -93,13 +83,12 @@ export default {
       sortBy: [],
       headers: [
         {
-          key: "nomEntreprise",
-          title: "Nom de l'entreprise",
+          key: "nom",
+          title: "Nom et Prenom",
         },
-        { key: "emploi", title: "Emploi" },
-        { key: "secteur", title: "Secteur" },
-        { key: "adress", title: " Emplacement" },
-        { key: "fondee", title: "Fondée en" },
+        { key: "mail", title: "E-mail" },
+        { key: "titre_emploi", title: "Role/Position " },
+        { key: "adress", title: " Gouvernorat" },
         { title: "vérification de l'E-mail", sortable: false },
         { title: "Statut du compte", sortable: false },
         { title: "Action", sortable: false },
@@ -112,7 +101,7 @@ export default {
       "showOfferRec",
       "getOfferApp",
       "delOffer",
-      "getRecruteurs",
+      "getCandidats",
       "updated",
       "updateVerif",
       "deltRecu",
@@ -161,9 +150,9 @@ export default {
       this.$router.push("login");
     } else {
       setTimeout(() => {
-        this.extractOfferRec();
+        // this.extractOfferRec();
       }, 10);
-      this.getRecruteurs();
+      this.getCandidats();
     }
   },
 };
@@ -171,11 +160,11 @@ export default {
 <template>
   <v-snackbar
     :timeout="1000"
-    :color="profilRec.color"
-    v-model="profilRec.alert"
+    :color="candidat.color"
+    v-model="candidat.alert"
     location="top"
   >
-    {{ profilRec.message }}
+    {{ candidat.message }}
   </v-snackbar>
   <!-- snackbar confirme -->
   <v-snackbar
@@ -186,7 +175,7 @@ export default {
     :timeout="-1"
   >
     <div class="text-subtitle-1 font-weight-bold pa-2">
-      Voulez-vous vraiment supprimer cette recruteur ?
+      Voulez-vous vraiment supprimer cette candidat ?
     </div>
 
     <p class="text-medium-emphasis">
@@ -213,12 +202,12 @@ export default {
               <v-row no-gutters>
                 <v-col cols="12" class="d-flex justify-space-between pa-2">
                   <h3 class="mb-6 mt-2">
-                    Liste d'entreprises
-                    <span class="text-grey-darken-2">({{ recuCount }})</span>
+                    Liste des candidats
+                    <span class="text-grey-darken-2">({{ candCount }})</span>
                   </h3>
-                  <AddRecu :role="true" />
+                  <AddCand :role="true" />
                 </v-col>
-                <v-col cols="10" md="3" class="mb-2">
+                <v-col cols="9" md="3" class="mb-2">
                   <h5 class="ms-1">Recherche</h5>
                   <v-text-field
                     v-model="search"
@@ -231,19 +220,7 @@ export default {
                     single-line
                   ></v-text-field>
                 </v-col>
-                <v-col cols="10" md="2" class="ms-md-5">
-                  <h5 class="ms-1">Secteur</h5>
-                  <v-autocomplete
-                    :items="secteurName"
-                    v-model="selectedSecteur"
-                    multiple
-                    chips
-                    color="blue"
-                    variant="outlined"
-                    density="compact"
-                  ></v-autocomplete>
-                </v-col>
-                <v-col cols="10" md="2" class="ms-md-5">
+                <v-col cols="9" md="2" class="ms-md-5">
                   <h5 class="ms-1">Emplacement</h5>
                   <v-autocomplete
                     :items="cityName"
@@ -255,7 +232,7 @@ export default {
                     density="compact"
                   ></v-autocomplete>
                 </v-col>
-                <v-col cols="10" md="2" class="ms-md-5">
+                <v-col cols="9" md="2" class="ms-md-5">
                   <h5 class="ms-1">Vérification de l'E-mail</h5>
                   <v-select
                     :items="['Tous', 'vérifié', 'non vérifié']"
@@ -265,7 +242,7 @@ export default {
                     density="compact"
                   ></v-select>
                 </v-col>
-                <v-col cols="10" md="2" class="ms-md-5">
+                <v-col cols="9" md="2" class="ms-md-5">
                   <h5 class="ms-1">Statut du compte</h5>
                   <v-select
                     :items="['Tous', 'activé', 'désactivé']"
@@ -281,7 +258,7 @@ export default {
               v-model:sort-by="sortBy"
               :loading="loading"
               :headers="headers"
-              :items="filteredRecu"
+              :items="filteredCand"
               :search="search"
               hover
               style="border: 1px solid #e0e0e0"
@@ -314,40 +291,29 @@ export default {
                       <v-col cols="auto">
                         <v-avatar
                           size="large"
-                          class="my-1 mx-1"
-                          :image="'http://localhost:8000' + item.logoPath"
+                          class="my-1 ms-1"
+                          :image="'http://localhost:8000' + item.imagePath"
                         >
                         </v-avatar>
                       </v-col>
-                      <v-col cols="8">
-                        <span >
-                          {{ item.nomEntreprise }}
-                          <p class="text-caption text-medium-emphasis">
-                            {{ item.mail }}
-                          </p>
-                        </span>
+                      <v-col cols="auto" class="pt-3 ps-2">
+                        <span> {{ item.nom }} {{ item.prenom }} </span>
                       </v-col>
                     </v-row>
                   </td>
-                  <td class="text-subtitle-1" style="width: 7%">
-                    {{ offerCountRec[item._id] }} emplois
+                  <td class="text-subtitle-1" style="width: 15%">
+                    {{ item.mail }}
                   </td>
                   <td
                     class="text-subtitle-1 text-medium-emphasis ps-5"
-                    style="width: 15%"
+                    style="width: 17%"
                   >
-                    {{ item.secteur }}
+                    {{ item.titre_emploi }}
                   </td>
-                  <td
-                    class="text-subtitle-1 text-medium-emphasis ps-5"
-                    style="width: 7%"
-                  >
+                  <td class="text-subtitle-1 text-medium-emphasis ps-5">
                     {{ item.adress }}
                   </td>
-                  <td class="text-subtitle-1 text-medium-emphasis ps-6">
-                    {{ item.fondee }}
-                  </td>
-                  <td class="text-subtitle-1" style="width: 15%">
+                  <td class="text-subtitle-1" style="width: 13%">
                     <v-switch
                       hide-details
                       inset
@@ -364,7 +330,7 @@ export default {
                   </td>
                   <td
                     class="text-subtitle-1 text-medium-emphasis"
-                    style="width: 15%"
+                    style="width: 13%"
                   >
                     <v-switch
                       hide-details
@@ -380,7 +346,7 @@ export default {
                       </template>
                     </v-switch>
                   </td>
-                  <td style="width: 12%">
+                  <td style="width: 10%">
                     <div class="d-flex">
                       <!-- btn voir profil -->
                       <v-btn
@@ -390,9 +356,8 @@ export default {
                         color="light-blue-darken-4"
                         target="_blank"
                         :to="{
-                          name: 'profilRec',
+                          name: 'ProfilCand',
                           params: {
-                            name: item.nomEntreprise,
                             id: item._id,
                           },
                         }"
@@ -402,7 +367,7 @@ export default {
                         </p>
                       </v-btn>
                       <!-- setting -->
-                      <AddRecu :obj="item" />
+                      <AddCand :obj="item" />
                       <v-btn
                         variant="plain"
                         class="mt-1"

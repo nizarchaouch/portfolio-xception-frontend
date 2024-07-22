@@ -15,15 +15,7 @@ export default {
       cityName,
       secteurName,
       loading: false,
-      logoForUpload: null,
-      logoPath: "/defaultprofil.png",
-      nomEntreprise: "",
-      fondee: null,
-      taill_ent: "",
-      secteur: "Tous secteurs",
       adress: "",
-      identifiant: "",
-      description: "",
       fileForUpload: null,
       imagePath: defaultprofil,
       nom: "",
@@ -32,8 +24,9 @@ export default {
       mail: "",
       tel: null,
       civilite: "",
+      titre_emploi: "",
       password: "",
-      socialLinks: [{ platform: "", url: "" }],
+      socialLinks: [{ platform: "Autre", url: "" }],
       platformOptions: [
         "Twitter",
         "Facebook",
@@ -65,7 +58,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["userAuth", "updatedOffer", "addRecu", "updated"]),
+    ...mapActions(["userAuth", "updatedOffer", "addCand", "updated"]),
     addLink() {
       this.socialLinks.push({ platform: "", url: "" });
     },
@@ -82,36 +75,19 @@ export default {
         alert("Veuillez sélectionner un fichier image.");
       }
     },
-    handleLogoChange(event) {
-      const file = event.target.files[0];
-      if (file && file.type.startsWith("image/")) {
-        const logoPreviewUrl = URL.createObjectURL(file);
-        this.logoForUpload = file;
-        this.logoPreviewUrl = logoPreviewUrl;
-      } else {
-        alert("Veuillez sélectionner un fichier image.");
-      }
-    },
     async submitForm() {
       if (this.form) {
         const data = {
-          nomEntreprise: this.nomEntreprise,
-          secteur: this.secteur,
-          description: this.description,
-          adress: this.adress,
-          identifiant: this.identifiant,
-          fondee: this.fondee,
-          taill_ent: this.taill_ent,
           fileForUpload: this.fileForUpload,
           imagePath: this.imagePath,
-          logoForUpload: this.logoForUpload,
-          logoPath: this.logoPath,
           nom: this.nom,
           prenom: this.prenom,
           dateNais: this.dateNais,
           tel: this.tel,
-          mail: this.mail,
           civilite: this.civilite,
+          adress: this.adress,
+          mail: this.mail,
+          titre_emploi: this.titre_emploi,
           socialLinks: this.socialLinks,
           password: this.password,
         };
@@ -123,11 +99,14 @@ export default {
           }
           this.updated(data);
         } else {
-          this.addRecu(data);
+          this.addCand(data);
         }
         setTimeout(() => {
           this.loading = false;
-          if (this.profilRec.message === "Ajouté avec succès") {
+          if (
+            this.profilRec.message === "Ajouté avec succès" ||
+            this.profilRec.message === "Mise à jour réussie"
+          ) {
             window.location.reload();
           }
         }, 500);
@@ -141,14 +120,8 @@ export default {
       this.socialLinks = this.obj.socialLinks || [
         { platform: "LinkedIn", url: "" },
       ];
-      this.logoPath = this.obj.logoPath;
-      this.nomEntreprise = this.obj.nomEntreprise;
-      this.secteur = this.obj.secteur;
-      this.description = this.obj.description;
       this.adress = this.obj.adress;
-      this.identifiant = this.obj.identifiant;
-      this.fondee = this.obj.fondee;
-      this.taill_ent = this.obj.taill_ent;
+      this.titre_emploi = this.obj.titre_emploi;
       this.imagePath = "http://localhost:8000" + this.obj.imagePath;
       this.nom = this.obj.nom;
       this.prenom = this.obj.prenom;
@@ -180,7 +153,6 @@ export default {
     {{ profilRec.message }}
   </v-snackbar>
   <v-dialog v-model="dialog" transition="dialog-bottom-transition" fullscreen>
-    {{ console.log(obj) }}
     <template v-slot:activator="{ props: activatorProps }">
       <v-btn
         v-if="this.role"
@@ -201,8 +173,8 @@ export default {
       <v-toolbar color="white">
         <v-btn icon="mdi-close" @click="this.dialog = false"></v-btn>
 
-        <v-toolbar-title v-if="this.role">Ajouter un recruteur</v-toolbar-title>
-        <v-toolbar-title v-else>Modifier le recruteur</v-toolbar-title>
+        <v-toolbar-title v-if="this.role">Ajouter un candidat</v-toolbar-title>
+        <v-toolbar-title v-else>Modifier le candidat</v-toolbar-title>
         <v-spacer></v-spacer>
 
         <v-toolbar-items>
@@ -218,152 +190,12 @@ export default {
       </v-toolbar>
 
       <v-container
-        class="h-100 overflow-auto"
+        class="h-screen overflow-auto"
         fluid
         style="background-color: #f2f7ff"
       >
         <v-row>
-          <v-col cols="6">
-            <v-card class="pa-3" border>
-              <v-row no-gutters>
-                <v-col cols="9" md="10" xl="11">
-                  <h2>Informations l'entreprise</h2>
-                </v-col>
-              </v-row>
-              <v-row>
-                <!-- col logo -->
-                <v-col cols="12">
-                  <!-- <h4 class="mb-4 ms-7 text-medium-emphasis text-center">Image du logo</h4> -->
-                  <label
-                    for="logo"
-                    class="cursor-pointer d-flex justify-center"
-                  >
-                    <v-tooltip text="Click pour change l'image" location="left">
-                      <template v-slot:activator="{ props }">
-                        <v-badge
-                          v-bind="props"
-                          class="ms-4"
-                          floating
-                          color="blue"
-                          icon="mdi-image-edit-outline"
-                          offset-y="12"
-                          offset-x="8"
-                        >
-                          <v-avatar
-                            size="150"
-                            rounded="0"
-                            :image="
-                              defaultprofil ||
-                              logoPreviewUrl ||
-                              'http://localhost:8000' + logoPath
-                            "
-                          >
-                          </v-avatar>
-                        </v-badge>
-                      </template>
-                    </v-tooltip>
-                  </label>
-                  <input
-                    type="file"
-                    id="logo"
-                    class="d-none"
-                    accept="image/*"
-                    @change="handleLogoChange"
-                  />
-                </v-col>
-                <!-- nom & secteur -->
-                <v-col cols="12" md="4">
-                  <h4 class="mb-4 text-medium-emphasis">
-                    Nom de l'entreprise <span class="text-red">*</span>
-                  </h4>
-                  <v-text-field
-                    v-model="nomEntreprise"
-                    density="comfortable"
-                    variant="outlined"
-                    color="blue"
-                    :rules="[rules.required]"
-                  >
-                  </v-text-field>
-                  <!-- secteur -->
-                  <h4 class="mb-4 text-medium-emphasis">
-                    Secteur <span class="text-red">*</span>
-                  </h4>
-                  <v-autocomplete
-                    v-model="secteur"
-                    :items="secteurName"
-                    density="comfortable"
-                    variant="outlined"
-                    color="blue"
-                    :rules="[rules.required]"
-                  ></v-autocomplete>
-                </v-col>
-                <!-- fondee & adress -->
-                <v-col cols="12" md="4">
-                  <h4 class="mb-4 text-medium-emphasis">Année de création</h4>
-                  <v-text-field
-                    v-model="fondee"
-                    density="comfortable"
-                    variant="outlined"
-                    color="blue"
-                    type="Number"
-                  >
-                  </v-text-field>
-                  <!-- adress -->
-                  <h4 class="mb-4 text-medium-emphasis">
-                    Emplacement de l'entreprise<span class="text-red">*</span>
-                  </h4>
-                  <v-autocomplete
-                    v-model="adress"
-                    :items="cityName"
-                    density="comfortable"
-                    color="blue"
-                    variant="outlined"
-                    :rules="[rules.required]"
-                  ></v-autocomplete>
-                </v-col>
-                <!-- tail & tel -->
-                <v-col cols="12" md="4">
-                  <h4 class="mb-4 text-medium-emphasis">
-                    Taille de l'entreprise
-                  </h4>
-                  <v-select
-                    v-model="taill_ent"
-                    :items="taillOptions"
-                    density="comfortable"
-                    variant="outlined"
-                    color="blue"
-                  ></v-select>
-                  <!-- tel -->
-                  <h4 class="mb-4 text-medium-emphasis">
-                    Identifiant Unique (RC/ RNE / MF)
-                    <span class="text-red">*</span>
-                  </h4>
-                  <v-text-field
-                    v-model="identifiant"
-                    variant="outlined"
-                    density="comfortable"
-                    color="blue"
-                    :rules="[rules.required]"
-                  >
-                  </v-text-field>
-                </v-col>
-              </v-row>
-              <v-row>
-                <h3 class="ms-4">Description</h3>
-                <v-col cols="12">
-                  <v-textarea
-                    v-model="description"
-                    color="blue"
-                    rows="15"
-                    clearable
-                    counter
-                    variant="outlined"
-                  ></v-textarea>
-                </v-col>
-              </v-row>
-            </v-card>
-          </v-col>
-          <v-col cols="6">
+          <v-col cols="12">
             <v-card class="pa-3" border>
               <v-row no-gutters>
                 <v-col cols="9" md="10" xl="11">
@@ -373,7 +205,6 @@ export default {
               <v-row>
                 <!-- col logo -->
                 <v-col cols="12">
-                  <!-- <h4 class="mb-4 ms-7 text-medium-emphasis text-center">Image du logo</h4> -->
                   <label
                     for="image"
                     class="cursor-pointer d-flex justify-center"
@@ -391,7 +222,6 @@ export default {
                         >
                           <v-avatar
                             size="150"
-                            rounded="0"
                             :image="imagePreviewUrl || imagePath"
                           >
                           </v-avatar>
@@ -443,7 +273,9 @@ export default {
                     :rules="[rules.required]"
                   ></v-text-field>
                   <!-- tel -->
-                  <h4 class="mb-4 text-medium-emphasis">Téléphone</h4>
+                  <h4 class="mb-4 text-medium-emphasis">
+                    Téléphone <span class="text-red">*</span>
+                  </h4>
                   <v-text-field
                     v-model="tel"
                     variant="outlined"
@@ -467,7 +299,7 @@ export default {
                     variant="outlined"
                     :rules="[rules.required, rules.mail]"
                   ></v-text-field>
-                  <!-- pwd -->
+                  <!-- sexe -->
                   <h4 class="mb-4 text-medium-emphasis">
                     Civilité<span class="text-red">*</span>
                   </h4>
@@ -480,10 +312,30 @@ export default {
                     :rules="[rules.required]"
                   ></v-select>
                 </v-col>
-              </v-row>
-              <v-row no-gutters>
-                <v-col cols="12" v-if="this.role">
+                <!--  -->
+                <v-col cols="12" md="4">
                   <!-- pwd -->
+                  <h4 class="mb-4 text-medium-emphasis">Adresse</h4>
+                  <v-autocomplete
+                    v-model="adress"
+                    :items="cityName"
+                    density="comfortable"
+                    color="blue"
+                    variant="outlined"
+                  ></v-autocomplete>
+                </v-col>
+                <v-col cols="12" md="4">
+                  <!-- pwd -->
+                  <h4 class="mb-4 text-medium-emphasis">Role/Position</h4>
+                  <v-text-field
+                    v-model="titre_emploi"
+                    density="comfortable"
+                    color="blue"
+                    variant="outlined"
+                  ></v-text-field>
+                </v-col>
+                <!-- pwd -->
+                <v-col cols="12" md="4" v-if="this.role">
                   <h4 class="mb-4 text-medium-emphasis">
                     Mots de passe<span class="text-red">*</span>
                   </h4>
@@ -495,7 +347,7 @@ export default {
                     :rules="[rules.required, rules.counter]"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="12" v-else>
+                <v-col cols="12" md="4" v-else>
                   <!-- pwd -->
                   <h4 class="mb-4 text-medium-emphasis">Mots de passe</h4>
                   <v-text-field
@@ -507,7 +359,7 @@ export default {
                 </v-col>
               </v-row>
             </v-card>
-            <v-card class="pa-3 mt-4" border>
+            <v-card class="pa-3 mt-3" border>
               <h2 class="mb-5">Détails sociaux</h2>
               <v-row
                 v-for="(link, index) in socialLinks"
@@ -521,7 +373,7 @@ export default {
                     label="Sélectionner une option"
                   ></v-select>
                 </v-col>
-                <v-col cols="9">
+                <v-col cols="8" md="9">
                   <v-text-field
                     v-model="link.url"
                     label="Lien de profil / URL..."

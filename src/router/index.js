@@ -18,8 +18,10 @@ import PosterEmploi from "@/views/recruteur/PosterEmploiView.vue";
 import MonProfil from "@/views/recruteur/ProfilView.vue";
 import MesEmplois from "@/views/recruteur/EmploisView.vue";
 import RecView from "@/views/admin/RecView.vue";
+import CandView from "@/views/admin/CandView.vue";
 import TrouveCandidat from "@/views/recruteur/TrouveCandidatView.vue";
 import ParametreRec from "@/views/recruteur/ParametreView.vue";
+import ProfilCand from "@/components/user/admin/candidat/ProfilCand.vue";
 
 const routes = [
   {
@@ -114,6 +116,12 @@ const routes = [
     props: true,
   },
   {
+    path: "/admin/candidat/:id",
+    name: "ProfilCand",
+    component: ProfilCand,
+    props: true,
+  },
+  {
     path: "/MesEmplois",
     name: "MesEmplois",
     component: MesEmplois,
@@ -122,6 +130,11 @@ const routes = [
     path: "/admin/recruteur",
     name: "RecView",
     component: RecView,
+  },
+  {
+    path: "/admin/candidat",
+    name: "CandView",
+    component: CandView,
   },
   {
     path: "/TrouveCandidat",
