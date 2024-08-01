@@ -212,7 +212,7 @@ export default {
                   <v-text-field
                     v-model="search"
                     color="blue"
-                    label="Recherche"
+                    placeholder="Recherche"
                     prepend-inner-icon="mdi-magnify"
                     variant="outlined"
                     density="compact"
@@ -223,6 +223,7 @@ export default {
                 <v-col cols="9" md="2" class="ms-md-5">
                   <h5 class="ms-1">Emplacement</h5>
                   <v-autocomplete
+                    placeholder="Tous"
                     :items="cityName"
                     v-model="selectedEmplacement"
                     multiple

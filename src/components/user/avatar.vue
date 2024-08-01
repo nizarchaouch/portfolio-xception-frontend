@@ -19,7 +19,7 @@ export default {
         { text: "Mon Compte", icon: "mdi-account-settings", to: "/profil" },
         {
           text: "Mon Portfolio",
-          icon: "mdi-star",
+          icon: "mdi-card-account-details-star",
           to: this.portfolioFirstPageLink,
         },
         {
@@ -140,7 +140,7 @@ export default {
               <v-icon :icon="item.icon"></v-icon>
             </template>
 
-            <v-list-item-title v-text="item.text"></v-list-item-title>
+            <v-list-item-title v-text="item.text" class="text-body-2"></v-list-item-title>
           </v-list-item>
         </v-list>
         <!-- menu recruteur -->

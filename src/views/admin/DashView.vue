@@ -2,13 +2,22 @@
 // eslint-disable-next-line
 /* eslint-disable */
 import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
+import { secteurName } from "@/components/secteur";
 import NavBar from "@/components/public/NavBar.vue";
 import SideAdmin from "@/components/user/admin/SideAdmin.vue";
 import DialogDetail from "@/components/user/recruteur/para_offer/DialogVoirDeta.vue";
 import DialogModifier from "@/components/user/recruteur/para_offer/ModifierOffer.vue";
-import { secteurName } from "@/components/secteur";
+import AddRecu from "@/components/user/admin/recruteur/AddRecu.vue";
+import AddCand from "@/components/user/admin/candidat/AddCand.vue";
 export default {
-  components: { NavBar, SideAdmin, DialogDetail, DialogModifier },
+  components: {
+    NavBar,
+    SideAdmin,
+    DialogDetail,
+    DialogModifier,
+    AddRecu,
+    AddCand,
+  },
   computed: {
     ...mapState(["user", "offer", "candOffer", "profilRec", "candidat"]),
     ...mapGetters(["latestOffers", "offerCount", "candCount", "recuCount"]),
@@ -112,10 +121,10 @@ export default {
       }, 1000);
     },
     updateCards() {
-      const count= this.profilRec.recuVerif + this.candidat.candVerif
+      const count = this.profilRec.recuVerif + this.candidat.candVerif;
       this.cards[0].number = this.candCount;
       this.cards[1].number = this.recuCount;
-      this.cards[2].number = count ;
+      this.cards[2].number = count;
       this.cards[3].number = this.offerCount;
     },
   },
@@ -272,7 +281,7 @@ export default {
                     Date de création
                   </th>
                   <th class="text-left font-weight-bold" style="width: 20%">
-                    Applications
+                    Type d'emploi
                   </th>
                   <th class="text-left font-weight-bold ps-14">Action</th>
                 </tr>
@@ -286,12 +295,13 @@ export default {
                     {{ item.date_creation.split("T")[0] }}
                   </td>
                   <td class="text-subtitle-1 text-medium-emphasis">
-                    <v-icon>mdi-account-multiple</v-icon>
+                    <!-- <v-icon>mdi-account-multiple</v-icon>
                     <template v-for="app in countApp" :key="app.id">
                       <span v-if="app.id === item._id">
                         {{ app.count }} Applications
                       </span>
-                    </template>
+                    </template> -->
+                    {{ item.typeOffer }}
                   </td>
                   <td>
                     <div class="d-flex">
@@ -413,23 +423,74 @@ export default {
                     <!-- <v-icon>{{item.verifier?'mdi-check':"mdi-close"}}</v-icon> -->
                     {{ item.verifier ? "vérifié" : "non vérifié" }}
                   </td>
-                  <td>
+                  <!-- settingd recruteur -->
+                  <td v-if="item.role === 'recruteur'">
                     <div class="d-flex">
+                      <!-- btn voir profil -->
+                      <v-btn
+                        class="text-none mt-2"
+                        variant="text"
+                        append-icon="mdi-chevron-right"
+                        color="light-blue-darken-4"
+                        target="_blank"
+                        :to="{
+                          name: 'profilRec',
+                          params: {
+                            name: item.nomEntreprise,
+                            id: item._id,
+                          },
+                        }"
+                      >
+                        <p class="text-subtitle-1 font-weight-bold">
+                          Voir le profil
+                        </p>
+                      </v-btn>
                       <!-- setting -->
-                      <v-btn variant="plain" class="float-end">
-                        <v-icon size="30">mdi-cog-outline</v-icon>
-                        <v-menu activator="parent">
-                          <v-list>
-                            <DialogDetail :obj="item" />
-                            <DialogModifier :obj="item" />
-                            <v-list-item
-                              link
-                              title="Supprimer"
-                              prepend-icon="mdi-delete-empty"
-                              @click="confirmDeletionDialog(item._id)"
-                            ></v-list-item>
-                          </v-list>
-                        </v-menu>
+                      <AddRecu :obj="item" />
+                      <v-btn
+                        variant="plain"
+                        class="mt-1"
+                        icon
+                        @click="confirmDeletionDialog(item._id)"
+                      >
+                        <v-icon size="30" color="red"
+                          >mdi-delete-outline</v-icon
+                        >
+                      </v-btn>
+                    </div>
+                  </td>
+                  <!-- settings candidat -->
+                  <td v-if="item.role === 'candidat'">
+                    <div class="d-flex">
+                      <!-- btn voir profil -->
+                      <v-btn
+                        class="text-none mt-2"
+                        variant="text"
+                        append-icon="mdi-chevron-right"
+                        color="light-blue-darken-4"
+                        target="_blank"
+                        :to="{
+                          name: 'ProfilCand',
+                          params: {
+                            id: item._id,
+                          },
+                        }"
+                      >
+                        <p class="text-subtitle-1 font-weight-bold">
+                          Voir le profil
+                        </p>
+                      </v-btn>
+                      <!-- setting -->
+                      <AddCand :obj="item" />
+                      <v-btn
+                        variant="plain"
+                        class="mt-1"
+                        icon
+                        @click="confirmDeletionDialog(item._id)"
+                      >
+                        <v-icon size="30" color="red"
+                          >mdi-delete-outline</v-icon
+                        >
                       </v-btn>
                     </div>
                   </td>

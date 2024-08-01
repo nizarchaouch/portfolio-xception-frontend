@@ -41,7 +41,10 @@ export default {
               item.nomEntreprise
                 .toLowerCase()
                 .includes(this.search.toLowerCase()) ||
-              item.mail.includes(this.search)
+              item.identifiant
+                .toLowerCase()
+                .includes(this.search.toLowerCase()) ||
+              item.mail.toLowerCase().includes(this.search.toLowerCase())
             );
           } else {
             return false;
@@ -223,7 +226,7 @@ export default {
                   <v-text-field
                     v-model="search"
                     color="blue"
-                    label="Recherche"
+                    placeholder="Recherche"
                     prepend-inner-icon="mdi-magnify"
                     variant="outlined"
                     density="compact"
@@ -234,6 +237,7 @@ export default {
                 <v-col cols="10" md="2" class="ms-md-5">
                   <h5 class="ms-1">Secteur</h5>
                   <v-autocomplete
+                    placeholder="Tous"
                     :items="secteurName"
                     v-model="selectedSecteur"
                     multiple
@@ -246,6 +250,7 @@ export default {
                 <v-col cols="10" md="2" class="ms-md-5">
                   <h5 class="ms-1">Emplacement</h5>
                   <v-autocomplete
+                    placeholder="Tous"
                     :items="cityName"
                     v-model="selectedEmplacement"
                     multiple
@@ -320,7 +325,7 @@ export default {
                         </v-avatar>
                       </v-col>
                       <v-col cols="8">
-                        <span >
+                        <span>
                           {{ item.nomEntreprise }}
                           <p class="text-caption text-medium-emphasis">
                             {{ item.mail }}

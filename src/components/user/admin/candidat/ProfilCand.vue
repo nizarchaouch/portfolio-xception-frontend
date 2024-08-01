@@ -190,8 +190,11 @@ export default {
       </v-col>
       <v-col cols="12" md="8" lg="8" xl="9">
         <v-col cols="12" sm="11" class="mx-auto">
-          <h3>Emplois appliqués
-            <span class="text-grey-darken-2">({{ this.candOffer.candData.length }})</span>
+          <h3>
+            Emplois appliqués
+            <span class="text-grey-darken-2"
+              >({{ this.candOffer.candData.length }})</span
+            >
           </h3>
         </v-col>
         <v-card class="ma-3" rounded="xl">
@@ -268,7 +271,9 @@ export default {
                     </v-col>
                     <v-col cols="12" lg="9" class="ps-2">
                       <span> {{ item.titre }} </span>
-                      <p class="text-subtitle-2">{{ item.typeOffer }}</p>
+                      <p class="text-subtitle-2 text-medium-emphasis">
+                        {{ item.nomEntreprise }} - {{ item.typeOffer }}
+                      </p>
                     </v-col>
                   </v-row>
                 </td>

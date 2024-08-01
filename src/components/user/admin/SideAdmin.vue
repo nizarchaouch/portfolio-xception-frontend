@@ -13,7 +13,7 @@ export default {
       { text: "Recruteur", icon: "mdi-domain", to: "/admin/recruteur" },
       { text: "Candidat", icon: "mdi-account-group", to: "/admin/candidat" },
       { text: "Emplois", icon: "mdi-briefcase-variant", to: "" },
-      { text: "Mon Profil", icon: "mdi-account-circle", to: "" },
+      { text: "Modèles de portfolio", icon: "mdi-card-account-details", to: "" },
     ],
   }),
   methods: {
@@ -68,6 +68,7 @@ export default {
         <v-divider class="border-opacity-50 mb-2"></v-divider>
         <v-btn
           to="/"
+          target="_blank"
           variant="elevated"
           elevation="0"
           color="#435ebe"
