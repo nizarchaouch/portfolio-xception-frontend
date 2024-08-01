@@ -14,11 +14,20 @@ export default {
     nav: null,
     drawer: false,
     hide: "hide",
+    items: [
+      { text: "accueil", to: "/" },
+      { text: "templates", to: "/template" },
+      { text: "Offres d'emploi", to: "/offer" },
+    ],
     itemsRec: [
-      { text: "Aperçu", icon: "mdi-chart-bar", to: "dashboard" },
-      { text: "Mon Profil", icon: "mdi-account-circle", to: "MonProfil" },
-      { text: "Poster un emploi", icon: "mdi-plus-circle", to: "PosterEmploi" },
-      { text: "Mes emplois", icon: "mdi-briefcase-variant", to: "MesEmplois" },
+      { text: "Aperçu", icon: "mdi-chart-bar", to: "/dashboard" },
+      { text: "Mon Profil", icon: "mdi-account-circle", to: "/MonProfil" },
+      {
+        text: "Poster un emploi",
+        icon: "mdi-plus-circle",
+        to: "/PosterEmploi",
+      },
+      { text: "Mes emplois", icon: "mdi-briefcase-variant", to: "/MesEmplois" },
       {
         text: "Trouver candidats",
         icon: "mdi-account-search",
@@ -30,8 +39,12 @@ export default {
       { text: "Aperçu", icon: "mdi-view-dashboard", to: "/admin/dashboard" },
       { text: "Recruteur", icon: "mdi-domain", to: "/admin/recruteur" },
       { text: "Candidat", icon: "mdi-account-group", to: "/admin/candidat" },
-      { text: "Emplois", icon: "mdi-briefcase-variant", to: "" },
-      { text: "Mon Profil", icon: "mdi-account-circle", to: "" },
+      { text: "Emplois", icon: "mdi-briefcase-variant", to: "/admin/emploi" },
+      {
+        text: "Modèles de portfolio",
+        icon: "mdi-card-account-details",
+        to: "",
+      },
     ],
   }),
   methods: {
@@ -191,6 +204,36 @@ export default {
               </template>
 
               <v-list-item-title v-text="item.text"></v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-col>
+        <v-col cols="1">
+          <v-icon @click="drawer = !drawer" class="ma-3">mdi-close</v-icon>
+        </v-col>
+      </v-row>
+    </v-navigation-drawer>
+    <v-navigation-drawer
+      v-if="!this.user.userData.role"
+      v-model="drawer"
+      location="top"
+      elevation="10"
+      temporary
+      permanent
+    >
+      <v-row>
+        <v-col cols="10">
+          <v-list density="compact" lines="one">
+            <v-list-item
+              v-for="(item, i) in items"
+              :key="i"
+              :value="item"
+              color="primary"
+              :to="item.to"
+            >
+              <v-list-item-title
+                v-text="item.text"
+                class="text-uppercase"
+              ></v-list-item-title>
             </v-list-item>
           </v-list>
         </v-col>

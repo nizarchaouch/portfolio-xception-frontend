@@ -19,6 +19,7 @@ import MonProfil from "@/views/recruteur/ProfilView.vue";
 import MesEmplois from "@/views/recruteur/EmploisView.vue";
 import RecView from "@/views/admin/RecView.vue";
 import CandView from "@/views/admin/CandView.vue";
+import EmpView from "@/views/admin/EmpView.vue";
 import TrouveCandidat from "@/views/recruteur/TrouveCandidatView.vue";
 import ParametreRec from "@/views/recruteur/ParametreView.vue";
 import ProfilCand from "@/components/user/admin/candidat/ProfilCand.vue";
@@ -135,6 +136,11 @@ const routes = [
     path: "/admin/candidat",
     name: "CandView",
     component: CandView,
+  },
+  {
+    path: "/admin/emploi",
+    name: "EmpView",
+    component: EmpView,
   },
   {
     path: "/TrouveCandidat",

@@ -1,9 +1,10 @@
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapGetters } from "vuex";
 export default {
-  props: { obj: String },
+  props: { obj: String, tab: Boolean, role: Boolean },
   computed: {
-    ...mapState(["user", "offer"]),
+    ...mapState(["user", "offer", "profilRec"]),
+    ...mapGetters(["getSecteurEtPosition"]),
   },
   data() {
     return {
@@ -23,6 +24,7 @@ export default {
       ],
       data: {
         id: null,
+        nomEntreprise: "",
         position: "",
         titre: "",
         niveauCand: "",
@@ -43,10 +45,21 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["userAuth", "updatedOffer"]),
+    ...mapActions(["userAuth", "updatedOffer", "addOffer", "getRecruteurs"]),
     async submitForm() {
       if (this.form) {
-        await this.updatedOffer(this.data);
+        if (this.obj) {
+          await this.updatedOffer(this.data);
+        } else {
+          const secteurEtPosition = this.getSecteurEtPosition(
+            this.data.nomEntreprise
+          );
+          if (secteurEtPosition) {
+            this.data.secteur = secteurEtPosition.secteur;
+            this.data.position = secteurEtPosition.position;
+          }
+          await this.addOffer(this.data);
+        }
         // window.location.reload();
       } else {
         console.log("Form is invalid");
@@ -58,19 +71,21 @@ export default {
     },
   },
   created() {
-    this.data.id = this.obj._id;
-    this.data.position = this.obj.position;
-    this.data.titre = this.obj.titre;
-    this.data.niveauCand = this.obj.niveauCand;
-    this.data.experience = this.obj.experience;
-    this.data.langue = this.obj.langue;
-    this.data.salaire = this.obj.salaire;
-    this.data.vacants = this.obj.vacants;
-    this.data.typeOffer = this.obj.typeOffer;
-    this.data.genre = this.obj.genre;
-    this.data.date_expiration = this.obj.date_expiration.split("T")[0];
-    this.data.description = this.obj.description;
-    this.data.exigence = this.obj.exigence;
+    if (this.obj) {
+      this.data.id = this.obj._id;
+      this.data.position = this.obj.position;
+      this.data.titre = this.obj.titre;
+      this.data.niveauCand = this.obj.niveauCand;
+      this.data.experience = this.obj.experience;
+      this.data.langue = this.obj.langue;
+      this.data.salaire = this.obj.salaire;
+      this.data.vacants = this.obj.vacants;
+      this.data.typeOffer = this.obj.typeOffer;
+      this.data.genre = this.obj.genre;
+      this.data.date_expiration = this.obj.date_expiration.split("T")[0];
+      this.data.description = this.obj.description;
+      this.data.exigence = this.obj.exigence;
+    }
   },
   async mounted() {
     await this.userAuth();
@@ -79,6 +94,8 @@ export default {
       this.user.userData.role === "candidat"
     ) {
       this.$router.push("login");
+    } else {
+      this.getRecruteurs();
     }
   },
 };
@@ -86,7 +103,28 @@ export default {
 <template>
   <v-dialog v-model="dialog" transition="dialog-bottom-transition" fullscreen>
     <template v-slot:activator="{ props: activatorProps }">
+      <v-btn
+        v-if="this.role"
+        v-bind="activatorProps"
+        class="text-none"
+        color="blue"
+        variant="tonal"
+        rounded
+        prepend-icon="mdi-plus"
+      >
+        Ajouter
+      </v-btn>
+      <v-btn
+        v-else-if="this.tab"
+        v-bind="activatorProps"
+        variant="plain"
+        class="mt-1"
+        icon
+      >
+        <v-icon size="30">mdi-progress-pencil</v-icon>
+      </v-btn>
       <v-list-item
+        v-else
         v-bind="activatorProps"
         link
         title="Modifier"
@@ -97,12 +135,13 @@ export default {
       <v-toolbar>
         <v-btn icon="mdi-close" @click="closeDialog()"></v-btn>
 
-        <v-toolbar-title>Modifier Offer</v-toolbar-title>
+        <v-toolbar-title v-if="this.role">Ajouter Offer</v-toolbar-title>
+        <v-toolbar-title v-else>Modifier Offer</v-toolbar-title>
         <v-spacer></v-spacer>
 
         <v-toolbar-items>
           <v-btn
-            text="Enregistrer les modifications"
+            text="Enregistrer"
             color="indigo"
             type="submit"
             class="text-none font-weight-bold"
@@ -229,7 +268,22 @@ export default {
                 >
                 </v-text-field>
               </v-col>
-              <v-col cols="12" md="3"></v-col>
+              <v-col cols="12" md="3">
+                <p
+                  class="text-subtitle-2 text-medium-emphasis"
+                  v-if="this.role"
+                >
+                  Nom de l'entreprise <span class="text-red">*</span>
+                </p>
+                <v-autocomplete
+                  v-if="this.role"
+                  v-model="data.nomEntreprise"
+                  :items="this.profilRec.nomEntreprise"
+                  variant="outlined"
+                  color="blue"
+                  :rules="[rules.required]"
+                ></v-autocomplete>
+              </v-col>
             </v-row>
             <!--  -->
             <v-row justify="center">

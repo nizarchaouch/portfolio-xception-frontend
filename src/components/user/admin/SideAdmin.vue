@@ -12,7 +12,7 @@ export default {
       { text: "Aperçu", icon: "mdi-view-dashboard", to: "/admin/dashboard" },
       { text: "Recruteur", icon: "mdi-domain", to: "/admin/recruteur" },
       { text: "Candidat", icon: "mdi-account-group", to: "/admin/candidat" },
-      { text: "Emplois", icon: "mdi-briefcase-variant", to: "" },
+      { text: "Emplois", icon: "mdi-briefcase-variant", to: "/admin/emploi" },
       { text: "Modèles de portfolio", icon: "mdi-card-account-details", to: "" },
     ],
   }),

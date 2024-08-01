@@ -180,7 +180,6 @@ export default {
     {{ profilRec.message }}
   </v-snackbar>
   <v-dialog v-model="dialog" transition="dialog-bottom-transition" fullscreen>
-    {{ console.log(obj) }}
     <template v-slot:activator="{ props: activatorProps }">
       <v-btn
         v-if="this.role"

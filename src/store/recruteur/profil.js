@@ -6,6 +6,7 @@ export default {
     color: "",
     InfoRec: [],
     recruteurs: [],
+    nomEntreprise: [],
     recuVerif: 0,
   },
   getters: {
@@ -16,6 +17,17 @@ export default {
       // console.log(state.recruteurs[0]);
       return state.recruteurs;
     },
+    getSecteurEtPosition: (state) => (nomEntreprise) => {
+      const index = state.recruteurs.findIndex(recruteur => recruteur.nomEntreprise === nomEntreprise);
+      if (index !== -1) {
+        return {
+          secteur: state.recruteurs[index].secteur,
+          position:  state.recruteurs[index].adress,
+        };
+      } else {
+        return null; // ou { secteur: null, position: -1 } si vous préférez
+      }
+    }
   },
   mutations: {
     setMes(state, payload) {
@@ -29,13 +41,14 @@ export default {
     setRecu(state, recruteurs) {
       state.recruteurs = recruteurs;
       state.recuVerif = 0;
+      state.nomEntreprise = [];
       recruteurs.forEach((recruteur) => {
+        state.nomEntreprise.push(recruteur.nomEntreprise);
         if (recruteur.verifier) {
           state.recuVerif++;
         }
       });
     },
-
   },
   actions: {
     async getRecruteurs(ctx) {
@@ -92,7 +105,7 @@ export default {
           formDataLogo
         );
         // if (uploadLogoResponse.data.logopath != "") {
-          data.logoPath = uploadLogoResponse.data.logopath;
+        data.logoPath = uploadLogoResponse.data.logopath;
         // }
 
         console.log("data", data);

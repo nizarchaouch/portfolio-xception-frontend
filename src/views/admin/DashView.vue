@@ -289,7 +289,24 @@ export default {
               <tbody>
                 <tr v-for="item in latestOffers" :key="item.name">
                   <td class="text-subtitle-1 font-weight-bold">
-                    {{ item.titre }}
+                    <v-row no-gutters>
+                      <v-col cols="auto">
+                        <v-avatar
+                          size="small"
+                          class="my-1 mx-1"
+                          :image="'http://localhost:8000' + item.logo"
+                        >
+                        </v-avatar>
+                      </v-col>
+                      <v-col cols="auto">
+                        <span class="ps-1">
+                          {{ item.titre }}
+                          <p class="text-caption text-medium-emphasis ms-1">
+                            {{ item.nomEntreprise }} - {{ item.position }}
+                          </p>
+                        </span>
+                      </v-col>
+                    </v-row>
                   </td>
                   <td class="text-subtitle-1">
                     {{ item.date_creation.split("T")[0] }}

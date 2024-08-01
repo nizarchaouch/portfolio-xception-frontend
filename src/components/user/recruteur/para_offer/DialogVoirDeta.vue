@@ -3,6 +3,7 @@ import { mapState, mapActions } from "vuex";
 export default {
   props: {
     obj: Object,
+    tab: Boolean,
   },
   computed: { ...mapState(["user"]) },
   data() {
@@ -26,7 +27,18 @@ export default {
     max-width="950"
   >
     <template v-slot:activator="{ props: activatorProps }">
+      <v-btn
+        v-if="this.tab"
+        class="text-none mt-2"
+        variant="text"
+        append-icon="mdi-chevron-right"
+        color="light-blue-darken-4"
+        v-bind="activatorProps"
+      >
+        <p class="text-subtitle-1 font-weight-bold">Voir les détails</p>
+      </v-btn>
       <v-list-item
+        v-else
         link
         title="Voir les détails"
         prepend-icon="mdi-eye"
@@ -53,9 +65,19 @@ export default {
                 {{ obj.titre }}
               </p>
               <div class="d-flex justify-center">
-                <p class="link">
+                <!-- <p class="link">
                   {{ obj.nomEntreprise }}
-                </p>
+                </p> -->
+                <router-link
+                  target="_blank"
+                  :to="{
+                    name: 'profilRec',
+                    params: { name: obj.nomEntreprise, id: obj.idRec },
+                  }"
+                  style="font-weight: 600"
+                >
+                  {{ obj.nomEntreprise }}
+                </router-link>
                 <span class="text-medium-emphasis">
                   <v-icon>mdi-minus</v-icon>{{ obj.position }}</span
                 >
