@@ -67,7 +67,7 @@ export default {
   <ITTB /> -->
   <!-- <BlocTitreBtn /> -->
   <!-- <CardExp /> -->
-   <!-- <BlocParg /> -->
+  <!-- <BlocParg /> -->
 </template>
 
 <style lang="scss" scoped></style>

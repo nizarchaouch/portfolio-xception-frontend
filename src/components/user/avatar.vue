@@ -5,10 +5,10 @@ import TeleCv from "./TeleCv.vue";
 export default {
   components: { TeleCv },
   computed: {
-    ...mapState(["login", "user", "portfolio"]),
+    ...mapState(["login", "user", "portfolioss"]),
     portfolioFirstPageLink() {
-      return this.portfolio.pages.length > 0
-        ? `/portfolio/${this.portfolio.pages[0].id}`
+      return this.portfolioss.portfolios.pages.length > 0
+        ? `/portfolio/${this.portfolioss.portfolios.pages[0].name}`
         : "";
     },
     userData() {
@@ -52,7 +52,7 @@ export default {
     itemsAdmin() {
       return [
         { text: "Aperçu", icon: "mdi-view-dashboard", to: "/admin/dashboard" },
-        { text: "Mon Profil", icon: "mdi-account-circle", to: "" },
+        { text: "Mon Profil", icon: "mdi-account-circle", to: "/admin/profil" },
         { text: "Paramètres", icon: "mdi-cog", to: "" },
       ];
     },

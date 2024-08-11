@@ -1,13 +1,14 @@
 <script>
 // eslint-disable-next-line
 /* eslint-disable */
-import { mapState, mapActions,mapMutations } from "vuex";
+import { mapState, mapActions } from "vuex";
 import NavBar from "@/components/portfolio/NavBar.vue";
 import PagePort from "@/components/portfolio/PagePort.vue";
 import SideModEntet from "@/components/portfolio/sidebar/SideModEntet.vue";
 import SidebarM from "@/components/portfolio/sidebar/SideBarM.vue";
 import SideModAprop from "@/components/portfolio/sidebar/SideModAprop.vue";
 export default {
+  name: "addModel",
   components: {
     NavBar,
     PagePort,
@@ -22,17 +23,16 @@ export default {
     ...mapState(["user", "portfolio"]),
   },
   methods: {
-    ...mapActions(["userAuth", "getPortfolio"]),
+    ...mapActions(["userAuth"]),
   },
   async mounted() {
     await this.userAuth();
-    await this.getPortfolio();
     if (
       this.user.authenticated === false ||
-      this.user.userData.role === "recruteur"
+      this.user.userData.role === "recruteur" ||
+      this.user.userData.role === "candidat"
     ) {
       this.$router.push("/login");
-    } else {
     }
   },
 };

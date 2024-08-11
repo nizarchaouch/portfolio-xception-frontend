@@ -18,7 +18,7 @@ export default {
 </script>
 <template lang="">
   <NavBar />
-  <v-container class="mt-16">
+  <v-container class="mt-16 px-xl-16" fluid>
     <v-row>
       <v-col cols="12" sm="12" md="10" xl="8" class="ma-lg-9">
         <h1>Sélectionnez le template que vous aimez</h1>

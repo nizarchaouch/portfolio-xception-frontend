@@ -4,6 +4,7 @@ import login from "./auth/login";
 import signup from "./auth/signup";
 import forgot from "./auth/forgot.js";
 import candidat from "./candidat/profil";
+import profilAdmin from "./admin/profil";
 import offer from "./offer/offers";
 import portfolioss from "./portfolio/portfolio";
 import portfolio from "./portfolio/elements";
@@ -32,6 +33,7 @@ export default createStore({
     chartRec,
     chartAdmin,
     profilRec,
+    profilAdmin,
     // usersUpdate,
   },
 });

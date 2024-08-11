@@ -42,9 +42,9 @@ export default {
   },
   methods: {
     ...mapActions(["userAuth", "updated"]),
-    cleanedEmail() {
-      return this.user.userData.mail.trim().replace(/;$/, "");
-    },
+    // cleanedEmail() {
+    //   return this.user.userData.mail.trim().replace(/;$/, "");
+    // },
     addLink() {
       this.data.socialLinks.push({ platform: "", url: "" });
     },

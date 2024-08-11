@@ -60,15 +60,12 @@ export default {
     ...mapMutations(["incrStep", "decrStep"]),
     handleFileChange(event) {
       const file = event.target.files[0];
-
       if (file) {
         const reader = new FileReader();
-
         reader.onload = (e) => {
           this.data.imageUrl = e.target.result;
           console.log("URL de l'image:", this.data.imageUrl);
         };
-
         reader.readAsDataURL(file);
       }
     },

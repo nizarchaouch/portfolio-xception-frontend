@@ -1,3 +1,5 @@
+// eslint-disable-next-line
+/* eslint-disable */
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import Login from "@/views/auth/LoginView.vue";
@@ -23,6 +25,9 @@ import EmpView from "@/views/admin/EmpView.vue";
 import TrouveCandidat from "@/views/recruteur/TrouveCandidatView.vue";
 import ParametreRec from "@/views/recruteur/ParametreView.vue";
 import ProfilCand from "@/components/user/admin/candidat/ProfilCand.vue";
+import ProfilAdmin from "@/views/admin/ProfilAdmin.vue";
+import ModelPortf from "@/views/admin/modeleProtfolio/ModelPortf.vue";
+import AddPortf from "@/views/admin/modeleProtfolio/AddPortf.vue";
 
 const routes = [
   {
@@ -46,13 +51,13 @@ const routes = [
     component: Signup,
   },
   {
-    path: "/forgot_password",
+    path: "/user/forgot_password",
     name: "forgotpwd",
     component: ForgotPwd,
   },
   {
     path: "/admin/forgot_password",
-    name: "forgotpwd",
+    name: "forgotpwdAdmin",
     component: ForgotPwdAdmin,
   },
   {
@@ -86,6 +91,11 @@ const routes = [
     component: PortfolioView,
   },
   {
+    path: "/portfolio_:nom/:page",
+    name: "addModel",
+    component: AddPortf,
+  },
+  {
     path: "/candidature",
     name: "candidature",
     component: CandidatureView,
@@ -99,6 +109,16 @@ const routes = [
     path: "/admin/dashboard",
     name: "dashboardAdmin",
     component: DashAdmin,
+  },
+  {
+    path: "/admin/profil",
+    name: "ProfilAdmin",
+    component: ProfilAdmin,
+  },
+  {
+    path: "/admin/modele",
+    name: "modelePortfolio",
+    component: ModelPortf,
   },
   {
     path: "/PosterEmploi",

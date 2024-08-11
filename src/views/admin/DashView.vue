@@ -189,7 +189,7 @@ export default {
   </v-snackbar>
   <NavBar hidea=" " />
   <SideAdmin />
-  <v-container fluid style="background-color: #f2f7ff">
+  <v-container fluid style="background-color: #f2f7ff" >
     <v-row class="mt-16">
       <v-col cols="12" lg="9" xl="10" offset-lg="3" offset-xl="2">
         <v-row no-gutters>

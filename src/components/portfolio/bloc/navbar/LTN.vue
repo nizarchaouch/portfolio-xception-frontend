@@ -37,6 +37,12 @@ export default {
   },
   created() {
     this.portfolioss.selectedPage = this.pages[0];
+    console.log("select", this.portfolioss.selectedPage);
+  },
+  mounted() {
+    setTimeout(() => {
+      this.findPage(this.pages[0].name);
+    }, 100);
   },
 };
 </script>

@@ -1,6 +1,6 @@
 <script>
-import logo from "@/assets/logo_text.png";
 import { mapState, mapActions } from "vuex";
+import logo from "@/assets/logo_text.png";
 export default {
   name: "authview",
   computed: {
