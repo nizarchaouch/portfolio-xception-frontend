@@ -200,11 +200,13 @@ export default {
           <v-card flat border>
             <v-card-title class="d-flex align-center pe-2">
               <v-row no-gutters>
-                <v-col cols="12" class="d-flex justify-space-between pa-2">
+                <v-col cols="12" sm="10" xl="11" class="pa-2">
                   <h3 class="mb-6 mt-2">
                     Liste des candidats
                     <span class="text-grey-darken-2">({{ candCount }})</span>
                   </h3>
+                </v-col>
+                <v-col cols="12" sm="2" xl="1" class="pa-2">
                   <AddCand :role="true" />
                 </v-col>
                 <v-col cols="9" md="3" class="mb-2">
