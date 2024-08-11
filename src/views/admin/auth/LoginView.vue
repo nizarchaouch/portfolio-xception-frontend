@@ -138,7 +138,7 @@ export default {
     <v-col cols="12" md="6" class="h-screen">
       <v-img cover height="100%" :src="bgAdmin" class="d-flex align-end pb-16">
         <v-row class="mb-10">
-          <v-col cols="auto" class="mb-lg-16 mx-lg-16 mx-md-9">
+          <v-col cols="auto" class="mb-lg-16 mx-md-9 mx-lg-16 mx-md-9">
             <v-btn
               :ripple="false"
               elevation="0"

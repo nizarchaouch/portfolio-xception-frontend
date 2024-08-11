@@ -1,5 +1,5 @@
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapGetters } from "vuex";
 import { useRoute } from "vue-router";
 import logo from "@/assets/logo_text.png";
 import bgAdmin from "@/assets/bg-admin.png";
@@ -8,6 +8,7 @@ export default {
   name: "authview",
   computed: {
     ...mapState(["forgot", "user"]),
+    ...mapGetters(["offerCount", "candCount", "recuCount"]),
   },
   data() {
     const route = useRoute();
@@ -33,7 +34,13 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["resetPwd", "userAuth"]),
+    ...mapActions([
+      "resetPwd",
+      "userAuth",
+      "showOffer",
+      "getCandidats",
+      "getRecruteurs",
+    ]),
     onSubmit() {
       const resetToken = this.route.params.token; // Access route params here
       if (!this.form) return;
@@ -53,6 +60,9 @@ export default {
   },
   async mounted() {
     await this.userAuth();
+    this.showOffer();
+    this.getCandidats();
+    this.getRecruteurs();
     if (this.user.authenticated && this.user.userData.role === "recruteur") {
       this.$router.push("/dashboard");
     }
@@ -65,12 +75,12 @@ export default {
 
 <template>
   <v-row no-gutters class="bg-white">
-    <v-col cols="6">
+    <v-col cols="12" md="6">
       <v-form @submit.prevent="onSubmit" v-model="form">
-        <v-col cols="4" offset-lg="3" class="mt-16">
-          <v-img class="mx-aut my-6" max-width="228" :src="logo"></v-img>
+        <v-col cols="12" lg="4" offset-md="3" class="mt-16">
+          <v-img class="mx-aut my-lg-6" max-width="228" :src="logo"></v-img>
         </v-col>
-        <v-col cols="6" class="mx-auto mt-16">
+        <v-col cols="12" md="8" lg="6" class="mx-auto mt-16">
           <v-snackbar
             :timeout="7000"
             color="red-darken-2 mt-16"
@@ -121,14 +131,14 @@ export default {
             type="submit"
           >
             Envoyer
-          </v-btn>  
+          </v-btn>
         </v-col>
       </v-form>
     </v-col>
-    <v-col cols="6" class="h-screen">
-      <v-img cover :src="bgAdmin" class="d-flex align-end pb-16">
+    <v-col cols="12" md="6" class="h-screen">
+      <v-img cover height="100%" :src="bgAdmin" class="d-flex align-end pb-16">
         <v-row class="mb-10">
-          <v-col cols="auto" class="mb-16 mx-16">
+          <v-col cols="auto" class="mb-lg-16 mx-md-9 mx-lg-16 mx-md-9">
             <v-btn
               :ripple="false"
               elevation="0"
@@ -138,10 +148,10 @@ export default {
             >
               <v-icon color="white" size="30">mdi-briefcase-eye-outline</v-icon>
             </v-btn>
-            <p class="text-white mt-2 ms-16 text-h6">2</p>
+            <p class="text-white mt-2 ms-16 text-h6">{{ offerCount }}</p>
             <p class="text-grey-lighten-1 ms-16 font-weight-bold">Offres</p>
           </v-col>
-          <v-col cols="auto" class="mb-16 mx-16">
+          <v-col cols="auto" class="mb-lg-16 mx-2 mx-lg-16 mx-md-9">
             <v-btn
               :ripple="false"
               elevation="0"
@@ -150,10 +160,10 @@ export default {
             >
               <v-icon color="white" size="30">mdi-domain</v-icon>
             </v-btn>
-            <p class="text-white mt-2 text-h6">2</p>
+            <p class="text-white mt-2 text-h6">{{ recuCount }}</p>
             <p class="text-grey-lighten-1 font-weight-bold">Entreprises</p>
           </v-col>
-          <v-col cols="auto" class="mb-16 mx-16">
+          <v-col cols="auto" class="mb-lg-16 mx-2 mx-lg-16 mx-md-9">
             <v-btn
               :ripple="false"
               elevation="0"
@@ -162,7 +172,7 @@ export default {
             >
               <v-icon color="white" size="30">mdi-account-outline</v-icon>
             </v-btn>
-            <p class="text-white mt-2 text-h6">2</p>
+            <p class="text-white mt-2 text-h6">{{ candCount }}</p>
             <p class="text-grey-lighten-1 font-weight-bold">Candidats</p>
           </v-col>
         </v-row>
