@@ -34,7 +34,8 @@ export default {
   data() {
     return {
       drawer: true,
-      snackConf: false,
+      snackConfUser: false,
+      snackConfOffre: false,
       deleteId: null,
       cards: [
         {
@@ -71,6 +72,7 @@ export default {
       "showOffer",
       "getOfferApp",
       "delOffer",
+      "deltRecu",
       "getCandidats",
       "getRecruteurs",
       "getLastUser",
@@ -110,11 +112,21 @@ export default {
         this.getOfferApp(id);
       });
     },
-    confirmDeletionDialog(id) {
+    confirmDeletionDialogUser(id) {
       this.deleteId = id;
-      this.snackConf = true;
+      this.snackConfUser = true;
     },
-    delet() {
+    confirmDeletionDialogOffre(id) {
+      this.deleteId = id;
+      this.snackConfOffre = true;
+    },
+    deletUser() {
+      this.deltRecu(this.deleteId);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    },
+    deletOffre() {
       this.delOffer(this.deleteId);
       setTimeout(() => {
         window.location.reload();
@@ -165,7 +177,7 @@ export default {
   </v-snackbar>
   <!-- snackbar confirme -->
   <v-snackbar
-    v-model="snackConf"
+    v-model="snackConfOffre"
     vertical
     location="center"
     color="light-blue-lighten-4"
@@ -182,7 +194,31 @@ export default {
 
     <template v-slot:actions>
       <v-btn variant="text" @click="snackConf = false"> Non </v-btn>
-      <v-btn color="white" variant="tonal" class="mx-3 bg-red" @click="delet()">
+      <v-btn color="white" variant="tonal" class="mx-3 bg-red" @click="deletOffre()">
+        Oui
+      </v-btn>
+    </template>
+  </v-snackbar>
+  <!-- snack uder -->
+  <v-snackbar
+    v-model="snackConfUser"
+    vertical
+    location="center"
+    color="light-blue-lighten-4"
+    :timeout="-1"
+  >
+    <div class="text-subtitle-1 font-weight-bold pa-2">
+      Voulez-vous vraiment supprimer cette utilisateur ?
+    </div>
+
+    <p class="text-medium-emphasis">
+      <v-icon>mdi-alert-octagon-outline</v-icon> cette action ne peut pas ètre
+      annulée
+    </p>
+
+    <template v-slot:actions>
+      <v-btn variant="text" @click="snackConf = false"> Non </v-btn>
+      <v-btn color="white" variant="tonal" class="mx-3 bg-red" @click="deletUser()">
         Oui
       </v-btn>
     </template>
@@ -345,7 +381,7 @@ export default {
                               link
                               title="Supprimer"
                               prepend-icon="mdi-delete-empty"
-                              @click="confirmDeletionDialog(item._id)"
+                              @click="confirmDeletionDialogOffre(item._id)"
                             ></v-list-item>
                           </v-list>
                         </v-menu>
@@ -468,7 +504,7 @@ export default {
                         variant="plain"
                         class="mt-1"
                         icon
-                        @click="confirmDeletionDialog(item._id)"
+                        @click="confirmDeletionDialogUser(item._id)"
                       >
                         <v-icon size="30" color="red"
                           >mdi-delete-outline</v-icon
@@ -503,7 +539,7 @@ export default {
                         variant="plain"
                         class="mt-1"
                         icon
-                        @click="confirmDeletionDialog(item._id)"
+                        @click="confirmDeletionDialogUser(item._id)"
                       >
                         <v-icon size="30" color="red"
                           >mdi-delete-outline</v-icon
