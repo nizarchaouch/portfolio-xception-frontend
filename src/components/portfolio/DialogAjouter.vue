@@ -115,11 +115,11 @@ export default {
               text="À propos"
               :value="2"
             ></v-tab>
-            <v-tab
+            <!-- <v-tab
               class="text-none font-weight-bold"
               text="Titre"
               :value="3"
-            ></v-tab>
+            ></v-tab> -->
           </v-tabs>
           <v-divider vertical class="border-opacity-25"></v-divider>
 
@@ -160,7 +160,7 @@ export default {
                 </v-col>
               </v-row>
             </v-window-item>
-            <v-window-item :value="3">
+            <!-- <v-window-item :value="3">
               <v-row no-gutters>
                 <v-col
                   v-for="(bloc, index) in titre"
@@ -173,7 +173,7 @@ export default {
                   <component :is="bloc"></component>
                 </v-col>
               </v-row>
-            </v-window-item>
+            </v-window-item> -->
           </v-window>
         </div>
       </v-card>

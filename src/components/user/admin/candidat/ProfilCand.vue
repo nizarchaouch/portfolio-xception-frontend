@@ -39,6 +39,7 @@ export default {
       "infoRec",
       "updateVerif",
       "getAll",
+      "deleteCandOffer",
     ]),
     changeEtat(id, verifier, statut) {
       const data = {
@@ -49,15 +50,21 @@ export default {
       this.updateVerif(data);
     },
     updateItemsData() {
-      this.items = this.candOffer.candData.map((item, index) => {
-        // console.log(this.candOffer.candData[index].etat);
-        const info = {
-          ...this.candOffer.infoData[index],
-          etat: this.candOffer.candData[index].etat,
-        };
-        console.log(info);
-        return info;
-      });
+      this.items = this.candOffer.candData
+        .map((item, index) => {
+          // console.log(this.candOffer.candData[index].etat);
+          const info = {
+            ...this.candOffer.infoData[index],
+            etat: this.candOffer.candData[index].etat,
+          };
+          if (!info) {
+            this.deleteCandOffer(item._id);
+            return null;
+          }
+          console.log(info);
+          return info;
+        })
+        .filter((item) => item !== null);
     },
 
     filterItems() {

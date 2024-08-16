@@ -20,6 +20,9 @@ export default {
     return {
       loading: false,
       showPwd: false,
+      alert: false,
+      visiblePwd: false,
+      passwordcheck: "",
       image: "",
       data: {
         id: null,
@@ -30,6 +33,15 @@ export default {
         mail: "",
         tel: "",
         password: null,
+      },
+      rules: {
+        required: (value) => !!value || "Champ requis.",
+        counter: (value) => value.length > 7 || "Minimum 8 caractères",
+        passwordMatch: (value, otherValue) => {
+          return (
+            value === otherValue || "Les mots de passe ne correspondent pas."
+          );
+        },
       },
     };
   },
@@ -52,6 +64,14 @@ export default {
     },
     onSubmit() {
       this.loading = true;
+
+      // Vérification des mots de passe si l'utilisateur a choisi de les changer
+      if (this.showPwd && this.data.password !== this.passwordcheck) {
+        this.loading = false;
+        this.alert = true;
+        return;
+      }
+
       const dataToSend = { ...this.data };
       if (!this.data.password) {
         delete dataToSend.password;
@@ -94,6 +114,9 @@ export default {
     location="top"
   >
     {{ profilAdmin.message }}
+  </v-snackbar>
+  <v-snackbar :timeout="7000" color="red" v-model="alert" location="top">
+    Les mots de passe ne correspondent pas
   </v-snackbar>
   <NavBar hidea=" " />
   <SideAdmin />
@@ -209,15 +232,29 @@ export default {
               density="comfortable"
               variant="outlined"
               color="blue"
-              type="password"
               v-model="data.password"
+              :rules="[rules.required, rules.counter]"
+              autofocus
+              :append-inner-icon="visiblePwd ? 'mdi-eye-off' : 'mdi-eye'"
+              :type="visiblePwd ? 'text' : 'password'"
+              @click:append-inner="visiblePwd = !visiblePwd"
             >
             </v-text-field>
           </v-col>
           <!--  -->
           <v-col cols="12" md="4">
             <h4 class="mb-4 text-medium-emphasis">Confirme mot de passe</h4>
-            <v-text-field density="comfortable" variant="outlined" color="blue">
+            <v-text-field
+              density="comfortable"
+              variant="outlined"
+              color="blue"
+              v-model="passwordcheck"
+              :type="visiblePwd ? 'text' : 'password'"
+              :rules="[
+                rules.required,
+                () => rules.passwordMatch(data.password, passwordcheck),
+              ]"
+            >
             </v-text-field>
           </v-col>
         </v-row>

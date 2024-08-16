@@ -77,6 +77,13 @@ export default {
         this.loading = false;
       }, 500);
     },
+    handleKeydown() {
+      if (this.signup.step < 3 && this.form) {
+        this.incrStep();
+      } else {
+        this.onSubmit;
+      }
+    },
   },
 };
 </script>
@@ -100,7 +107,11 @@ export default {
         class="ms-2"
       ></v-avatar>
     </v-card-title>
-    <v-form v-model="form" @submit.prevent="onSubmit">
+    <v-form
+      v-model="form"
+      @keydown.enter="handleKeydown"
+      @submit.prevent="onSubmit"
+    >
       <v-window v-model="signup.step">
         <v-window-item :value="1">
           <v-card-text>

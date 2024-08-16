@@ -89,6 +89,13 @@ export default {
         this.loading = false;
       }, 500);
     },
+    handleKeydown() {
+      if (this.signup.step < 4 && this.form) {
+        this.incrStep();
+      } else {
+        this.onSubmit;
+      }
+    },
   },
 };
 </script>
@@ -112,7 +119,11 @@ export default {
         class="ms-2"
       ></v-avatar>
     </v-card-title>
-    <v-form @submit.prevent="onSubmit" v-model="form">
+    <v-form
+      @keydown.enter="handleKeydown"
+      @submit.prevent="onSubmit"
+      v-model="form"
+    >
       <v-window v-model="signup.step">
         <v-window-item :value="1">
           <v-card-text>
@@ -157,6 +168,20 @@ export default {
         <v-window-item :value="3">
           <v-card-text>
             <v-container grid-list-xs>
+              <v-row>
+                <v-col cols="3" class="mx-auto">
+                  <label for="file">
+                    <img :src="data.imageUrl" alt="img" />
+                  </label>
+                  <input
+                    type="file"
+                    id="file"
+                    class="d-none"
+                    @change="handleFileChange"
+                    :disabled="loading"
+                  />
+                </v-col>
+              </v-row>
               <v-row>
                 <v-col cols="12" sm="6">
                   <v-text-field
@@ -322,8 +347,10 @@ export default {
               </h2>
 
               <div class="font-weight-regular mb-2">
-                Veuillez consulter votre boîte de réception/spam ou d'autres
-                dossiers pour trouver notre e-mail de vérification.
+                Merci d'avoir inscrit votre entreprise. Votre demande est
+                actuellement en cours de vérification par notre équipe
+                administrative. Vous recevrez une réponse dans un délai de 24
+                heures.
               </div>
 
               <!-- <v-btn color="blue" variant="text" to="login">Connexion</v-btn> -->
@@ -364,7 +391,7 @@ export default {
           :disabled="!form"
           type="submit"
         >
-          Continuer
+          Envoyer
         </v-btn>
       </v-card-actions>
     </v-form>

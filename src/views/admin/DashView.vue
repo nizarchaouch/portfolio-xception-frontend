@@ -274,14 +274,17 @@ export default {
             <v-table hover>
               <thead>
                 <tr style="background-color: #435ebe" class="text-white">
-                  <th class="text-left font-weight-bold" style="width: 30%">
+                  <th class="text-left font-weight-bold" style="width: 40%">
                     Emploi
                   </th>
                   <th class="text-left font-weight-bold" style="width: 20%">
                     Date de création
                   </th>
-                  <th class="text-left font-weight-bold" style="width: 20%">
+                  <th class="text-left font-weight-bold" style="width: 15%">
                     Type d'emploi
+                  </th>
+                  <th class="text-left font-weight-bold" style="width: 20%">
+                    Secteur
                   </th>
                   <th class="text-left font-weight-bold ps-14">Action</th>
                 </tr>
@@ -320,22 +323,19 @@ export default {
                     </template> -->
                     {{ item.typeOffer }}
                   </td>
+                  <td class="text-subtitle-1 text-medium-emphasis">
+                    <!-- <v-icon>mdi-account-multiple</v-icon>
+                    <template v-for="app in countApp" :key="app.id">
+                      <span v-if="app.id === item._id">
+                        {{ app.count }} Applications
+                      </span>
+                    </template> -->
+                    {{ item.secteur }}
+                  </td>
                   <td>
                     <div class="d-flex">
-                      <!-- btn voir candidats -->
-                      <v-btn
-                        class="pa-3 ma-3 text-none responsive-"
-                        width="282"
-                        height="51"
-                        variant="tonal"
-                        color="light-blue-darken-4"
-                      >
-                        <p class="text-subtitle-1 font-weight-bold">
-                          Voir les candidatures
-                        </p>
-                      </v-btn>
                       <!-- setting -->
-                      <v-btn variant="plain" class="float-end mt-4">
+                      <v-btn variant="plain" class="float-end mt-4 mx-auto">
                         <v-icon size="30">mdi-cog-outline</v-icon>
                         <v-menu activator="parent">
                           <v-list>

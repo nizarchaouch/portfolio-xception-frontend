@@ -237,7 +237,7 @@ export default {
         <v-row class="mt-10">
           <v-col cols="12" md="8">
             <v-sheet class="rounded-lg pa-3 ma-3" rounded border>
-              <h4>Graphique à barres</h4>
+              <h4>Offre et candidature par mois</h4>
               <canvas
                 id="myChart"
                 style="width: 100%; max-height: 400px"
@@ -251,7 +251,7 @@ export default {
               rounded
               border
             >
-              <h4>Graphique à barres</h4>
+              <h4>Type d'offres</h4>
               <canvas
                 id="myChart2"
                 style="max-width: 500px; max-height: 400px"

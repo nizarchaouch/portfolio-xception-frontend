@@ -42,17 +42,20 @@ export default {
               order: 1,
               type: "line",
               label: "Offres",
+              backgroundColor:'#74b9ff',
+              borderColor:'#74b9ff',
               data: offer,
             },
-            {
-              type: "bar",
-              label: "Bar Dataset",
-              data: [0,0,0,0,0,0,0.5,2,0],
-              order: 2,
-            },
+            // {
+            //   type: "bar",
+            //   label: "Bar Dataset",
+            //   data: [0,0,0,0,0,0,0.5,2,0],
+            //   order: 2,
+            // },
             {
               type: "bar",
               label: "Candidats",
+              backgroundColor:'#fad390',
               data: applique,
               order: 2,
             },
@@ -69,11 +72,11 @@ export default {
       const chartInstance2 = new Chart(ctx2, {
         type: "pie",
         data: {
-          labels: ["Red", "Blue", "Yellow"],
+          labels: ["CDD", "CVIP", "Temps plein"],
           datasets: [
             {
-              label: "My First Dataset",
-              data: [11, 16, 7, 3, 14],
+              label: " ",
+              data: [2, 2, 1],
               backgroundColor: [
                 "rgb(255, 99, 132)",
                 "rgb(75, 192, 192)",

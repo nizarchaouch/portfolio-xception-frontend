@@ -113,7 +113,7 @@ export default {
             :width="180"
             class="mx-auto mt-8"
             :class="settings.card.imgarrond"
-            src="https://scontent.ftun9-1.fna.fbcdn.net/v/t39.30808-6/330180889_1348125799366307_3179994644660910263_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=Wc13879tFrwQ7kNvgEebAql&_nc_ht=scontent.ftun9-1.fna&oh=00_AYDTTWmtOWqPwlDCnp2yphxoftHdIwW7rsBI8nO4aoDqEw&oe=6683B090"
+            src="https://scontent.ftun10-1.fna.fbcdn.net/v/t39.30808-6/330180889_1348125799366307_3179994644660910263_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=kMDN6fKMNAUQ7kNvgFitZ4v&_nc_ht=scontent.ftun10-1.fna&oh=00_AYCUUsJ8JRpGPhSIlG3owh8OVpyN_GFo8VhHTixaDk7qHA&oe=66C330D0"
           ></v-img>
           <div
             v-html="settings.card.nom.nom"
