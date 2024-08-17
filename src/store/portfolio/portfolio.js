@@ -259,6 +259,20 @@ export default {
         console.error("Error fetching portfolio:", error);
       }
     },
+    async checkPortfolio(ctx,id) {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/api/portfolio/checkPortfolio/${id}`,
+          {
+            headers: { "Content-type": "application/json" },
+            withCredentials: true,
+          }
+        );
+        return response.data
+      } catch (error) {
+        console.error("Error fetching portfolio:", error);
+      }
+    },
     async getAllModel(ctx) {
       try {
         const ModelResponse = await axios.get(

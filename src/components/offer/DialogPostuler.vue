@@ -16,10 +16,14 @@ export default {
       cvPath: true,
       cv: "Portfolio",
       letter: "",
+      portfolioExists: null,
     };
   },
   methods: {
-    ...mapActions(["addCandOffer"]),
+    ...mapActions(["addCandOffer", "checkPortfolio"]),
+    async checkIfPortfolioExists() {
+      this.portfolioExists = await this.checkPortfolio(this.userData._id);
+    },
     postuler() {
       const data = {
         idCandidat: this.user.userData._id,
@@ -34,6 +38,9 @@ export default {
         this.dialog = false;
       }, 2000);
     },
+  },
+  created() {
+    this.checkIfPortfolioExists();
   },
 };
 </script>
@@ -79,7 +86,7 @@ export default {
             </v-alert>
             <!-- protf alert -->
             <v-alert
-              v-if="!userData.idPortfolio && cv === 'Portfolio'"
+              v-if="!portfolioExists && cv === 'Portfolio'"
               color="#C51162"
               icon="mdi-alert-circle"
               theme="dark"
@@ -110,7 +117,7 @@ export default {
                     <v-icon v-else color="green">mdi-check-bold</v-icon>
                   </template>
                   <template v-else>
-                    <v-icon v-if="!userData.idPortfolio" color="red">
+                    <v-icon v-if="!portfolioExists" color="red">
                       mdi-alert-circle
                     </v-icon>
                     <v-icon v-else color="green">mdi-check-bold</v-icon>
@@ -144,7 +151,7 @@ export default {
               variant="flat"
               :disabled="
                 (!userData.cvPath && cv === 'CV') ||
-                (!userData.idPortfolio && cv === 'Portfolio')
+                (!portfolioExists && cv === 'Portfolio')
               "
               :loading="loading"
               @click="postuler()"
