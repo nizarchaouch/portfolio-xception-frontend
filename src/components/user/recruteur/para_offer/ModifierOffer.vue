@@ -4,7 +4,7 @@ export default {
   props: { obj: String, tab: Boolean, role: Boolean },
   computed: {
     ...mapState(["user", "offer", "profilRec"]),
-    ...mapGetters(["getSecteurEtPosition"]),
+    ...mapGetters(["getDataRec"]),
   },
   data() {
     return {
@@ -24,6 +24,8 @@ export default {
       ],
       data: {
         id: null,
+        idRec: null,
+        logo: "",
         nomEntreprise: "",
         position: "",
         titre: "",
@@ -49,12 +51,17 @@ export default {
     async submitForm() {
       if (this.form) {
         if (this.obj) {
+          delete this.data.idRec;
+          delete this.data.logo;
+          delete this.data.nomEntreprise;
           await this.updatedOffer(this.data);
         } else {
-          const secteurEtPosition = this.getSecteurEtPosition(
+          const secteurEtPosition = this.getDataRec(
             this.data.nomEntreprise
           );
           if (secteurEtPosition) {
+            this.data.idRec = secteurEtPosition.idRec;
+            this.data.logo = secteurEtPosition.logo;
             this.data.secteur = secteurEtPosition.secteur;
             this.data.position = secteurEtPosition.position;
           }
@@ -73,6 +80,8 @@ export default {
   created() {
     if (this.obj) {
       this.data.id = this.obj._id;
+      this.data.idRec = this.obj.idRec;
+      this.data.logo = this.obj.logo;
       this.data.position = this.obj.position;
       this.data.titre = this.obj.titre;
       this.data.niveauCand = this.obj.niveauCand;

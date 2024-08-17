@@ -392,7 +392,6 @@ export default {
                   <td style="width: 12%">
                     <div class="d-flex">
                       <!-- btn voir profil -->
-
                       <DialogDetail :obj="item" :tab="true" />
                       <!-- setting -->
                       <DialogModifier :obj="item" :tab="true" />

@@ -17,17 +17,21 @@ export default {
       // console.log(state.recruteurs[0]);
       return state.recruteurs;
     },
-    getSecteurEtPosition: (state) => (nomEntreprise) => {
-      const index = state.recruteurs.findIndex(recruteur => recruteur.nomEntreprise === nomEntreprise);
+    getDataRec: (state) => (nomEntreprise) => {
+      const index = state.recruteurs.findIndex(
+        (recruteur) => recruteur.nomEntreprise === nomEntreprise
+      );
       if (index !== -1) {
         return {
+          idRec: state.recruteurs[index]._id,
+          logo: state.recruteurs[index].logoPath,
           secteur: state.recruteurs[index].secteur,
-          position:  state.recruteurs[index].adress,
+          position: state.recruteurs[index].adress,
         };
       } else {
         return null; // ou { secteur: null, position: -1 } si vous préférez
       }
-    }
+    },
   },
   mutations: {
     setMes(state, payload) {
