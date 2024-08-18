@@ -14,7 +14,7 @@ export default {
     },
   },
   actions: {
-    initializeChart({ commit }, { offer, applique }) {
+    initializeChart({ commit }, { offer, applique, typeParOffre }) {
       const ctx = document.getElementById("myChart");
       const ctx2 = document.getElementById("myChart2");
       // console.log("applique:", applique);
@@ -42,8 +42,8 @@ export default {
               order: 1,
               type: "line",
               label: "Offres",
-              backgroundColor:'#74b9ff',
-              borderColor:'#74b9ff',
+              backgroundColor: "#74b9ff",
+              borderColor: "#74b9ff",
               data: offer,
             },
             // {
@@ -55,7 +55,7 @@ export default {
             {
               type: "bar",
               label: "Candidats",
-              backgroundColor:'#fad390',
+              backgroundColor: "#fad390",
               data: applique,
               order: 2,
             },
@@ -72,18 +72,12 @@ export default {
       const chartInstance2 = new Chart(ctx2, {
         type: "pie",
         data: {
-          labels: ["CDD", "CVIP", "Temps plein"],
+          labels: Object.keys(typeParOffre),
           datasets: [
             {
               label: " ",
-              data: [2, 2, 1],
-              backgroundColor: [
-                "rgb(255, 99, 132)",
-                "rgb(75, 192, 192)",
-                "rgb(255, 205, 86)",
-                "rgb(201, 203, 207)",
-                "rgb(54, 162, 235)",
-              ],
+              data: Object.values(typeParOffre),
+              // backgroundColor: ["#435ebe", "#55c6e8"],
             },
           ],
         },

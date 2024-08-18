@@ -2,7 +2,6 @@
 // eslint-disable-next-line
 /* eslint-disable */
 import Chart from "chart.js/auto";
-import { secteurName } from "@/components/secteur";
 export default {
   state: {
     chartAdmin: null,

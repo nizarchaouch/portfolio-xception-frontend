@@ -65,6 +65,18 @@ export default {
       return (this.offersPerMonth = offersPerMonth);
       // console.log(offersPerMonth);
     },
+
+    typeParOffre() {
+      const count = {};
+      this.offerData.forEach((offre) => {
+        if (count[offre.typeOffer]) {
+          count[offre.typeOffer]++;
+        } else {
+          count[offre.typeOffer] = 1;
+        }
+      });
+      return count;
+    },
   },
   async mounted() {
     await this.userAuth();
@@ -81,6 +93,7 @@ export default {
         this.initializeChart({
           offer: this.OffersPerMonth(),
           applique: this.AppPerMonth,
+          typeParOffre: this.typeParOffre(),
         });
       }, 10);
     }
