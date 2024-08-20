@@ -9,16 +9,20 @@ export default {
   },
   data: () => ({
     itemsRec: [
-      { text: "Aperçu", icon: "mdi-chart-bar", to: "dashboard" },
+      { text: "Aperçu", icon: "mdi-chart-bar", to: "/dashboard" },
       { text: "Mon Profil", icon: "mdi-account-circle", to: "/MonProfil" },
-      { text: "Poster un emploi", icon: "mdi-plus-circle", to: "PosterEmploi" },
-      { text: "Mes emplois", icon: "mdi-briefcase-variant", to: "MesEmplois" },
+      {
+        text: "Poster un emploi",
+        icon: "mdi-plus-circle",
+        to: "/PosterEmploi",
+      },
+      { text: "Mes emplois", icon: "mdi-briefcase-variant", to: "/MesEmplois" },
       {
         text: "Trouver candidats",
         icon: "mdi-account-search",
-        to: "TrouveCandidat",
+        to: "/TrouveCandidat",
       },
-      { text: "Paramétres", icon: "mdi-cog", to: "ParametreRec" },
+      { text: "Paramétres", icon: "mdi-cog", to: "/ParametreRec" },
     ],
   }),
 };
@@ -46,7 +50,7 @@ export default {
           :value="item"
           color="indigo"
           :to="item.to"
-          style="border-radius: 30px 0 0 30px;"
+          style="border-radius: 30px 0 0 30px"
         >
           <template v-slot:prepend>
             <v-icon :icon="item.icon" class="mt-2" size="27"></v-icon>

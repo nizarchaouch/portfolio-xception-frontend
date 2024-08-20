@@ -104,8 +104,12 @@ export default {
                 color="#428ee6"
               ></v-card>
               <v-card
-                v-if="!fileName"
-                :title="this.user.userData.cvPath.slice(14)"
+                v-else-if="this.user.userData.cvPath"
+                :title="
+                  this.user.userData.cvPath
+                    ? this.user.userData.cvPath.slice(14)
+                    : 'CV non disponible'
+                "
                 prepend-icon="mdi-file-document"
                 append-icon="mdi-eye"
                 :href="'http://localhost:8000/' + this.user.userData.cvPath"

@@ -60,25 +60,17 @@ export default {
             withCredentials: true,
           }
         );
-        console.log("store", data);
-        if (response.status === 200) {
-          console.log("Postuler successful");
-          ctx.state.alert = true;
-          const message = "Postuler successful";
-          const color = "blue-darken-2";
-          ctx.commit("setMes", { message, color });
-        }
+        console.log("store", response.data.message);
+        ctx.state.alert = true;
+        const message = response.data.message;
+        const color = "blue-darken-2";
+        ctx.commit("setMes", { message, color });
       } catch (error) {
-        if (error.response.status === 409) {
-          ctx.state.alert = true;
-          const message = "Déjà postulé à cette offre";
-          const color = "red";
-          ctx.commit("setMes", { message, color });
-        } else {
-          console.log("Erreur lors de la postule:", error.message);
-          ctx.state.alert = true;
-          ctx.commit("setMes", "Erreur lors de la postule");
-        }
+        console.log("error", error.response.data.error);
+        ctx.state.alert = true;
+        const message = error.response.data.error;
+        const color = "red";
+        ctx.commit("setMes", { message, color });
       }
     },
     async getAll(ctx, id) {
@@ -110,9 +102,35 @@ export default {
         const count = response.data.candOffers.length || 0;
         const etat = response.data.candOffers;
         ctx.commit("setCountApp", { id, count, etat });
-        // console.log("tt", etat);
       } catch (error) {
         console.error("Erreur lors de l'affichage des candidateurs :", error);
+      }
+    },
+    async getDataCand(ctx, id) {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/api/candidature/showOfferApp/${id}`,
+          {
+            headers: { "Content-type": "application/json" },
+            withCredentials: true,
+          }
+        );
+
+        // Assuming `candOffers` and `infoCands` are arrays and you want to combine them by matching ids
+        const combinedData = response.data.candOffers.map((offer) => {
+          const candidateInfo = response.data.infoCands.find(
+            (info) => info._id === offer.idCandidat // Adjust this line to match the correct field names
+          );
+          return {
+            ...offer,
+            ...(candidateInfo || {}),
+          };
+        });
+
+        ctx.commit("setCandData", combinedData);
+        console.log("Combined Data:", combinedData);
+      } catch (error) {
+        console.error("Erreur lors de l'affichage des candidatures :", error);
       }
     },
 

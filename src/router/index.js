@@ -28,17 +28,13 @@ import ProfilCand from "@/components/user/admin/candidat/ProfilCand.vue";
 import ProfilAdmin from "@/views/admin/ProfilAdmin.vue";
 import ModelPortf from "@/views/admin/modeleProtfolio/ModelPortf.vue";
 import AddPortf from "@/views/admin/modeleProtfolio/AddPortf.vue";
+import VoirCandidateur from "@/components/user/recruteur/candidateur/VoirCandidateur.vue";
 
 const routes = [
   {
     path: "/",
     name: "home",
     component: HomeView,
-  },
-  {
-    path: "/admin/Login",
-    name: "loginAddmin",
-    component: LoginAddmin,
   },
   {
     path: "/Login",
@@ -56,6 +52,27 @@ const routes = [
     component: ForgotPwd,
   },
   {
+    path: "/template",
+    name: "template",
+    component: TemplateView,
+  },
+  {
+    path: "/offer",
+    name: "offer",
+    component: OfferView,
+  },
+  // admin
+  {
+    path: "/admin/dashboard",
+    name: "dashboardAdmin",
+    component: DashAdmin,
+  },
+  {
+    path: "/admin/Login",
+    name: "loginAddmin",
+    component: LoginAddmin,
+  },  
+  {
     path: "/admin/forgot_password",
     name: "forgotpwdAdmin",
     component: ForgotPwdAdmin,
@@ -71,20 +88,43 @@ const routes = [
     component: ResetPwdAdmin,
   },
   {
+    path: "/admin/profil",
+    name: "ProfilAdmin",
+    component: ProfilAdmin,
+  },
+  {
+    path: "/admin/modele",
+    name: "modelePortfolio",
+    component: ModelPortf,
+  },
+  {
+    path: "/admin/candidat/:id",
+    name: "ProfilCand",
+    component: ProfilCand,
+    props: true,
+  },
+  {
+    path: "/admin/recruteur",
+    name: "RecView",
+    component: RecView,
+  },
+  {
+    path: "/admin/candidat",
+    name: "CandView",
+    component: CandView,
+  },
+  {
+    path: "/admin/emploi",
+    name: "EmpView",
+    component: EmpView,
+  },
+  // candidat
+  {
     path: "/profil",
     name: "profil",
     component: ProfilView,
   },
-  {
-    path: "/template",
-    name: "template",
-    component: TemplateView,
-  },
-  {
-    path: "/offer",
-    name: "offer",
-    component: OfferView,
-  },
+  
   {
     path: "/portfolio/:page",
     name: "portfolio",
@@ -100,25 +140,11 @@ const routes = [
     name: "candidature",
     component: CandidatureView,
   },
+  // recruteur
   {
     path: "/dashboard",
     name: "dashboard",
     component: DashView,
-  },
-  {
-    path: "/admin/dashboard",
-    name: "dashboardAdmin",
-    component: DashAdmin,
-  },
-  {
-    path: "/admin/profil",
-    name: "ProfilAdmin",
-    component: ProfilAdmin,
-  },
-  {
-    path: "/admin/modele",
-    name: "modelePortfolio",
-    component: ModelPortf,
   },
   {
     path: "/PosterEmploi",
@@ -137,30 +163,15 @@ const routes = [
     props: true,
   },
   {
-    path: "/admin/candidat/:id",
-    name: "ProfilCand",
-    component: ProfilCand,
-    props: true,
-  },
-  {
     path: "/MesEmplois",
     name: "MesEmplois",
     component: MesEmplois,
   },
   {
-    path: "/admin/recruteur",
-    name: "RecView",
-    component: RecView,
-  },
-  {
-    path: "/admin/candidat",
-    name: "CandView",
-    component: CandView,
-  },
-  {
-    path: "/admin/emploi",
-    name: "EmpView",
-    component: EmpView,
+    path: "/candidateur/:nom-:prenom",
+    name: "VoirCandidateur",
+    component: VoirCandidateur,
+    props: true,
   },
   {
     path: "/TrouveCandidat",
@@ -172,6 +183,7 @@ const routes = [
     name: "ParametreRec",
     component: ParametreRec,
   },
+
 ];
 
 const router = createRouter({
