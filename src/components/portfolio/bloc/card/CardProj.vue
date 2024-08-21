@@ -15,14 +15,6 @@ export default {
         return this.setting;
       }
     },
-    anneeNom: {
-      get() {
-        return this.removeHtmlTags(this.settings.annee.nom);
-      },
-      set(value) {
-        this.settings.annee.nom = value;
-      },
-    },
     titreNom: {
       get() {
         return this.removeHtmlTags(this.settings.titre.nom);
@@ -39,14 +31,6 @@ export default {
         this.settings.sousTitre.nom = value;
       },
     },
-    villeNom: {
-      get() {
-        return this.removeHtmlTags(this.settings.ville.nom);
-      },
-      set(value) {
-        this.settings.ville.nom = value;
-      },
-    },
     pargNom: {
       get() {
         return this.removeHtmlTags(this.settings.parg.nom);
@@ -59,15 +43,14 @@ export default {
   data: () => ({
     toggle: "justify",
     showButton: false,
-    showTextareaAnnee: false,
-    showColorAnnee: false,
     showTextareaTitre: false,
     showColorTitre: false,
-
-    showTextareaVille: false,
-    showColorVille: false,
+    showTextareaSous: false,
+    showColorSous: false,
     showTextareaParg: false,
     showColorParg: false,
+
+    showColorRec: false,
 
     showColorSheet: false,
     showColorBack: false,
@@ -88,37 +71,39 @@ export default {
       backSheet: {
         color: "white",
       },
+      rectangle: {
+        color: "black",
+      },
       titre: {
         color: "black",
         selectStyle: "Titer 4",
         selectPolice: "Roboto,sans-serif",
         justify: "left",
-        nom: "Compétences", //Titre
+        nom: "Nom du projet 1",
       },
-      sousTitre: [
-        {
-          showTextareaSous: false,
-          showColorSous: false,
-          showColorCarre: false,
-          colorCarre: "blue",
-          color: "black",
-          selectStyle: "Titer 4",
-          selectPolice: "Roboto,sans-serif",
-          justify: "left",
-          nom: "Non de l'entreprise", //sous-titre
-        },
-        {
-          showTextareaSous: false,
-          showColorSous: false,
-          showColorCarre: false,
-          colorCarre: "blue",
-          color: "black",
-          selectStyle: "Titer 4",
-          selectPolice: "Roboto,sans-serif",
-          justify: "left",
-          nom: "Non de l'entreprise", //sous-titre
-        },
-      ],
+      sousTitre: {
+        color: "black",
+        selectStyle: "Titer 4",
+        selectPolice: "Roboto,sans-serif",
+        justify: "left",
+        nom: "Titre du rôle", //sous-titre
+      },
+      ville: {
+        color: "black",
+        selectStyle: "Titer 4",
+        selectPolice: "Roboto,sans-serif",
+        justify: "left",
+        nom: "Ville-pays",
+      },
+      parg: {
+        color: "black",
+        selectStyle: "Titer 4",
+        selectPolice: "Roboto,sans-serif",
+        justify: "center",
+        nom: `Paragraphe. Cliquez ici pour ajouter votre propre texte.
+              Cliquez sur « Modifier Texte » ou double-cliquez ici pour
+              ajouter votre contenu et personnaliser les polices.`,
+      },
     },
   }),
   methods: {
@@ -132,22 +117,6 @@ export default {
     },
     toggleTextareaTitre() {
       this.showTextareaTitre = !this.showTextareaTitre;
-    },
-    addSousTitre() {
-      this.settings.sousTitre.push({
-        colorCarre: "blue",
-        color: "black",
-        selectStyle: "Titer 4",
-        selectPolice: "Roboto,sans-serif",
-        justify: "left",
-        nom: "Non de l'entreprise", //sous-titre
-      });
-      this.save();
-      //   console.log("sous", this.settings.sousTitre);
-    },
-    deleteSousTitre(index) {
-      this.settings.sousTitre.splice(index, 1);
-      this.save(); // Save the form after deletion to update the state
     },
     save() {
       this.showTextareaTitre = false;
@@ -176,10 +145,8 @@ export default {
     formatTextToBold() {
       const selectedText = window.getSelection().toString();
       if (selectedText) {
-        this.toggleBold(this.settings.annee, selectedText);
         this.toggleBold(this.settings.titre, selectedText);
         this.toggleBold(this.settings.sousTitre, selectedText);
-        this.toggleBold(this.settings.ville, selectedText);
         this.toggleBold(this.settings.parg, selectedText);
         this.saveForm();
       }
@@ -195,10 +162,8 @@ export default {
     formatTextToI() {
       const selectedText = window.getSelection().toString();
       if (selectedText) {
-        this.toggleI(this.settings.annee, selectedText);
         this.toggleI(this.settings.titre, selectedText);
         this.toggleI(this.settings.sousTitre, selectedText);
-        this.toggleI(this.settings.ville, selectedText);
         this.toggleI(this.settings.parg, selectedText);
 
         this.saveForm();
@@ -215,10 +180,8 @@ export default {
     formatTextToU() {
       const selectedText = window.getSelection().toString();
       if (selectedText) {
-        this.toggleU(this.settings.annee, selectedText);
         this.toggleU(this.settings.titre, selectedText);
         this.toggleU(this.settings.sousTitre, selectedText);
-        this.toggleU(this.settings.ville, selectedText);
         this.toggleU(this.settings.parg, selectedText);
 
         this.saveForm();
@@ -421,6 +384,265 @@ export default {
           class="mx-auto my-2"
         ></v-color-picker>
       </v-col>
+      <!-- modifer soustitre -->
+      <v-col cols="auto" v-if="showTextareaSous">
+        <v-card max-width="600" style="z-index: 3">
+          <v-row no-gutters>
+            <v-col cols="auto">
+              <v-btn
+                :ripple="false"
+                class="mt-2 text-none"
+                variant="plain"
+                append-icon="mdi-menu-down"
+                >Titre 1
+                <v-menu activator="parent" max-height="300">
+                  <v-list>
+                    <v-list-item>
+                      <v-list-item-title
+                        class="pa-2 cursor-pointer"
+                        v-for="item in style"
+                        :key="item"
+                        >{{ item.title }}</v-list-item-title
+                      >
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+              </v-btn>
+            </v-col>
+            <v-divider vertical height="2"></v-divider>
+            <v-col cols="auto">
+              <v-btn
+                :ripple="false"
+                class="mt-2 text-none"
+                variant="plain"
+                append-icon="mdi-menu-down"
+                >Police
+                <v-menu activator="parent" max-height="300">
+                  <v-list>
+                    <v-list-item>
+                      <v-list-item-title>Potta One</v-list-item-title>
+                      <v-list-item-title>Potta One</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+              </v-btn>
+            </v-col>
+            <v-divider vertical height="2"></v-divider>
+            <v-col cols="auto">
+              <v-btn
+                variant="text"
+                class="rounded-0"
+                icon="mdi-format-italic"
+                @click="formatTextToI"
+              >
+              </v-btn>
+            </v-col>
+            <v-col cols="auto">
+              <v-btn
+                variant="text"
+                class="rounded-0"
+                icon="mdi-format-bold"
+                @click="formatTextToBold"
+              >
+              </v-btn>
+            </v-col>
+            <v-col cols="auto">
+              <v-btn
+                variant="text"
+                class="rounded-0"
+                icon="mdi-format-underline"
+                @click="formatTextToU"
+              >
+              </v-btn>
+            </v-col>
+            <v-divider vertical height="2"></v-divider>
+            <v-col cols="auto">
+              <v-btn
+                variant="text"
+                class="rounded-0"
+                icon
+                @click="showColorSous = !showColorSous"
+              >
+                <div class="d-flex align-center flex-column justify-center">
+                  <v-icon icon="mdi-format-color-text"></v-icon>
+                  <v-sheet color="purple" height="4" width="26" tile></v-sheet>
+                </div>
+              </v-btn>
+            </v-col>
+            <v-divider vertical height="2"></v-divider>
+            <v-col cols="auto">
+              <v-btn :ripple="false" class="rounded-0" icon variant="text">
+                <v-icon
+                  >mdi-format-align-{{ settings.sousTitre.justify }}</v-icon
+                >
+                <v-menu activator="parent" max-height="300" location="end">
+                  <v-btn-toggle
+                    v-model="settings.sousTitre.justify"
+                    divided
+                    @click="saveForm()"
+                  >
+                    <v-btn icon="mdi-format-align-left" value="left"></v-btn>
+                    <v-btn
+                      icon="mdi-format-align-center"
+                      value="center"
+                    ></v-btn>
+                    <v-btn icon="mdi-format-align-right" value="right"></v-btn>
+                  </v-btn-toggle>
+                </v-menu>
+              </v-btn>
+            </v-col>
+          </v-row>
+          <v-divider></v-divider>
+          <v-sheet class="pa-4 text-center">
+            <v-textarea
+              @change="save"
+              @keyup.esc="this.showTextareaSous = false"
+              v-model="sousNom"
+              rows="2"
+              variant="outlined"
+              auto-grow
+              full-width
+              hide-details
+            ></v-textarea>
+          </v-sheet>
+        </v-card>
+        <v-color-picker
+          v-if="showColorSous"
+          @click="saveForm()"
+          v-model="this.settings.sousTitre.color"
+          :modes="['hexa']"
+          class="mx-auto my-2"
+        ></v-color-picker>
+      </v-col>
+      <!-- modifer ville -->
+      <v-col cols="auto" v-if="showTextareaParg">
+        <v-card max-width="600" style="z-index: 3">
+          <v-row no-gutters>
+            <v-col cols="auto">
+              <v-btn
+                :ripple="false"
+                class="mt-2 text-none"
+                variant="plain"
+                append-icon="mdi-menu-down"
+                >Titre 1
+                <v-menu activator="parent" max-height="300">
+                  <v-list>
+                    <v-list-item>
+                      <v-list-item-title
+                        class="pa-2 cursor-pointer"
+                        v-for="item in style"
+                        :key="item"
+                        >{{ item.title }}</v-list-item-title
+                      >
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+              </v-btn>
+            </v-col>
+            <v-divider vertical height="2"></v-divider>
+            <v-col cols="auto">
+              <v-btn
+                :ripple="false"
+                class="mt-2 text-none"
+                variant="plain"
+                append-icon="mdi-menu-down"
+                >Police
+                <v-menu activator="parent" max-height="300">
+                  <v-list>
+                    <v-list-item>
+                      <v-list-item-title>Potta One</v-list-item-title>
+                      <v-list-item-title>Potta One</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+              </v-btn>
+            </v-col>
+            <v-divider vertical height="2"></v-divider>
+            <v-col cols="auto">
+              <v-btn
+                variant="text"
+                class="rounded-0"
+                icon="mdi-format-italic"
+                @click="formatTextToI"
+              >
+              </v-btn>
+            </v-col>
+            <v-col cols="auto">
+              <v-btn
+                variant="text"
+                class="rounded-0"
+                icon="mdi-format-bold"
+                @click="formatTextToBold"
+              >
+              </v-btn>
+            </v-col>
+            <v-col cols="auto">
+              <v-btn
+                variant="text"
+                class="rounded-0"
+                icon="mdi-format-underline"
+                @click="formatTextToU"
+              >
+              </v-btn>
+            </v-col>
+            <v-divider vertical height="2"></v-divider>
+            <v-col cols="auto">
+              <v-btn
+                variant="text"
+                class="rounded-0"
+                icon
+                @click="showColorParg = !showColorParg"
+              >
+                <div class="d-flex align-center flex-column justify-center">
+                  <v-icon icon="mdi-format-color-text"></v-icon>
+                  <v-sheet color="purple" height="4" width="26" tile></v-sheet>
+                </div>
+              </v-btn>
+            </v-col>
+            <v-divider vertical height="2"></v-divider>
+            <v-col cols="auto">
+              <v-btn :ripple="false" class="rounded-0" icon variant="text">
+                <v-icon>mdi-format-align-{{ settings.parg.justify }}</v-icon>
+                <v-menu activator="parent" max-height="300" location="end">
+                  <v-btn-toggle
+                    v-model="settings.parg.justify"
+                    divided
+                    @click="saveForm()"
+                  >
+                    <v-btn icon="mdi-format-align-left" value="left"></v-btn>
+                    <v-btn
+                      icon="mdi-format-align-center"
+                      value="center"
+                    ></v-btn>
+                    <v-btn icon="mdi-format-align-right" value="right"></v-btn>
+                  </v-btn-toggle>
+                </v-menu>
+              </v-btn>
+            </v-col>
+          </v-row>
+          <v-divider></v-divider>
+
+          <v-sheet class="pa-4 text-center">
+            <v-textarea
+              @change="save"
+              @keyup.esc="this.showTextareaParg = false"
+              v-model="pargNom"
+              rows="2"
+              variant="outlined"
+              auto-grow
+              full-width
+              hide-details
+            ></v-textarea>
+          </v-sheet>
+        </v-card>
+        <v-color-picker
+          v-if="showColorParg"
+          @click="saveForm()"
+          v-model="this.settings.parg.color"
+          :modes="['hexa']"
+          class="mx-auto my-2"
+        ></v-color-picker>
+      </v-col>
     </v-row>
 
     <v-row justify="center">
@@ -431,6 +653,14 @@ export default {
         :modes="['hexa']"
         class="mx-2"
       ></v-color-picker>
+      <v-color-picker
+          v-if="showColorRec"
+          @click="saveForm()"
+          v-model="settings.rectangle.color"
+          :modes="['hexa']"
+           class="mx-2"
+          @change="save"
+        ></v-color-picker>
       <v-sheet
         :min-height="300"
         :width="600"
@@ -451,10 +681,17 @@ export default {
           variant="text"
           @click="showColorSheet = !showColorSheet"
         ></v-btn>
-        <v-row class="my-5 mx-5">
-          <v-col cols="12">
+        <v-row class="my-9 mx-5" no-gutters>
+          <v-icon
+            @click="showColorRec = !showColorRec"
+            :color="settings.rectangle.color"
+            size="70"
+            style="transform: rotate(90deg)"
+            >mdi-minus-thick</v-icon
+          >
+          <v-col cols="5">
             <div
-              class="my-1 text-h4"
+              class="my-1 text-h6"
               v-html="settings.titre.nom"
               :style="{ color: this.settings.titre.color }"
               :class="{
@@ -463,150 +700,28 @@ export default {
               }"
               @click="showTextareaTitre = !showTextareaTitre"
             ></div>
-            <v-btn
-              v-if="btnshowColorSheet && !portfolio.dialogA"
-              append-icon="mdi-plus"
-              style="position: relative"
-              variant="text"
-              color="indigo"
-              class="ms-7 text-none"
-              size="20"
-              @click="addSousTitre()"
-            >
-              Ajouter
-            </v-btn>
-            <v-row>
-              <v-col
-                cols="5"
-                v-for="(sousTitre, index) in settings.sousTitre"
-                :key="index"
-                class="overflow-hidden"
-              >
-                <div
-                  class="d-flex mt-6"
-                  :class="{
-                    blocHover: !portfolio.dialogA,
-                    ['text-' + sousTitre.justify]: true,
-                  }"
-                >
-                  <v-icon
-                    class="me-2"
-                    @click="
-                      sousTitre.showColorCarre = !sousTitre.showColorCarre
-                    "
-                    :color="sousTitre.colorCarre"
-                    >mdi-square</v-icon
-                  >
-                  <div
-                    class="text-subtitle-2"
-                    v-html="sousTitre.nom"
-                    :style="{ color: sousTitre.color }"
-                    @click="
-                      sousTitre.showTextareaSous = !sousTitre.showTextareaSous
-                    "
-                  ></div>
-                  <v-icon
-                    v-if="btnshowColorSheet && !portfolio.dialogA"
-                    size="small"
-                    color="red"
-                    class="ms-1"
-                    @click="deleteSousTitre(index)"
-                    >mdi-delete</v-icon
-                  >
-                </div>
-                <v-color-picker
-                  v-if="sousTitre.showColorCarre"
-                  @click="saveForm(), (sousTitre.showColorCarre = false)"
-                  v-model="sousTitre.colorCarre"
-                  :modes="['hexa']"
-                  class="mx-auto mb-2"
-                  style="position: absolute; left: 30%; z-index: 5"
-                ></v-color-picker>
-                <!-- modifer soustitre -->
-                <v-col cols="auto" v-if="sousTitre.showTextareaSous">
-                  <v-card max-width="600" style="z-index: 3">
-                    <v-row no-gutters>
-                      <v-divider vertical height="2"></v-divider>
-                      <v-col cols="auto">
-                        <v-btn
-                          variant="text"
-                          class="rounded-0"
-                          icon="mdi-format-italic"
-                          size="small"
-                          @click="formatTextToI"
-                        >
-                        </v-btn>
-                      </v-col>
-                      <v-col cols="auto">
-                        <v-btn
-                          variant="text"
-                          class="rounded-0"
-                          icon="mdi-format-bold"
-                          size="small"
-                          @click="formatTextToBold"
-                        >
-                        </v-btn>
-                      </v-col>
-                      <v-col cols="auto">
-                        <v-btn
-                          variant="text"
-                          class="rounded-0"
-                          icon="mdi-format-underline"
-                          size="small"
-                          @click="formatTextToU"
-                        >
-                        </v-btn>
-                      </v-col>
-                      <v-divider vertical height="2"></v-divider>
-                      <v-col cols="auto">
-                        <v-btn
-                          variant="text"
-                          class="rounded-0"
-                          size="small"
-                          icon
-                          @click="
-                            sousTitre.showColorSous = !sousTitre.showColorSous
-                          "
-                        >
-                          <div
-                            class="d-flex align-center flex-column justify-center"
-                          >
-                            <v-icon icon="mdi-format-color-text"></v-icon>
-                            <v-sheet
-                              color="purple"
-                              height="4"
-                              width="26"
-                              tile
-                            ></v-sheet>
-                          </div>
-                        </v-btn>
-                      </v-col>
-                    </v-row>
-                    <v-divider></v-divider>
-                    <v-sheet class="pa-4 text-center">
-                      <v-textarea
-                        @change="save"
-                        @keyup.esc="sousTitre.showTextareaSous = false"
-                        v-model="sousTitre.nom"
-                        rows="2"
-                        variant="outlined"
-                        auto-grow
-                        full-width
-                        hide-details
-                      ></v-textarea>
-                    </v-sheet>
-                  </v-card>
-                  <v-color-picker
-                    v-if="sousTitre.showColorSous"
-                    @click="saveForm()"
-                    v-model="sousTitre.color"
-                    :modes="['hexa']"
-                    class="mx-auto my-2"
-                  ></v-color-picker>
-                </v-col>
-                <!--  -->
-              </v-col>
-            </v-row>
+
+            <div
+              class="my-1 text-subtitle-2"
+              v-html="settings.sousTitre.nom"
+              :style="{ color: this.settings.sousTitre.color }"
+              :class="{
+                blocHover: !portfolio.dialogA,
+                ['text-' + settings.sousTitre.justify]: true,
+              }"
+              @click="showTextareaSous = !showTextareaSous"
+            ></div>
+          </v-col>
+          <v-col cols="12" class="mt-7">
+            <div
+              v-html="settings.parg.nom"
+              :style="{ color: this.settings.parg.color }"
+              :class="{
+                blocHover: !portfolio.dialogA,
+                ['text-' + settings.parg.justify]: true,
+              }"
+              @click="showTextareaParg = !showTextareaParg"
+            ></div>
           </v-col>
         </v-row>
       </v-sheet>

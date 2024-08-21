@@ -9,6 +9,7 @@ import BlocTitreBtn from "./bloc/Titre/BlocTitreBtn.vue";
 import BlocParg from "./bloc/Titre/BlocParg.vue";
 import CardExp from "./bloc/card/CardExp.vue";
 import CardSkil from "./bloc/card/CardSkil.vue";
+import CardProj from "./bloc/card/CardProj.vue";
 export default {
   // props: { defaultSettings: Object },
   components: {
@@ -20,6 +21,7 @@ export default {
     BlocParg,
     CardExp,
     CardSkil,
+    CardProj,
   },
   computed: {
     ...mapState(["portfolio", "portfolioss"]),
@@ -31,7 +33,14 @@ export default {
     tab: 2,
     entete: ["CardText"],
     apropos: ["ITTB"],
-    titre: ["BlocTitre", "BlocTitreBtn", "CardExp", "CardSkil", "BlocParg"],
+    titre: [
+      "BlocTitre",
+      "BlocTitreBtn",
+      "CardExp",
+      "CardSkil",
+      "CardProj",
+      "BlocParg",
+    ],
   }),
   methods: {
     ...mapActions(["addBloc", "addBlocNav"]),
