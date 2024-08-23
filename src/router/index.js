@@ -29,6 +29,7 @@ import ProfilAdmin from "@/views/admin/ProfilAdmin.vue";
 import ModelPortf from "@/views/admin/modeleProtfolio/ModelPortf.vue";
 import AddPortf from "@/views/admin/modeleProtfolio/AddPortf.vue";
 import VoirCandidateur from "@/components/user/recruteur/candidateur/VoirCandidateur.vue";
+import VoirPortfolio from "@/views/candidat/portfolio/VoirPortfolio.vue"
 
 const routes = [
   {
@@ -139,6 +140,11 @@ const routes = [
     path: "/candidature",
     name: "candidature",
     component: CandidatureView,
+  },
+  {
+    path: "/voir/:page",
+    name: "voir",
+    component: VoirPortfolio,
   },
   // recruteur
   {

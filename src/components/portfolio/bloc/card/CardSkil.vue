@@ -4,7 +4,7 @@
 import { mapState, mapActions, mapMutations } from "vuex";
 
 export default {
-  props: { id: Number },
+  props: { id: Number, voir: Boolean },
   computed: {
     ...mapState(["portfolio", "portfolioss"]),
     settings() {
@@ -238,13 +238,13 @@ export default {
 <template>
   <v-container
     fluid
-    class="bloc"
+    :class="voir ? '' : 'bloc'"
     style="min-height: 350px"
     :style="{ 'background-color': settings.back.color }"
     @mouseover="showButton = true"
     @mouseleave="showButton = false"
   >
-    <v-row style="height: 0" v-if="!portfolio.dialogA">
+    <v-row style="height: 0" v-if="!portfolio.dialogA && !voir">
       <v-card
         v-if="showButton"
         class="animation ms-sm-auto me-6 mt-5 pa-2 ms-6"
@@ -291,7 +291,7 @@ export default {
         ></v-color-picker>
       </v-card>
     </v-row>
-    <v-row style="height: 0" justify="start" v-if="!portfolio.dialogA">
+    <v-row style="height: 0" justify="start" v-if="!portfolio.dialogA && !voir">
       <!-- modifer titre -->
       <v-col cols="auto" v-if="showTextareaTitre">
         <v-card max-width="600" style="z-index: 3">
@@ -436,7 +436,7 @@ export default {
         :width="600"
         :color="settings.backSheet.color"
         :class="{
-          blocHover: !portfolio.dialogA,
+          blocHover: !portfolio.dialogA && !voir,
         }"
         @mouseover="btnshowColorSheet = true"
         @mouseleave="btnshowColorSheet = false"
@@ -445,7 +445,7 @@ export default {
         class="my-3 overflow-hidden"
       >
         <v-btn
-          v-if="btnshowColorSheet && !portfolio.dialogA"
+          v-if="btnshowColorSheet && !portfolio.dialogA && !voir"
           icon="mdi-palette"
           style="position: absolute"
           variant="text"
@@ -458,13 +458,13 @@ export default {
               v-html="settings.titre.nom"
               :style="{ color: this.settings.titre.color }"
               :class="{
-                blocHover: !portfolio.dialogA,
+                blocHover: !portfolio.dialogA && !voir,
                 ['text-' + settings.titre.justify]: true,
               }"
               @click="showTextareaTitre = !showTextareaTitre"
             ></div>
             <v-btn
-              v-if="btnshowColorSheet && !portfolio.dialogA"
+              v-if="btnshowColorSheet && !portfolio.dialogA && !voir"
               append-icon="mdi-plus"
               style="position: relative"
               variant="text"
@@ -485,7 +485,7 @@ export default {
                 <div
                   class="d-flex mt-6"
                   :class="{
-                    blocHover: !portfolio.dialogA,
+                    blocHover: !portfolio.dialogA && !voir,
                     ['text-' + sousTitre.justify]: true,
                   }"
                 >
@@ -506,7 +506,7 @@ export default {
                     "
                   ></div>
                   <v-icon
-                    v-if="btnshowColorSheet && !portfolio.dialogA"
+                    v-if="btnshowColorSheet && !portfolio.dialogA && !voir"
                     size="small"
                     color="red"
                     class="ms-1"
@@ -515,7 +515,7 @@ export default {
                   >
                 </div>
                 <v-color-picker
-                  v-if="sousTitre.showColorCarre"
+                  v-if="sousTitre.showColorCarre && !voir"
                   @click="saveForm(), (sousTitre.showColorCarre = false)"
                   v-model="sousTitre.colorCarre"
                   :modes="['hexa']"
@@ -523,7 +523,7 @@ export default {
                   style="position: absolute; left: 30%; z-index: 5"
                 ></v-color-picker>
                 <!-- modifer soustitre -->
-                <v-col cols="auto" v-if="sousTitre.showTextareaSous">
+                <v-col cols="auto" v-if="sousTitre.showTextareaSous && !voir">
                   <v-card max-width="600" style="z-index: 3">
                     <v-row no-gutters>
                       <v-divider vertical height="2"></v-divider>
@@ -612,7 +612,7 @@ export default {
       </v-sheet>
     </v-row>
 
-    <v-row style="height: 0" justify="center" v-if="!portfolio.dialogA">
+    <v-row style="height: 0" justify="center" v-if="!portfolio.dialogA && !voir">
       <v-btn
         v-if="showButton"
         color="white"

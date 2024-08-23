@@ -5,6 +5,7 @@ import { mapState, mapActions, mapMutations } from "vuex";
 import DialogAjouter from "@/components/portfolio/DialogAjouter.vue";
 
 export default {
+  props: { voir: Boolean },
   components: { DialogAjouter },
   computed: {
     ...mapState(["portfolio", "portfolioss"]),
@@ -32,7 +33,11 @@ export default {
   watch: {
     tab(newValue) {
       // Met à jour l'affichage de la page quand l'onglet sélectionné change
-      this.$router.push({ name: "portfolio", params: { page: newValue } });
+      if (this.voir) {
+        this.$router.push({ name: "voir", params: { page: newValue } });
+      } else {
+        this.$router.push({ name: "portfolio", params: { page: newValue } });
+      }
     },
   },
   created() {
@@ -50,7 +55,7 @@ export default {
 <template>
   <v-row
     no-gutters
-    @mouseover="showButton = true"
+    @mouseover="voir ? (showButton = false) : (showButton = true)"
     @mouseleave="showButton = false"
   >
     <v-toolbar
@@ -58,6 +63,7 @@ export default {
         portfolio.navbar.backgroundImage ? portfolio.navbar.lineImage : null
       "
       :color="portfolio.navbar.colorNav"
+      :class="!voir ? 'vToolbar' : ''"
     >
       <v-app-bar-nav-icon
         @click="drawer = !drawer"
@@ -172,7 +178,7 @@ export default {
         <v-tooltip activator="parent" location="bottom">Modifier</v-tooltip>
       </v-btn>
     </v-toolbar>
-    <v-row style="height: 0" justify="center">
+    <v-row style="height: 0" justify="center" v-if="!voir">
       <v-btn
         v-if="showButton"
         color="white"
@@ -203,7 +209,7 @@ export default {
 .addBloc {
   border: 2px dashed gray;
 }
-.v-toolbar {
+.vToolbar {
   &:hover {
     border: 2px solid blue;
   }

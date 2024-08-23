@@ -4,7 +4,7 @@
 import { mapState, mapActions, mapMutations } from "vuex";
 
 export default {
-  props: { id: Number },
+  props: { id: Number, voir: Boolean },
   computed: {
     ...mapState(["portfolio", "portfolioss"]),
     settings() {
@@ -150,13 +150,13 @@ export default {
 <template>
   <v-container
     fluid
-    class="bloc"
+    :class="voir ? '' : 'bloc'"
     style="height: 100px"
     :style="{ 'background-color': settings.back.color }"
     @mouseover="showButton = true"
     @mouseleave="showButton = false"
   >
-    <v-row style="height: 0" v-if="!portfolio.dialogA">
+    <v-row style="height: 0" v-if="!portfolio.dialogA && !voir">
       <v-card
         v-if="showButton"
         class="animation ms-sm-auto me-6 mt-1 pa-2 ms-6"
@@ -203,7 +203,7 @@ export default {
         ></v-color-picker>
       </v-card>
     </v-row>
-    <v-row style="height: 0" justify="start" v-if="!portfolio.dialogA">
+    <v-row style="height: 0" justify="start" v-if="!portfolio.dialogA && !voir">
       <!-- modifer -->
       <v-col cols="auto" v-if="showTextareaTitre">
         <v-card max-width="600" style="z-index: 3">
@@ -339,7 +339,9 @@ export default {
         <div
           v-html="settings.titre.nom"
           class="d-inline overflow-hidden text-body-1"
-          :class="!portfolio.dialogA ? 'blocHover' : ''"
+          :class="{
+            blocHover: !portfolio.dialogA && !voir,
+          }"
           style="max-width: 800px"
           :style="{ color: this.settings.titre.color }"
           @click="toggleTextareaTitre"
@@ -347,7 +349,11 @@ export default {
       </v-col>
     </v-row>
 
-    <v-row style="height: 0" justify="center" v-if="!portfolio.dialogA">
+    <v-row
+      style="height: 0"
+      justify="center"
+      v-if="!portfolio.dialogA && !voir"
+    >
       <v-btn
         v-if="showButton"
         color="white"

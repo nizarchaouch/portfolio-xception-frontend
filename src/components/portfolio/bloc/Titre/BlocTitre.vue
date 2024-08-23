@@ -4,7 +4,7 @@
 import { mapState, mapActions, mapMutations } from "vuex";
 
 export default {
-  props: { id: Number },
+  props: { id: Number, voir: Boolean },
   computed: {
     ...mapState(["portfolio", "portfolioss"]),
     settings() {
@@ -152,13 +152,13 @@ export default {
 <template>
   <v-container
     fluid
-    class="bloc"
+    :class="voir ? '' : 'bloc'"
     style="height: 150px"
     :style="{ 'background-color': settings.back.color }"
     @mouseover="showButton = true"
     @mouseleave="showButton = false"
   >
-    <v-row style="height: 0" v-if="!portfolio.dialogA">
+    <v-row style="height: 0" v-if="!portfolio.dialogA && !voir">
       <v-card
         v-if="showButton"
         class="animation ms-sm-auto me-6 mt-5 pa-2 ms-6"
@@ -215,7 +215,7 @@ export default {
         </v-btn> -->
       </v-card>
     </v-row>
-    <v-row style="height: 0" justify="start" v-if="!portfolio.dialogA">
+    <v-row style="height: 0" justify="start" v-if="!portfolio.dialogA && !voir">
       <!-- modifer -->
       <v-col cols="auto" v-if="showTextareaTitre">
         <v-card max-width="600" style="z-index: 3">
@@ -349,7 +349,7 @@ export default {
     <v-row>
       <v-col cols="12" :class="'mt-9 text-' + settings.titre.justify">
         <v-color-picker
-          v-if="showColorCarre"
+          v-if="showColorCarre && !voir"
           @click="saveForm()"
           v-model="this.settings.carre.color"
           :modes="['hexa']"
@@ -367,7 +367,9 @@ export default {
         <div
           v-html="settings.titre.nom"
           class="text-h3 d-inline overflow-hidden"
-          :class="!portfolio.dialogA ? 'blocHover' : ''"
+          :class="{
+            blocHover: !portfolio.dialogA && !voir,
+          }"
           style="max-width: 800px"
           :style="{ color: this.settings.titre.color }"
           @click="toggleTextareaTitre"
@@ -375,7 +377,7 @@ export default {
       </v-col>
     </v-row>
 
-    <v-row style="height: 0" justify="center" v-if="!portfolio.dialogA">
+    <v-row style="height: 0" justify="center" v-if="!portfolio.dialogA && !voir">
       <v-btn
         v-if="showButton"
         color="white"

@@ -4,7 +4,7 @@
 import { mapState, mapActions, mapMutations } from "vuex";
 
 export default {
-  props: { id: Number },
+  props: { id: Number, voir: Boolean },
   computed: {
     ...mapState(["portfolio", "portfolioss"]),
     settings() {
@@ -229,10 +229,10 @@ export default {
 <template>
   <v-container
     fluid
-    class="bloc"
+    :class="voir ? '' : 'bloc'"
     style="min-height: 350px"
     :style="{ 'background-color': settings.back.color }"
-    @mouseover="showButton = true"
+    @mouseover="voir ? (showButton = false) : (showButton = true)"
     @mouseleave="showButton = false"
   >
     <v-row style="height: 0" v-if="!portfolio.dialogA">
@@ -282,7 +282,7 @@ export default {
         ></v-color-picker>
       </v-card>
     </v-row>
-    <v-row style="height: 0" justify="start" v-if="!portfolio.dialogA">
+    <v-row style="height: 0" justify="start" v-if="!portfolio.dialogA && !voir">
       <!-- modifer anne -->
       <v-col cols="auto" v-if="showTextareaAnnee">
         <v-card max-width="600" style="z-index: 3">
@@ -944,7 +944,7 @@ export default {
         :width="600"
         :color="settings.backSheet.color"
         :class="{
-          blocHover: !portfolio.dialogA,
+          blocHover: !portfolio.dialogA && !voir,
         }"
         @mouseover="btnshowColorSheet = true"
         @mouseleave="btnshowColorSheet = false"
@@ -953,7 +953,7 @@ export default {
         class="my-3 overflow-hidden"
       >
         <v-btn
-          v-if="btnshowColorSheet && !portfolio.dialogA"
+          v-if="btnshowColorSheet && !portfolio.dialogA && !voir"
           icon="mdi-palette"
           style="position: absolute"
           variant="text"
@@ -966,7 +966,7 @@ export default {
               v-html="settings.annee.nom"
               :style="{ color: this.settings.annee.color }"
               :class="{
-                blocHover: !portfolio.dialogA,
+                blocHover: !portfolio.dialogA && !voir,
                 ['text-' + settings.annee.justify]: true,
               }"
               @click="showTextareaAnnee = !showTextareaAnnee"
@@ -977,7 +977,7 @@ export default {
               v-html="settings.titre.nom"
               :style="{ color: this.settings.titre.color }"
               :class="{
-                blocHover: !portfolio.dialogA,
+                blocHover: !portfolio.dialogA && !voir,
                 ['text-' + settings.titre.justify]: true,
               }"
               @click="showTextareaTitre = !showTextareaTitre"
@@ -987,7 +987,7 @@ export default {
               v-html="settings.sousTitre.nom"
               :style="{ color: this.settings.sousTitre.color }"
               :class="{
-                blocHover: !portfolio.dialogA,
+                blocHover: !portfolio.dialogA && !voir,
                 ['text-' + settings.sousTitre.justify]: true,
               }"
               @click="showTextareaSous = !showTextareaSous"
@@ -997,7 +997,7 @@ export default {
               v-html="settings.ville.nom"
               :style="{ color: this.settings.ville.color }"
               :class="{
-                blocHover: !portfolio.dialogA,
+                blocHover: !portfolio.dialogA && !voir,
                 ['text-' + settings.ville.justify]: true,
               }"
               @click="showTextareaVille = !showTextareaVille"
@@ -1008,7 +1008,7 @@ export default {
               v-html="settings.parg.nom"
               :style="{ color: this.settings.parg.color }"
               :class="{
-                blocHover: !portfolio.dialogA,
+                blocHover: !portfolio.dialogA && !voir,
                 ['text-' + settings.parg.justify]: true,
               }"
               @click="showTextareaParg = !showTextareaParg"
