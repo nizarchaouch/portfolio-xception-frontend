@@ -7,7 +7,7 @@ export default {
     modelPort: [],
     selectedPage: null,
     portfolios: {
-      idCandidat: "65f67e1e555d2e3355947742",
+      idCandidat: null,
       nom: "model",
       navbar: {
         id: 0,
@@ -244,10 +244,10 @@ export default {
         });
       }
     },
-    async getPortfolio(ctx) {
+    async getPortfolio(ctx,id) {
       try {
         const portfolioResponse = await axios.get(
-          `http://localhost:8000/api/portfolio/get/65f67e1e555d2e3355947742`,
+          `http://localhost:8000/api/portfolio/get/${id}`,
           {
             headers: { "Content-type": "application/json" },
             withCredentials: true,
@@ -271,6 +271,7 @@ export default {
         return response.data
       } catch (error) {
         console.error("Error fetching portfolio:", error);
+        return false;
       }
     },
     async getAllModel(ctx) {

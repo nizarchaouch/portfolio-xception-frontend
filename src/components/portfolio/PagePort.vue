@@ -28,7 +28,7 @@ export default {
     CardProj,
   },
   computed: {
-    ...mapState(["portfolio", "portfolioss"]),
+    ...mapState(["portfolio", "portfolioss","user"]),
     selectedPage() {
       return this.portfolioss.selectedPage;
     },
@@ -45,6 +45,7 @@ export default {
     ...mapMutations([""]),
   },
   created() {
+    this.portfolioss.portfolios.idCandidat = this.user.userData._id;    
     this.portfolioss.selectedPage = this.pages[0];
   },
 };

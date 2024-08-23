@@ -1,7 +1,7 @@
 <script>
 // eslint-disable-next-line
 /* eslint-disable */
-import { mapState, mapActions,mapMutations } from "vuex";
+import { mapState, mapActions } from "vuex";
 import NavBar from "@/components/portfolio/NavBar.vue";
 import PagePort from "@/components/portfolio/PagePort.vue";
 import SideModEntet from "@/components/portfolio/sidebar/SideModEntet.vue";
@@ -22,17 +22,19 @@ export default {
     ...mapState(["user", "portfolio"]),
   },
   methods: {
-    ...mapActions(["userAuth", "getPortfolio"]),
+    ...mapActions(["userAuth", "getPortfolio", "checkPortfolio"]),
   },
   async mounted() {
     await this.userAuth();
-    await this.getPortfolio();
     if (
       this.user.authenticated === false ||
       this.user.userData.role === "recruteur"
     ) {
       this.$router.push("/login");
     } else {
+      if (await this.checkPortfolio(this.user.userData._id)) {
+        await this.getPortfolio(this.user.userData._id);
+      }
     }
   },
 };
