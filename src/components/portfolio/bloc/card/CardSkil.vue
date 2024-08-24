@@ -122,10 +122,22 @@ export default {
     },
   }),
   methods: {
-    ...mapActions(["delBloc", "modBloc"]),
+    ...mapActions(["delBloc", "modBloc", "moveBlocUp", "moveBlocDown"]),
     ...mapMutations(["changeSidebarA", "changeSidebarM"]),
     onClickDeltBloc() {
       this.delBloc({
+        pageIndex: this.portfolioss.selectedPage.id,
+        blocIndex: this.id,
+      });
+    },
+    onClickMoveUpBloc() {
+      this.moveBlocUp({
+        pageIndex: this.portfolioss.selectedPage.id,
+        blocIndex: this.id,
+      });
+    },
+    onClickMoveDownBloc() {
+      this.moveBlocDown({
         pageIndex: this.portfolioss.selectedPage.id,
         blocIndex: this.id,
       });
@@ -263,13 +275,25 @@ export default {
           Modifier le bloc
         </v-btn>
         <v-card class="pa-2 my-1 d-flex justify-space-between" flat border>
-          <v-btn variant="text" size="40">
+          <v-btn
+            variant="text"
+            size="40"
+            @click="onClickMoveUpBloc"
+            :disabled="this.id === 0"
+          >
             <v-icon>mdi-arrow-up</v-icon>
             <v-tooltip activator="parent" location="bottom"
               >Déplacer vers le haut</v-tooltip
             >
           </v-btn>
-          <v-btn variant="text" size="40">
+          <v-btn
+            variant="text"
+            size="40"
+            @click="onClickMoveDownBloc"
+            :disabled="
+              this.id === this.portfolioss.selectedPage.bloc.length - 1
+            "
+          >
             <v-icon>mdi-arrow-down</v-icon>
             <v-tooltip activator="parent" location="bottom"
               >Déplacer vers le bas</v-tooltip
@@ -612,7 +636,11 @@ export default {
       </v-sheet>
     </v-row>
 
-    <v-row style="height: 0" justify="center" v-if="!portfolio.dialogA && !voir">
+    <v-row
+      style="height: 0"
+      justify="center"
+      v-if="!portfolio.dialogA && !voir"
+    >
       <v-btn
         v-if="showButton"
         color="white"

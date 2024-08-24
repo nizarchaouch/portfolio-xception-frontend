@@ -111,6 +111,37 @@ export default {
         state.portfolios.pages[i].id = index++;
       }
     },
+    moveBlocUp(state, { pageIndex, blocIndex }) {
+      if (blocIndex > 0) {
+        const blocs = state.portfolios.pages[pageIndex].bloc;
+        // Swap the current block with the one above it
+        [blocs[blocIndex - 1], blocs[blocIndex]] = [
+          blocs[blocIndex],
+          blocs[blocIndex - 1],
+        ];
+        // Update the ids to reflect their new positions
+        blocs[blocIndex - 1].id--;
+        blocs[blocIndex].id++;
+      } else {
+        console.log("This block is already at the top");
+      }
+    },
+
+    moveBlocDown(state, { pageIndex, blocIndex }) {
+      const blocs = state.portfolios.pages[pageIndex].bloc;
+      if (blocIndex < blocs.length - 1) {
+        // Swap the current block with the one below it
+        [blocs[blocIndex + 1], blocs[blocIndex]] = [
+          blocs[blocIndex],
+          blocs[blocIndex + 1],
+        ];
+        // Update the ids to reflect their new positions
+        blocs[blocIndex + 1].id++;
+        blocs[blocIndex].id--;
+      } else {
+        console.log("This block is already at the bottom");
+      }
+    },
   },
   getters: {},
   actions: {
@@ -190,6 +221,13 @@ export default {
         state.portfolios.pages[pageIndex].bloc[i].id++;
       }
     },
+    moveBlocUp({ commit }, payload) {
+      commit("moveBlocUp", payload);
+    },
+
+    moveBlocDown({ commit }, payload) {
+      commit("moveBlocDown", payload);
+    },
     async addModel(ctx) {
       try {
         const AddModelResponse = await axios.post(
@@ -244,7 +282,7 @@ export default {
         });
       }
     },
-    async getPortfolio(ctx,id) {
+    async getPortfolio(ctx, id) {
       try {
         const portfolioResponse = await axios.get(
           `http://localhost:8000/api/portfolio/get/${id}`,
@@ -259,7 +297,7 @@ export default {
         console.error("Error fetching portfolio:", error);
       }
     },
-    async checkPortfolio(ctx,id) {
+    async checkPortfolio(ctx, id) {
       try {
         const response = await axios.get(
           `http://localhost:8000/api/portfolio/checkPortfolio/${id}`,
@@ -268,7 +306,7 @@ export default {
             withCredentials: true,
           }
         );
-        return response.data
+        return response.data;
       } catch (error) {
         console.error("Error fetching portfolio:", error);
         return false;
