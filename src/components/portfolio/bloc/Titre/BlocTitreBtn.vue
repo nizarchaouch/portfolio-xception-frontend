@@ -32,7 +32,7 @@ export default {
     showColorTitre: false,
     showColorBtn: false,
     showColorBack: false,
-    choixBtn: ["URL", "web"],
+    choixBtn: ["Fichier", "folder-multiple-image"],
     menu: false,
     menuChoix: false,
 
@@ -68,7 +68,14 @@ export default {
     },
   }),
   methods: {
-    ...mapActions(["delBloc", "modBloc",,"moveBlocUp","moveBlocDown"]),
+    ...mapActions([
+      "delBloc",
+      "modBloc",
+      ,
+      "moveBlocUp",
+      "moveBlocDown",
+      "uploadCv",
+    ]),
     ...mapMutations(["changeSidebarA", "changeSidebarM"]),
     onClickDeltBloc() {
       this.delBloc({
@@ -109,9 +116,16 @@ export default {
       });
     },
     handleFileChange(event) {
+      this.settings.btn.url = "";
       const file = event.target.files[0];
-      this.settings.btn.doc = file;
-      // console.log(file);
+      // this.settings.btn.doc = file;
+      const cvData = {
+        file: file,
+        pageIndex: this.portfolioss.selectedPage.id,
+        blocIndex: this.id,
+      };
+      this.uploadCv(cvData);
+      console.log(file);
       this.saveform();
     },
 
@@ -175,6 +189,13 @@ export default {
         }
       }
     },
+  },
+  mounted() {
+    if (this.settings.btn.url === "") {
+      this.choixBtn = ["Fichier", "folder-multiple-image"];
+    } else {
+      this.choixBtn = ["URL", "web"];
+    }
   },
 };
 </script>
@@ -504,7 +525,7 @@ export default {
                                     URL</v-btn
                                   >
                                 </v-list-item-title>
-                                <v-list-item-title class="pcursor-pointer">
+                                <v-list-item-title class="cursor-pointer">
                                   <v-btn
                                     :ripple="false"
                                     variant="text"
@@ -528,7 +549,7 @@ export default {
                       <v-list-item-title>
                         <v-text-field
                           v-if="choixBtn[0] === 'URL'"
-                          @change="saveform()"
+                          @change="saveform(), (settings.btn.doc = '')"
                           density="compact"
                           variant="underlined"
                           color="blue"
@@ -537,6 +558,26 @@ export default {
                         ></v-text-field>
                       </v-list-item-title>
                       <v-list-item-title>
+                        <v-card
+                          v-if="
+                            settings.btn.doc  && choixBtn[0] === 'Fichier'
+                          "
+                          :title="
+                            settings.btn.doc
+                              ? settings.btn.doc.slice(14)
+                              : 'CV non disponible'
+                          "
+                          prepend-icon="mdi-file-document"
+                          append-icon="mdi-eye"
+                          :href="'http://localhost:8000/' + settings.btn.doc"
+                          target="_blank"
+                          variant="tonal"
+                          color="#428ee6"
+                        >
+                          <v-tooltip activator="parent" location="top"
+                            >Voir CV</v-tooltip
+                          >
+                        </v-card>
                         <v-btn
                           v-if="choixBtn[0] === 'Fichier'"
                           class="text-none rounded-pill ma-2"
@@ -604,8 +645,22 @@ export default {
           :variant="settings.btn.variant"
           :color="settings.btn.color"
           @click="showTextareaBtn = !showTextareaBtn"
-          >{{ settings.btn.nom }}</v-btn
         >
+          <a
+            :href="
+              voir
+                ? settings.btn.url === ''
+                  ? 'http://localhost:8000/' + settings.btn.doc
+                  : settings.btn.url
+                : null
+            "
+            target="_blank"
+            download="CV"
+            class="text-decoration-none text-white"
+          >
+            {{ settings.btn.nom }}
+          </a>
+        </v-btn>
         <v-color-picker
           v-if="showColorCarre"
           v-model="this.settings.btn.color"

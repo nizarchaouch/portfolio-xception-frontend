@@ -1,3 +1,4 @@
+// import axios from "axios";
 export default {
   state: {
     modAprop: false,
@@ -96,4 +97,20 @@ export default {
       state.sideBarA = false;
     },
   },
+  actions: {
+    // async uploadLogo({ state }, file) {
+    //   try {
+    //     let formData = new FormData();
+    //     formData.append("image", file);
+
+    //     const uploadResponse = await axios.post(
+    //       "http://localhost:8000/upload",
+    //       formData
+    //     );        
+    //     state.logo.lineImage = uploadResponse.data.imagepath;
+    //   } catch (error) {
+    //     console.error("Erreur lors du téléchargement d'un file :", error);
+    //   }
+    // },
+  }
 };

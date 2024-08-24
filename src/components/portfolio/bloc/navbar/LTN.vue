@@ -15,6 +15,9 @@ export default {
     selectedPage() {
       return this.portfolioss.portfolios.selectedPage;
     },
+    navbar() {
+      return this.portfolioss.portfolios.navbar.settings;
+    },
   },
   data: () => ({
     tab: null,
@@ -59,10 +62,8 @@ export default {
     @mouseleave="showButton = false"
   >
     <v-toolbar
-      :image="
-        portfolio.navbar.backgroundImage ? portfolio.navbar.lineImage : null
-      "
-      :color="portfolio.navbar.colorNav"
+      :image="navbar.navbar.backgroundImage ? navbar.navbar.lineImage : null"
+      :color="navbar.navbar.colorNav"
       :class="!voir ? 'vToolbar' : ''"
     >
       <v-app-bar-nav-icon
@@ -109,19 +110,23 @@ export default {
           @click="findPage(this.pages[0].name)"
           class="text-none"
           :style="{
-            fontFamily: portfolio.navbar.selectPolice,
-            'font-size': portfolio.navbar.sizeTitle + 'px',
+            fontFamily: navbar.navbar.selectPolice,
+            'font-size': navbar.navbar.sizeTitle + 'px',
           }"
         >
           <v-avatar
-            v-if="portfolio.logo.logo"
+            v-if="navbar.logo.logo"
             class="me-4 mt-1"
-            :color="portfolio.logo.colorChoix"
-            :rounded="!portfolio.logo.logoArr"
-            :size="portfolio.logo.sizeLogo"
+            :color="navbar.logo.colorChoix"
+            :rounded="!navbar.logo.logoArr"
+            :size="navbar.logo.sizeLogo"
           >
             <v-img
-              :src="portfolio.logo.image ? portfolio.logo.lineImage : null"
+              :src="
+                navbar.logo.image
+                  ? 'http://localhost:8000/' + navbar.logo.lineImage
+                  : null
+              "
               cover
             ></v-img>
           </v-avatar>
@@ -137,12 +142,12 @@ export default {
             {{ portfolio.navbar.titre }}
           </p> -->
           <div
-            v-html="portfolio.navbar.titre"
-            v-if="portfolio.navbar.afficheTitre"
+            v-html="navbar.navbar.titre"
+            v-if="navbar.navbar.afficheTitre"
             class="py-1"
             :style="{
-              color: portfolio.navbar.colorTitre,
-              'background-color': portfolio.navbar.colorBackTitre,
+              color: navbar.navbar.colorTitre,
+              'background-color': navbar.navbar.colorBackTitre,
             }"
           ></div>
         </v-tab>
@@ -154,13 +159,13 @@ export default {
           v-for="(item, index) in pages"
           :key="index"
           :value="item.name"
-          :hide-slider="portfolio.links.hideSlider"
+          :hide-slider="navbar.links.hideSlider"
           :style="{
             'font-weight': 600,
-            fontFamily: portfolio.links.selectPolice,
+            fontFamily: navbar.links.selectPolice,
           }"
           class="text-none"
-          :color="portfolio.links.colorLink"
+          :color="navbar.links.colorLink"
           @click="findPage(item.name)"
         >
           {{ item.name }}
@@ -184,10 +189,7 @@ export default {
         color="white"
         class="animation bg-blue text-none rounded-pill"
         prepend-icon="mdi-plus"
-        @click="
-          (portfolio.dialogA = !portfolio.dialogA) &&
-            (portfolio.isnavbar = true)
-        "
+        @click="(portfolio.dialogA = !portfolio.dialogA) && (portfolio.isnavbar = true)"
         style="z-index: 3"
       >
         Ajouter un bloc

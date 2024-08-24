@@ -7,17 +7,22 @@ export default {
   },
   computed: {
     ...mapState(["portfolio", "fonts", "portfolioss"]),
+    navbar() {
+      return this.portfolioss.portfolios.navbar.settings;
+    },
     navbartitre: {
       get() {
-        return this.removeHtmlTags(this.portfolio.navbar.titre);
+        return this.removeHtmlTags(this.navbar.navbar.titre);
       },
       set(value) {
-        this.portfolio.navbar.titre = value;
-      }
-    }
+        this.navbar.navbar.titre = value;
+      },
+    },
   },
   data: () => ({
-    panel: 2,
+    snackConf: false,
+    deleteId: null,
+    panel: 0,
     colorPick: false,
     colorPickLogo: false,
     colorPickLinks: false,
@@ -34,12 +39,22 @@ export default {
     ],
   }),
   methods: {
-    ...mapMutations(["changeSidebarM", "addPage", "movePage"]),
-    ...mapActions(["fetchFonts"]),
+    ...mapMutations([
+      "changeSidebarM",
+      "addPage",
+      "movePage",
+      "deletePage",
+      "duplicatePage",
+    ]),
+    ...mapActions(["fetchFonts", "uploadLogo"]),
+    handleFileChange(event) {
+      const file = event.target.files[0];
+      this.uploadLogo(file);
+    },
     loadFont() {
       const fontLink = document.createElement("link");
       fontLink.rel = "stylesheet";
-      fontLink.href = `https://fonts.googleapis.com/css?family=${this.portfolio.navbar.selectPolice.replace(
+      fontLink.href = `https://fonts.googleapis.com/css?family=${this.navbar.navbar.selectPolice.replace(
         / /g,
         "+"
       )}&display=swap`;
@@ -55,13 +70,13 @@ export default {
     formatTextToBold() {
       const selectedText = window.getSelection().toString();
       if (selectedText) {
-        if (this.portfolio.navbar.titre.includes(`<b>${selectedText}</b>`)) {
-          this.portfolio.navbar.titre = this.portfolio.navbar.titre.replace(
+        if (this.navbar.navbar.titre.includes(`<b>${selectedText}</b>`)) {
+          this.navbar.navbar.titre = this.navbar.navbar.titre.replace(
             `<b>${selectedText}</b>`,
             selectedText
           );
         } else {
-          this.portfolio.navbar.titre = this.portfolio.navbar.titre.replace(
+          this.navbar.navbar.titre = this.navbar.navbar.titre.replace(
             selectedText,
             `<b>${selectedText}</b>`
           );
@@ -71,13 +86,13 @@ export default {
     formatTextToI() {
       const selectedText = window.getSelection().toString();
       if (selectedText) {
-        if (this.portfolio.navbar.titre.includes(`<i>${selectedText}</i>`)) {
-          this.portfolio.navbar.titre = this.portfolio.navbar.titre.replace(
+        if (this.navbar.navbar.titre.includes(`<i>${selectedText}</i>`)) {
+          this.navbar.navbar.titre = this.navbar.navbar.titre.replace(
             `<i>${selectedText}</i>`,
             selectedText
           );
         } else {
-          this.portfolio.navbar.titre = this.portfolio.navbar.titre.replace(
+          this.navbar.navbar.titre = this.navbar.navbar.titre.replace(
             selectedText,
             `<i>${selectedText}</i>`
           );
@@ -87,32 +102,71 @@ export default {
     formatTextToU() {
       const selectedText = window.getSelection().toString();
       if (selectedText) {
-        if (this.portfolio.navbar.titre.includes(`<u>${selectedText}</u>`)) {
-          this.portfolio.navbar.titre = this.portfolio.navbar.titre.replace(
+        if (this.navbar.navbar.titre.includes(`<u>${selectedText}</u>`)) {
+          this.navbar.navbar.titre = this.navbar.navbar.titre.replace(
             `<u>${selectedText}</u>`,
             selectedText
           );
         } else {
-          this.portfolio.navbar.titre = this.portfolio.navbar.titre.replace(
+          this.navbar.navbar.titre = this.navbar.navbar.titre.replace(
             selectedText,
             `<u>${selectedText}</u>`
           );
         }
       }
     },
+    confirmDeletionDialog(id) {
+      this.deleteId = id;
+      this.snackConf = true;
+    },
+    deltPage() {
+      this.deletePage(this.deleteId);
+      this.snackConf = false;
+    },
   },
   mounted() {
     this.fetchFonts();
     this.loadFont();
-  }, 
+  },
   async created() {
     // await this.userAuth();
-    this.linkNav = this.portfolioss.portfolios.pages;
+    setTimeout(() => {
+      this.linkNav = this.portfolioss.portfolios.pages;
+    }, 100);
+    console.log("lll", this.linkNav);
   },
 };
 </script>
 
 <template>
+  <v-snackbar
+    v-model="snackConf"
+    vertical
+    location="center"
+    color="light-blue-lighten-4"
+    :timeout="-1"
+  >
+    <div class="text-subtitle-1 font-weight-bold pa-2">
+      Voulez-vous vraiment supprimer cette page ?
+    </div>
+
+    <p class="text-medium-emphasis">
+      <v-icon>mdi-alert-octagon-outline</v-icon> cette action ne peut pas ètre
+      annulée
+    </p>
+
+    <template v-slot:actions>
+      <v-btn variant="text" @click="snackConf = false"> Non </v-btn>
+      <v-btn
+        color="white"
+        variant="tonal"
+        class="mx-3 bg-red"
+        @click="deltPage"
+      >
+        Oui
+      </v-btn>
+    </template>
+  </v-snackbar>
   <v-layout>
     <v-navigation-drawer
       temporary
@@ -120,7 +174,7 @@ export default {
       elevation="10"
       permanent
       width="380"
-      v-model="portfolio.sideBarM"
+      v-model="portfolioss.sideBarM"
     >
       <v-toolbar color="indigo" class="px-1 mt-14">
         <v-toolbar-title class="font-weight-bold">
@@ -151,7 +205,7 @@ export default {
                 <div class="d-flex">
                   <h4 class="mt-4">Ajouter une image d'arrière-plan</h4>
                   <v-switch
-                    v-model="portfolio.navbar.backgroundImage"
+                    v-model="navbar.navbar.backgroundImage"
                     :value="true"
                     color="blue"
                     class="ms-auto"
@@ -162,10 +216,9 @@ export default {
               </v-col>
               <v-col cols="12">
                 <div class="d-flex">
-                  <h4 class="mt-4">Barre de navigation fixe</h4>
+                  <h4 class="mt-4">Barre de navigation inversée</h4>
                   <v-switch
-                    v-model="portfolio.navbar.fixedNav"
-                    :value="true"
+                    @change="toggleNavBarValue"
                     color="blue"
                     class="ms-auto"
                     inset
@@ -188,11 +241,11 @@ export default {
                   </v-btn>
                 </div>
               </v-col>
-              <v-col cols="12" v-if="portfolio.navbar.backgroundImage">
+              <v-col cols="12" v-if="navbar.navbar.backgroundImage">
                 <div class="d-flex">
                   <h4 class="mt-4">Lien d'image</h4>
                   <v-text-field
-                    v-model="portfolio.navbar.lineImage"
+                    v-model="navbar.navbar.lineImage"
                     variant="outlined"
                     density="compact"
                     hide-details
@@ -207,7 +260,7 @@ export default {
             <v-row>
               <v-color-picker
                 v-if="colorPick"
-                v-model="portfolio.navbar.colorNav"
+                v-model="navbar.navbar.colorNav"
                 :modes="['hexa']"
                 class="mx-auto"
               ></v-color-picker>
@@ -228,7 +281,7 @@ export default {
                 <div class="d-flex">
                   <h4 class="mt-4">Affichage Logo</h4>
                   <v-switch
-                    v-model="portfolio.logo.logo"
+                    v-model="navbar.logo.logo"
                     :value="true"
                     color="blue"
                     class="ms-auto"
@@ -239,7 +292,7 @@ export default {
                 <div class="d-flex">
                   <h4 class="mt-4">Logo Arrondi</h4>
                   <v-switch
-                    v-model="portfolio.logo.logoArr"
+                    v-model="navbar.logo.logoArr"
                     value="1"
                     color="blue"
                     class="ms-auto"
@@ -252,7 +305,7 @@ export default {
                 <div class="d-flex">
                   <h4 class="mt-4">Affichage Image</h4>
                   <v-switch
-                    v-model="portfolio.logo.image"
+                    v-model="navbar.logo.image"
                     :value="true"
                     color="blue"
                     class="ms-auto"
@@ -278,7 +331,7 @@ export default {
               <v-col cols="12">
                 <h4 class="mt-4">Taille</h4>
                 <v-slider
-                  v-model="portfolio.logo.sizeLogo"
+                  v-model="navbar.logo.sizeLogo"
                   :max="170"
                   :min="10"
                   :step="1"
@@ -287,7 +340,7 @@ export default {
                 >
                   <template v-slot:append>
                     <v-text-field
-                      v-model="portfolio.logo.sizeLogo"
+                      v-model="navbar.logo.sizeLogo"
                       :max="170"
                       :min="10"
                       style="width: 100px"
@@ -301,18 +354,24 @@ export default {
                   </template>
                 </v-slider>
               </v-col>
-              <v-col cols="12" v-if="portfolio.logo.image">
+              <v-col cols="12" v-if="navbar.logo.image">
                 <div class="d-flex">
-                  <h4 class="mt-4">Lien d'image</h4>
-                  <v-text-field
-                    v-model="portfolio.logo.lineImage"
-                    variant="outlined"
-                    density="compact"
-                    hide-details
-                    single-line
+                  <h4 class="mt-4">Logo</h4>
+                  <v-btn
+                    class="text-none rounded ma-2"
                     color="blue"
-                    class="mt-2 ms-2"
-                  ></v-text-field>
+                    variant="tonal"
+                  >
+                    <label for="file" class="m-0" style="cursor: pointer">
+                      choisir un fichier
+                    </label>
+                  </v-btn>
+                  <input
+                    type="file"
+                    id="file"
+                    class="d-none"
+                    @change="handleFileChange"
+                  />
                 </div>
               </v-col>
             </v-row>
@@ -320,7 +379,7 @@ export default {
             <v-row>
               <v-color-picker
                 v-if="colorPickLogo"
-                v-model="portfolio.logo.colorChoix"
+                v-model="navbar.logo.colorChoix"
                 :modes="['hexa']"
                 class="mx-auto"
               ></v-color-picker>
@@ -341,7 +400,7 @@ export default {
                 <div class="d-flex">
                   <h4 class="mt-4">Affichage Titre</h4>
                   <v-switch
-                    v-model="portfolio.navbar.afficheTitre"
+                    v-model="navbar.navbar.afficheTitre"
                     :value="true"
                     color="blue"
                     class="ms-auto"
@@ -354,7 +413,7 @@ export default {
                 <div class="d-flex">
                   <h4 class="mt-4">Style</h4>
                   <v-select
-                    v-model="portfolio.navbar.selectStyle"
+                    v-model="navbar.navbar.selectStyle"
                     :items="style"
                     class="ms-16 mt-3"
                     density="compact"
@@ -367,7 +426,7 @@ export default {
                       <v-list-item
                         v-bind="props"
                         class="d-flex"
-                        @click="portfolio.navbar.sizeTitle = item.raw.px"
+                        @click="navbar.navbar.sizeTitle = item.raw.px"
                       >
                         <template v-slot:title>
                           <div class="d-flex">
@@ -396,7 +455,7 @@ export default {
                 <div class="d-flex mt-5">
                   <h4 class="mt-4">Police</h4>
                   <v-autocomplete
-                    v-model="portfolio.navbar.selectPolice"
+                    v-model="navbar.navbar.selectPolice"
                     :items="fonts.font"
                     class="ms-14 mt-1"
                     density="compact"
@@ -422,7 +481,7 @@ export default {
               <v-col cols="12">
                 <h4 class="mt-4">Taille de la police</h4>
                 <v-slider
-                  v-model="portfolio.navbar.sizeTitle"
+                  v-model="navbar.navbar.sizeTitle"
                   :max="170"
                   :min="10"
                   :step="1"
@@ -431,7 +490,7 @@ export default {
                 >
                   <template v-slot:append>
                     <v-text-field
-                      v-model="portfolio.navbar.sizeTitle"
+                      v-model="navbar.navbar.sizeTitle"
                       :max="170"
                       :min="10"
                       style="width: 100px"
@@ -470,7 +529,7 @@ export default {
                       <v-icon icon="mdi-format-color-text"></v-icon>
 
                       <v-sheet
-                        :color="portfolio.navbar.colorTitre"
+                        :color="navbar.navbar.colorTitre"
                         height="4"
                         width="26"
                         tile
@@ -484,7 +543,7 @@ export default {
                       <v-icon icon="mdi-format-color-fill"></v-icon>
 
                       <v-sheet
-                        :color="portfolio.navbar.colorBackTitre"
+                        :color="navbar.navbar.colorBackTitre"
                         height="4"
                         width="26"
                         tile
@@ -509,13 +568,13 @@ export default {
             <v-row>
               <v-color-picker
                 v-if="colorPickTitreNav"
-                v-model="portfolio.navbar.colorTitre"
+                v-model="navbar.navbar.colorTitre"
                 :modes="['hexa']"
                 class="mx-auto"
               ></v-color-picker>
               <v-color-picker
                 v-if="colorPickBackTitreNav"
-                v-model="portfolio.navbar.colorBackTitre"
+                v-model="navbar.navbar.colorBackTitre"
                 :modes="['hexa']"
                 class="mx-auto"
               ></v-color-picker>
@@ -536,7 +595,7 @@ export default {
                 <div class="d-flex">
                   <h4 class="mt-4">Masquer le curseur</h4>
                   <v-switch
-                    v-model="portfolio.links.hideSlider"
+                    v-model="navbar.links.hideSlider"
                     :value="true"
                     color="blue"
                     class="ms-auto"
@@ -561,7 +620,7 @@ export default {
                 <div class="d-flex mt-5">
                   <h4 class="mt-4">Police</h4>
                   <v-autocomplete
-                    v-model="portfolio.links.selectPolice"
+                    v-model="navbar.links.selectPolice"
                     :items="fonts.font"
                     class="ms-16 mt-1"
                     density="compact"
@@ -584,7 +643,7 @@ export default {
               <v-col cols="12" class="mt-2">
                 <v-color-picker
                   v-if="colorPickLinks"
-                  v-model="portfolio.links.colorLink"
+                  v-model="navbar.links.colorLink"
                   :modes="['hexa']"
                   class="mx-auto"
                 ></v-color-picker>
@@ -621,21 +680,15 @@ export default {
                           <v-list>
                             <v-list-item
                               link
-                              title="Masquer du menu"
-                              prepend-icon="mdi-eye-off"
-                              @click="confirmDeletionDialog(item._id)"
-                            ></v-list-item>
-                            <v-list-item
-                              link
                               title="Dupliquer"
                               prepend-icon="mdi-file-multiple"
-                              @click="confirmDeletionDialog(item._id)"
+                              @click="duplicatePage(element.id)"
                             ></v-list-item>
                             <v-list-item
                               link
                               title="Supprimer"
                               prepend-icon="mdi-delete-empty"
-                              @click="confirmDeletionDialog(item._id)"
+                              @click="confirmDeletionDialog(element.id)"
                             ></v-list-item>
                           </v-list>
                         </v-menu>

@@ -20,7 +20,7 @@ export default {
             formaTitreNav: [],
             colorTitre: "white",
             colorBackTitre: "#0B242400",
-            titre: "Nizar Chaouch",
+            titre: "Nizar Chaoucha",
             selectStyle: "Titer 4", // en px
             sizeTitle: 25,
             selectPolice: "Potta One",
@@ -110,6 +110,25 @@ export default {
       for (let i = 0; i < state.portfolios.pages.length; i++) {
         state.portfolios.pages[i].id = index++;
       }
+    },
+    duplicatePage(state, pageIndex) {
+      const pageToDuplicate = state.portfolios.pages[pageIndex];      
+      const duplicatedPage = {
+        ...pageToDuplicate,
+        id: state.portfolios.pages.length,
+        name: pageToDuplicate.name + " copie",
+        bloc: pageToDuplicate.bloc.map(bloc => ({ ...bloc })), // Deep copy of blocks
+      };
+  
+      state.portfolios.pages.push(duplicatedPage);
+    },
+    deletePage(state, pageIndex) {
+      state.portfolios.pages.splice(pageIndex, 1);
+      
+      // Reassign ids to remaining pages
+      state.portfolios.pages.forEach((page, index) => {
+        page.id = index;
+      });
     },
     moveBlocUp(state, { pageIndex, blocIndex }) {
       if (blocIndex > 0) {
@@ -327,21 +346,42 @@ export default {
         console.error("Erreur lors de l'affiche de model :", error);
       }
     },
-    // async upload(ctx, data) {
-    //   try {
-    //     let formData = new FormData();
-    //     formData.append("file", data.file);
+    async uploadCv({ state }, data) {
+      try {
+        let formData = new FormData();
+        formData.append("file", data.file);
 
-    //     const uploadResponse = await axios.post(
-    //       "http://localhost:8000/uploadCv",
-    //       formData
-    //     );
-    //     data.cvPath = uploadResponse.data.cvpath;
-    //   } catch (error) {
-    //     console.error("Erreur lors du téléchargement d'un file :", error);
-    //     ctx.state.alert = true;
-    //     ctx.commit("setMes", "Erreur lors du téléchargement d'un file");
-    //   }
-    // },
+        const uploadResponse = await axios.post(
+          "http://localhost:8000/uploadCv",
+          formData
+        );
+        console.log("cv path", uploadResponse.data.cvpath);
+        console.log(
+          "pathg doc",
+          state.portfolios.pages[data.pageIndex].bloc[data.blocIndex].settings
+            .btn.doc
+        );
+
+        state.portfolios.pages[data.pageIndex].bloc[
+          data.blocIndex
+        ].settings.btn.doc = uploadResponse.data.cvpath;
+      } catch (error) {
+        console.error("Erreur lors du téléchargement d'un file :", error);
+      }
+    },
+    async uploadLogo({ state }, file) {
+      try {
+        let formData = new FormData();
+        formData.append("image", file);
+
+        const uploadResponse = await axios.post(
+          "http://localhost:8000/upload",
+          formData
+        );        
+        state.portfolios.navbar.settings.logo.lineImage = uploadResponse.data.imagepath;
+      } catch (error) {
+        console.error("Erreur lors du téléchargement d'un file :", error);
+      }
+    },
   },
 };
