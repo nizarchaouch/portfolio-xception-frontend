@@ -30,6 +30,7 @@ import ModelPortf from "@/views/admin/modeleProtfolio/ModelPortf.vue";
 import AddPortf from "@/views/admin/modeleProtfolio/AddPortf.vue";
 import VoirCandidateur from "@/components/user/recruteur/candidateur/VoirCandidateur.vue";
 import VoirPortfolio from "@/views/candidat/portfolio/VoirPortfolio.vue"
+import ParametreView from "@/views/admin/ParametreView.vue";
 
 const routes = [
   {
@@ -118,6 +119,11 @@ const routes = [
     path: "/admin/emploi",
     name: "EmpView",
     component: EmpView,
+  },
+  {
+    path: "/admin/parametre",
+    name: "ParametreView",
+    component: ParametreView,
   },
   // candidat
   {

@@ -62,13 +62,13 @@ export default {
           await router.push("/admin/dashboard");
         }
       } catch (error) {
-        console.log("Error during login:", error.message);
-        if (error.response.status === 400) {
+        // console.log("Error during login:", error.reponse.status);
+        if (error.response.status === 401 || error.response.status === 400) {
           ctx.state.alert = true;
-          ctx.commit("setMes", "E-mail ou Mot de passe incorrect");
+          ctx.commit("setMes", error.response.data.error);
         } else {
           ctx.state.alert = true;
-          ctx.commit("setMes", "admin non trouvé");
+          ctx.commit("setMes", "Admin non trouvé");
         }
       }
     },

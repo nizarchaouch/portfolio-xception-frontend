@@ -85,7 +85,7 @@ export default {
           Visiter site Web
         </v-btn>
         <v-btn
-          to="/"
+          to="/admin/parametre"
           variant="outlined"
           elevation="0"
           color="#435ebe"

@@ -348,7 +348,7 @@ export default {
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="4" v-else>
-                  <!-- pwd -->
+                  <!-- pwd update -->
                   <h4 class="mb-4 text-medium-emphasis">Mots de passe</h4>
                   <v-text-field
                     v-model="password"
