@@ -26,12 +26,22 @@ export default {
     selectedPage: null,
   }),
   methods: {
-    ...mapActions([""]),
+    ...mapActions(["fetchFonts"]),
     ...mapMutations(["changeSidebarA", "changeSidebarM"]),
     findPage(name) {
       this.portfolioss.selectedPage =
         this.pages.find((page) => page.name === name) || {};
     },
+    loadFont() {
+      const fontLink = document.createElement("link");
+      fontLink.rel = "stylesheet";
+      fontLink.href = `https://fonts.googleapis.com/css?family=${this.navbar.navbar.selectPolice.replace(
+        / /g,
+        "+"
+      )}&display=swap`;
+      document.head.appendChild(fontLink);
+    },
+
   },
   watch: {
     tab(newValue) {
@@ -49,6 +59,8 @@ export default {
   },
   mounted() {
     setTimeout(() => {
+      this.fetchFonts();
+      this.loadFont();
       this.findPage(this.pages[0].name);
     }, 100);
   },
