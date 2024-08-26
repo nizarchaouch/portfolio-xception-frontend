@@ -1,26 +1,55 @@
 <script>
 /* eslint-disable */
 import iconNotf from "@/assets/not.png";
+import { mapState, mapActions, mapGetters, mapMutations } from "vuex";
 export default {
+  computed: {
+    ...mapState(["user", "notif"]),
+    userData() {
+      return this.user.userData;
+    },
+  },
   data: () => ({
     iconNotf: iconNotf,
     menu: false,
     count: 10,
     Badge: false,
   }),
-  created() {
-    if (this.count > 0) {
-      this.Badge = true;
-    }
+  methods: {
+    ...mapActions(["getNotif", "markAll"]),
+    showMessage() {
+      if (this.menu) {
+        console.log("Menu opened, displaying message!");
+      }
+    },
+  },
+  watch: {
+    menu(val) {
+      if (val) {
+        this.markAll(this.user.userData._id);
+      }
+    },
+  },
+  mounted() {
+    setTimeout(() => {
+      if (this.notif.countNotif > 0) {
+        this.Badge = true;
+      }
+    }, 100);
   },
 };
 </script>
 <template>
   <div class="me-5">
-    <v-menu v-model="menu" max-width="500px" rounded location="end">
+    <v-menu v-model="menu" max-width="400px" rounded location="end">
       <template v-slot:activator="{ props }">
         <v-btn v-bind="props" icon>
-          <v-badge color="error" :content="count" max="9" v-model="Badge">
+          <v-badge
+            color="error"
+            :content="this.notif.countNotif"
+            max="9"
+            v-model="Badge"
+          >
             <v-icon icon="mdi-bell" size="small"></v-icon>
           </v-badge>
           <v-tooltip
@@ -32,17 +61,10 @@ export default {
       </template>
 
       <v-card v-if="Badge">
-        <v-banner
-          v-for="n in count"
-          :key="n"
-          avatar="https://randomuser.me/api/portraits/women/8.jpg"
-          lines="three"
-          :stacked="false"
-        >
+        <v-banner v-for="not in notif.notifs" :key="n" :stacked="false">
           <template v-slot:text>
-            <p>2024-02-20</p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit Lorem ipsum
-            dolor sit amet consectetur adipisicing elit
+            <h3>{{ not.contenu }}</h3>
+            <p class="text-body-2">{{ not.date.split("T")[0] }}</p>
           </template>
           <template v-slot:actions>
             <v-btn color="primary" class="text-none">Voir</v-btn>

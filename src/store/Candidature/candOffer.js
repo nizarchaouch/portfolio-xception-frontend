@@ -65,6 +65,16 @@ export default {
         const message = response.data.message;
         const color = "blue-darken-2";
         ctx.commit("setMes", { message, color });
+
+        const dataNotif = { idUser: data.idUser, contenu: data.contenu };
+        await axios.post(
+          "http://localhost:8000/api/notification/add",
+          JSON.stringify(dataNotif),
+          {
+            headers: { "Content-type": "application/json" },
+            withCredentials: true,
+          }
+        );
       } catch (error) {
         console.log("error", error.response.data.error);
         ctx.state.alert = true;

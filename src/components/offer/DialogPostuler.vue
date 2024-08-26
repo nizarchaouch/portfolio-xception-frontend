@@ -1,7 +1,7 @@
 <script>
 import { mapState, mapActions } from "vuex";
 export default {
-  props: { idoffer: String },
+  props: { idoffer: String, titre: String, idRec: String },
   computed: {
     ...mapState(["user"]),
     userData() {
@@ -30,6 +30,13 @@ export default {
         idOffer: this.idoffer,
         cv: this.cv,
         letter: this.letter,
+        contenu:
+          this.user.userData.nom +
+          " " +
+          this.user.userData.prenom +
+          " a postulé pour une offre " +
+          this.titre,
+        idUser: this.idRec,
       };
       this.loading = true;
       this.addCandOffer(data);

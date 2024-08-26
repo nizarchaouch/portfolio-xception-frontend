@@ -7,7 +7,7 @@ export default {
   props: { hidea: String },
   components: { Avatar, Notfi },
   computed: {
-    ...mapState(["user"]),
+    ...mapState(["user", "notif"]),
   },
   data: () => ({
     logo: logo,
@@ -48,10 +48,11 @@ export default {
     ],
   }),
   methods: {
-    ...mapActions(["userAuth"]),
+    ...mapActions(["userAuth", "getNotif"]),
   },
   async mounted() {
     await this.userAuth();
+    this.getNotif(this.user.userData._id);
   },
 };
 </script>

@@ -13,6 +13,7 @@ import candOffer from "./Candidature/candOffer";
 import chartRec from "./recruteur/chart";
 import chartAdmin from "./admin/chart";
 import profilRec from "./recruteur/profil";
+import notif from "./notification/notif";
 // import usersUpdate from "./users/profil";
 
 export default createStore({
@@ -34,6 +35,7 @@ export default createStore({
     chartAdmin,
     profilRec,
     profilAdmin,
+    notif,
     // usersUpdate,
   },
 });

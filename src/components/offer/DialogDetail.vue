@@ -71,6 +71,8 @@ export default {
               </div>
               <DialogPostuler
                 :idoffer="obj.raw._id"
+                :titre=" obj.raw.titre"
+                :idRec=" obj.raw.idRec"
                 v-if="!(this.user.userData.role === 'recruteur')"
               />
             </v-col>
