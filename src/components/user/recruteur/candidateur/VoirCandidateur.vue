@@ -14,20 +14,34 @@ export default {
   },
   data() {
     return {
-      dialog: true,
+      dialog: false,
+      idCandidat: "",
+      idOffer: "",
+      etat: "",
     };
   },
   methods: {
-    ...mapActions(["deleteCandOffer", "getPortfolio"]),
-    viewPortfolio() {
-      const url =
-        "/PortfolioXception." + this.obj.nom + "-" + this.obj.prenom + "/page";
-      window.open(url, "_blank");
+    ...mapActions(["deleteCandOffer", "getPortfolio", "ChangeEtatCandOffer"]),
+    submit(reponse) {
+      const data = {
+        idCandidat: this.obj.idCandidat,
+        idOffer: this.obj.idOffer,
+        reponse: reponse,
+      };
+      this.ChangeEtatCandOffer(data);
     },
   },
 };
 </script>
 <template>
+    <v-snackbar
+    :timeout="1000"
+    :color="candOffer.color"
+    v-model="candOffer.alert"
+    location="top"
+  >
+    {{ candOffer.message }}
+  </v-snackbar>
   <v-dialog v-model="dialog" transition="dialog-bottom-transition" fullscreen>
     <template v-slot:activator="{ props: activatorProps }">
       <v-btn
@@ -138,10 +152,17 @@ export default {
             </v-col>
             <!-- btn accepte & refuser -->
             <v-col cols="auto">
-              <v-btn color="success" variant="tonal">Accepter</v-btn>
-              <v-btn color="red" variant="tonal" class="float-end me-3"
-                >Refuser</v-btn
+              <v-btn color="success" variant="tonal" @click="submit('Accepte')"
+                >Accepter</v-btn
               >
+              <v-btn
+                color="red"
+                variant="tonal"
+                class="float-end me-3"
+                @click="submit('Refuser')"
+              >
+                Refuser
+              </v-btn>
             </v-col>
           </v-card>
         </v-col>

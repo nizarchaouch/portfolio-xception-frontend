@@ -133,7 +133,6 @@ export default {
         console.error("Erreur lors de l'affichage des candidatures :", error);
       }
     },
-
     async deleteCandOffer(ctx, id) {
       try {
         const response = await axios.delete(
@@ -148,6 +147,35 @@ export default {
         }
       } catch (error) {
         console.log(error.message);
+      }
+    },
+    async ChangeEtatCandOffer(ctx, data) {
+      try {
+        const response = await axios.put(
+          `http://localhost:8000/api/candidature/changeEtat`,
+          JSON.stringify(data),
+          {
+            headers: { "Content-type": "application/json" },
+            withCredentials: true,
+          }
+        );
+        if (response.status === 200) {
+          ctx.state.alert = true;
+          const message = response.data.message;
+          const color = "blue-darken-2";
+          ctx.commit("setMes", { message, color });
+        } else {
+          ctx.state.alert = true;
+          const message = response.data.message;
+          const color = "red";
+          ctx.commit("setMes", { message, color });
+        }
+      } catch (error) {
+        console.log(error.message);
+        ctx.state.alert = true;
+        const message = error.response.data.error;
+        const color = "red";
+        ctx.commit("setMes", { message, color });
       }
     },
   },

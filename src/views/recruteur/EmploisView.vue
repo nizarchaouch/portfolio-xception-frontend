@@ -24,10 +24,44 @@ export default {
     offerData() {
       return this.offer.offerData;
     },
+    filteredCand() {
+      let filtered = this.candOffer.candData;
+      // Apply search filter
+      if (this.search1.trim() !== "") {
+        filtered = filtered.filter((item) => {
+          return (
+            item.nom.toLowerCase().includes(this.search1.toLowerCase()) ||
+            item.prenom.toLowerCase().includes(this.search1.toLowerCase()) ||
+            item.mail.toLowerCase().includes(this.search1.toLowerCase())
+          );
+        });
+      }
+      // Filter by selectedEtat
+      if (this.selectedEtat && this.selectedEtat.length > 0) {
+        filtered = filtered.filter((item) =>
+          this.selectedEtat.includes(item.etat)
+        );
+      }
+      // Filter by date range
+      if (this.selectedStartDate) {
+        filtered = filtered.filter((item) => {
+          const creationDate = new Date(item.date);
+          return creationDate >= new Date(this.selectedStartDate);
+        });
+      }
+      if (this.selectedEndDate) {
+        filtered = filtered.filter((item) => {
+          const creationDate = new Date(item.date);
+          return creationDate <= new Date(this.selectedEndDate);
+        });
+      }
+      return filtered;
+    },
     countApp() {
       return this.candOffer.countApp || [];
     },
   },
+
   data() {
     return {
       selectedStartDate: null,
@@ -72,39 +106,6 @@ export default {
       "getDataCand",
     ]),
     ...mapMutations(["RestCountApp"]),
-    filteredCand() {
-      let filtered = this.candOffer.candData;
-      // Apply search filter
-      if (this.search1.trim() !== "") {
-        filtered = filtered.filter((item) => {
-          if (item && item.nom && item.prenom) {
-            return (
-              item.nom.toLowerCase().includes(this.search1.toLowerCase()) ||
-              item.prenom.toLowerCase().includes(this.search1.toLowerCase())
-            );
-          }
-          return false;
-        });
-      }
-      if (this.selectedEtat && this.selectedEtat.length > 0) {
-        filtered = filtered.filter((item) =>
-          this.selectedEtat.includes(item.etat)
-        );
-      }
-      if (this.selectedStartDate) {
-        filtered = filtered.filter((item) => {
-          const creationDate = new Date(item.date);
-          return creationDate >= new Date(this.selectedStartDate);
-        });
-      }
-      if (this.selectedEndDate) {
-        filtered = filtered.filter((item) => {
-          const creationDate = new Date(item.date);
-          return creationDate <= new Date(this.selectedEndDate);
-        });
-      }
-      return filtered;
-    },
     extractOfferIds() {
       this.RestCountApp();
       this.offerIds = this.offerData.map((offer) => offer._id);
@@ -362,7 +363,7 @@ export default {
                   v-model:sort-by="sortBy"
                   :loading="loading"
                   :headers="headersCandidat"
-                  :items="filteredCand()"
+                  :items="filteredCand"
                   :search="search"
                   hover
                   style="border: 1px solid #e0e0e0"
