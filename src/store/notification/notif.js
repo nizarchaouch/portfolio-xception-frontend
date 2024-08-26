@@ -51,7 +51,7 @@ export default {
           }
         );
         console.log(response.data.message);
-        // ctx.commit("setCountNot", 0);
+        ctx.commit("setCountNot", 0);
       } catch (error) {
         console.error("Erreur lors de l'affichage des notif :", error);
       }

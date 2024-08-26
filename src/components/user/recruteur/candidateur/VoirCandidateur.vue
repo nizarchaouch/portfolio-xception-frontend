@@ -173,7 +173,7 @@ export default {
           <v-card class="ma-3" rounded="xl" min-height="200">
             <p
               class="ma-3 pa-3 text-body-1"
-              style="white-space: pre-wrap; font-family: monospace, monospace"
+              style="white-space: pre-wrap"
             >
               {{ obj.letter || "Il n'y a pas de lettre de motivation" }}
             </p>

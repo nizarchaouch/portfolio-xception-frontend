@@ -1,7 +1,7 @@
 <script>
 /* eslint-disable */
 import iconNotf from "@/assets/not.png";
-import { mapState, mapActions, mapGetters, mapMutations } from "vuex";
+import { mapState, mapActions } from "vuex";
 export default {
   computed: {
     ...mapState(["user", "notif"]),
@@ -27,6 +27,9 @@ export default {
     menu(val) {
       if (val) {
         this.markAll(this.user.userData._id);
+      }
+      if (this.notif.countNotif === 0 && val===false) {
+        this.Badge = false;
       }
     },
   },

@@ -203,6 +203,7 @@ export default {
                 <v-col cols="12" md="4">
                   <v-text-field
                     v-model="search"
+                    color="blue"
                     label="Titre d'emploi, description etc..."
                     prepend-inner-icon="mdi-magnify"
                     variant="outlined"
