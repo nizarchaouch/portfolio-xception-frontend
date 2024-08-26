@@ -29,7 +29,7 @@ import ProfilAdmin from "@/views/admin/ProfilAdmin.vue";
 import ModelPortf from "@/views/admin/modeleProtfolio/ModelPortf.vue";
 import AddPortf from "@/views/admin/modeleProtfolio/AddPortf.vue";
 import VoirCandidateur from "@/components/user/recruteur/candidateur/VoirCandidateur.vue";
-import VoirPortfolio from "@/views/candidat/portfolio/VoirPortfolio.vue"
+import VoirPortfolio from "@/views/candidat/portfolio/VoirPortfolio.vue";
 import ParametreView from "@/views/admin/ParametreView.vue";
 
 const routes = [
@@ -73,7 +73,7 @@ const routes = [
     path: "/admin/Login",
     name: "loginAddmin",
     component: LoginAddmin,
-  },  
+  },
   {
     path: "/admin/forgot_password",
     name: "forgotpwdAdmin",
@@ -131,7 +131,7 @@ const routes = [
     name: "profil",
     component: ProfilView,
   },
-  
+
   {
     path: "/portfolio/:page",
     name: "portfolio",
@@ -148,9 +148,14 @@ const routes = [
     component: CandidatureView,
   },
   {
-    path: "/voir/:page",
+    path: "/PortfolioXception.:nom-:prenom/:page",
     name: "voir",
     component: VoirPortfolio,
+    props: (route) => ({
+      nom: route.params.nom,
+      prenom: route.params.prenom,
+      id: route.query.id,
+    }),
   },
   // recruteur
   {
@@ -195,7 +200,6 @@ const routes = [
     name: "ParametreRec",
     component: ParametreRec,
   },
-
 ];
 
 const router = createRouter({

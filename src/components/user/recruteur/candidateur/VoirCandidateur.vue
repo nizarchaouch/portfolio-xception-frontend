@@ -1,7 +1,7 @@
 <script>
 // eslint-disable-next-line
 /* eslint-disable */
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 import NavBar from "@/components/public/NavBar.vue";
 import SideBar from "@/components/user/admin/SideAdmin.vue";
 import DialogDetail from "@/components/user/admin/candidat/VoirDetail.vue";
@@ -10,16 +10,20 @@ export default {
   props: { obj: Object },
   components: { NavBar, SideBar, DialogDetail },
   computed: {
-    ...mapState(["candOffer", "offer"]),
+    ...mapState(["candOffer", "portfolioss"]),
   },
   data() {
     return {
-      dialog: false,
+      dialog: true,
     };
   },
   methods: {
-    ...mapActions(["deleteCandOffer"]),
-    updateItemsData() {},
+    ...mapActions(["deleteCandOffer", "getPortfolio"]),
+    viewPortfolio() {
+      const url =
+        "/PortfolioXception." + this.obj.nom + "-" + this.obj.prenom + "/page";
+      window.open(url, "_blank");
+    },
   },
 };
 </script>
@@ -39,14 +43,36 @@ export default {
     <v-toolbar>
       <v-btn icon="mdi-close" @click="dialog = false"></v-btn>
 
-      <v-toolbar-title class="text-capitalize">Profil {{ obj.prenom }} {{ obj.nom }}</v-toolbar-title>
+      <v-toolbar-title class="text-capitalize"
+        >Profil {{ obj.prenom }} {{ obj.nom }}</v-toolbar-title
+      >
       <v-spacer></v-spacer>
       <v-toolbar-items>
         <v-btn
+          v-if="obj.cv === 'Portfolio'"
           text="Voir CV"
           color="indigo"
           class="text-none font-weight-bold"
           size="large"
+          target="_blank"
+          :to="{
+            name: 'voir',
+            params: {
+              nom: this.obj.nom,
+              prenom: this.obj.prenom,
+              page: 'page',
+            },
+            query: { id: this.obj._id },
+          }"
+        ></v-btn>
+        <v-btn
+          v-else
+          text="Voir CV"
+          color="indigo"
+          class="text-none font-weight-bold"
+          size="large"
+          target="_blank"
+          :href="'http://localhost:8000/' + obj.cvPath"
         ></v-btn>
       </v-toolbar-items>
     </v-toolbar>
@@ -110,6 +136,13 @@ export default {
                 >
               </p>
             </v-col>
+            <!-- btn accepte & refuser -->
+            <v-col cols="auto">
+              <v-btn color="success" variant="tonal">Accepter</v-btn>
+              <v-btn color="red" variant="tonal" class="float-end me-3"
+                >Refuser</v-btn
+              >
+            </v-col>
           </v-card>
         </v-col>
         <v-col cols="12" md="8" lg="8" xl="9">
@@ -117,7 +150,10 @@ export default {
             <h3>Lettre de motivation</h3>
           </v-col>
           <v-card class="ma-3" rounded="xl" min-height="200">
-            <p class="ma-3 pa-3 text-body-1">
+            <p
+              class="ma-3 pa-3 text-body-1"
+              style="white-space: pre-wrap; font-family: monospace, monospace"
+            >
               {{ obj.letter || "Il n'y a pas de lettre de motivation" }}
             </p>
           </v-card>

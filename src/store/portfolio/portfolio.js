@@ -6,6 +6,7 @@ export default {
     color: "",
     modelPort: [],
     selectedPage: null,
+    IdVoir: '',
     portfolios: {
       idCandidat: null,
       nom: "model",
@@ -112,19 +113,19 @@ export default {
       }
     },
     duplicatePage(state, pageIndex) {
-      const pageToDuplicate = state.portfolios.pages[pageIndex];      
+      const pageToDuplicate = state.portfolios.pages[pageIndex];
       const duplicatedPage = {
         ...pageToDuplicate,
         id: state.portfolios.pages.length,
         name: pageToDuplicate.name + " copie",
-        bloc: pageToDuplicate.bloc.map(bloc => ({ ...bloc })), // Deep copy of blocks
+        bloc: pageToDuplicate.bloc.map((bloc) => ({ ...bloc })), // Deep copy of blocks
       };
-  
+
       state.portfolios.pages.push(duplicatedPage);
     },
     deletePage(state, pageIndex) {
       state.portfolios.pages.splice(pageIndex, 1);
-      
+
       // Reassign ids to remaining pages
       state.portfolios.pages.forEach((page, index) => {
         page.id = index;
@@ -301,7 +302,7 @@ export default {
         });
       }
     },
-    async getPortfolio(ctx, id) {
+    async getPortfolio(ctx,id) {
       try {
         const portfolioResponse = await axios.get(
           `http://localhost:8000/api/portfolio/get/${id}`,
@@ -310,12 +311,15 @@ export default {
             withCredentials: true,
           }
         );
+        console.log("id",id);
+        
+        
         ctx.commit("setPortf", portfolioResponse.data[0]);
         console.log("Portfolio data:", portfolioResponse.data[0]);
       } catch (error) {
         console.error("Error fetching portfolio:", error);
       }
-    },
+    },    
     async checkPortfolio(ctx, id) {
       try {
         const response = await axios.get(
@@ -377,8 +381,9 @@ export default {
         const uploadResponse = await axios.post(
           "http://localhost:8000/upload",
           formData
-        );        
-        state.portfolios.navbar.settings.logo.lineImage = uploadResponse.data.imagepath;
+        );
+        state.portfolios.navbar.settings.logo.lineImage =
+          uploadResponse.data.imagepath;
       } catch (error) {
         console.error("Erreur lors du téléchargement d'un file :", error);
       }

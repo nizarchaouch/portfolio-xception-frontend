@@ -14,6 +14,7 @@ import CardExp from "@/components/portfolio/bloc/card/CardExp.vue";
 import CardSkil from "@/components/portfolio/bloc/card/CardSkil.vue";
 import CardProj from "@/components/portfolio/bloc/card/CardProj.vue";
 export default {
+  props: { id: String },
   components: {
     CardText,
     LTN,
@@ -45,9 +46,13 @@ export default {
     ...mapMutations([""]),
   },
   created() {
-    this.getPortfolio("65f67e1e555d2e3355947742");
-    this.portfolioss.selectedPage = this.pages[0];
-  },
+  if (this.id) {
+    this.getPortfolio(this.id);
+  } else {
+    console.error("ID prop is missing.");
+  }
+  this.portfolioss.selectedPage = this.pages[0];
+}
 };
 </script>
 

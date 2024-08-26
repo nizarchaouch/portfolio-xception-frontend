@@ -53,7 +53,7 @@ export default {
       return [
         { text: "Aperçu", icon: "mdi-view-dashboard", to: "/admin/dashboard" },
         { text: "Mon Profil", icon: "mdi-account-circle", to: "/admin/profil" },
-        { text: "Paramètres", icon: "mdi-cog", to: "" },
+        { text: "Paramètres", icon: "mdi-cog", to: "/admin/parametre" },
       ];
     },
   },

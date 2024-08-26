@@ -429,7 +429,7 @@ export default {
                       </td>
                       <td style="width: 20%">
                         <div class="d-flex">
-                          <!-- btn voir candidats -->
+                          <!-- btn voir candidats
                           <v-btn
                             class="text-none me-2"
                             variant="tonal"
@@ -439,7 +439,7 @@ export default {
                               Voir CV
                             </p>
                             <v-icon size="large">mdi-chevron-right</v-icon>
-                          </v-btn>
+                          </v-btn> -->
                           <!--  -->
                           <VoirCandidateur :obj="item" />
                         </div>
