@@ -63,8 +63,17 @@ export default {
             <v-col v-for="item in items" :key="item.title" cols="12" md="4">
               <v-hover v-slot="{ isHovering, props }">
                 <v-card class="mb-6" border flat v-bind="props">
-                  <v-img :src="item.raw.img"></v-img>
-
+                  <div style="overflow: hidden; width: 100%; height: 250px">
+                    <iframe
+                      :src="`http://localhost:8080/Model.${item.raw.nom}/page%201id=${item.raw._id}`"
+                      style="
+                        transform: scale(0.4);
+                        transform-origin: 0 0;
+                        width: 256.8%;
+                        height: 620px;
+                      "
+                    ></iframe>
+                  </div>
                   <v-overlay
                     :model-value="isHovering"
                     class="align-center justify-center"
@@ -73,24 +82,47 @@ export default {
                   >
                     <v-btn
                       variant="flat"
-                      class="text-none d-flex align-center ma-2 rounded-pill"
+                      class="text-none d-flex align-center ma-2 mx-auto rounded-pill"
                       size="large"
                       color="#5865f2"
-                      >Modifier</v-btn
                     >
+                      Modifier
+                    </v-btn>
                     <v-btn
                       variant="outlined"
-                      class="text-none d-flex align-center ma-2 ms-6 rounded-pill"
+                      class="text-none d-flex align-center ma-2 mx-auto rounded-pill"
                       size="large"
                       color="white"
-                      >Voir</v-btn
+                      target="_blank"
+                      :to="{
+                        name: 'voirModel',
+                        params: {
+                          nom: item.raw.nom,
+                          page: 'page',
+                          id: item.raw._id,
+                        },
+                      }"
                     >
+                      Voir
+                    </v-btn>
                   </v-overlay>
                 </v-card>
               </v-hover>
 
               <v-list-item class="mb-2">
-                <div>{{ item.raw.title }}</div>
+                <div>
+                  <v-btn
+                    color="red"
+                    variant="text"
+                    size=""
+                    @click="confirmDeletionDialog(item.raw._id)"
+                  >
+                    <v-icon color="red" size="x-large" class="mb-1"
+                      >mdi-delete-circle</v-icon
+                    >
+                  </v-btn>
+                  {{ item.raw.nom }}
+                </div>
               </v-list-item>
             </v-col>
           </v-row>

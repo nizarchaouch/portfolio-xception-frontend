@@ -6,7 +6,84 @@ export default {
     color: "",
     modelPort: [],
     selectedPage: null,
-    IdVoir: '',
+    ModelPortf: {
+      nom: "model",
+      navbar: {
+        id: 0,
+        type: "LTN",
+        settings: {
+          navbar: {
+            backgroundImage: false,
+            afficheTitre: true,
+            fixedNav: false,
+            formaTitreNav: [],
+            colorTitre: "white",
+            colorBackTitre: "#0B242400",
+            titre: "Nizar Chaoucha",
+            selectStyle: "Titer 4", // en px
+            sizeTitle: 25,
+            selectPolice: "Potta One",
+            colorNav: "#0B2424",
+            lineImage:
+              "https://cdn.vuetifyjs.com/images/backgrounds/vbanner.jpg",
+          },
+          logo: {
+            logo: true,
+            image: false,
+            logoArr: false,
+            colorChoix: "blue",
+            sizeLogo: 20,
+            lineImage:
+              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPFARC1fuCzw9lIUrY4ZS69QUrSzDi11gKPczV38dtl3ezCQeqjhB6FKd1IXBGULNYzFM&usqp=CAU",
+          },
+          links: {
+            hideSlider: false,
+            colorLink: "blue",
+            selectPolice: "Poppins",
+          },
+        },
+      },
+      pages: [
+        {
+          id: 0,
+          name: "page 1",
+          bloc: [
+            // {
+            //   id: 0,
+            //   type: "CardText",
+            //   content: "Welcome to the homepage!",
+            //   settings: {},
+            // },
+            // {
+            //   id: 0,
+            //   type: "ITTB",
+            //   settings: {
+            //     titre: {
+            //       affiche: true,
+            //       color: "white",
+            //       selectStyle: "Titer 4",
+            //       size: 100,
+            //       selectPolice: "Frank Ruhl Libre",
+            //       nom: "Noter ",
+            //     },
+            //     parg: {
+            //       affiche: true,
+            //       color: "white",
+            //       selectStyle: "Titer 4",
+            //       size: 20,
+            //       selectPolice: "Average Sans",
+            //       nom: `Non occaecat culpa aliquip duis sunt amet qui pariatur quis ut.
+            //             Officia sit adipisicing proident aute veniam veniam. Irure officia
+            //             esse eu quis mollit consectetur aliqua anim nisi et labore do.
+            //             Incididunt ea consequat duis officia commodo fugiat non.
+            //             Occaecat ea velit esse tempor veniam laborum.`,
+            //     },
+            //   },
+            // },
+          ],
+        },
+      ],
+    },
     portfolios: {
       idCandidat: null,
       nom: "model",
@@ -94,6 +171,9 @@ export default {
     },
     setModels(state, model) {
       state.modelPort = model;
+    },
+    setModelPort(state, model) {
+      state.ModelPortf = { ...model };
     },
     setPortf(state, portfolio) {
       // Assuming the portfolio object is structured the same as state.portfolios
@@ -311,11 +391,26 @@ export default {
             withCredentials: true,
           }
         );
-        console.log("id",id);
+        // console.log("id",id);
         
         
         ctx.commit("setPortf", portfolioResponse.data[0]);
         console.log("Portfolio data:", portfolioResponse.data[0]);
+      } catch (error) {
+        console.error("Error fetching portfolio:", error);
+      }
+    },
+    async getModelPortfolio(ctx,id) {
+      try {
+        const portfolioResponse = await axios.get(
+          `http://localhost:8000/api/ModelPortfolio/get/${id}`,
+          {
+            headers: { "Content-type": "application/json" },
+            withCredentials: true,
+          }
+        );
+        ctx.commit("setModelPort", portfolioResponse.data);
+        console.log("Portfolio data:", portfolioResponse.data);
       } catch (error) {
         console.error("Error fetching portfolio:", error);
       }
@@ -386,6 +481,20 @@ export default {
           uploadResponse.data.imagepath;
       } catch (error) {
         console.error("Erreur lors du téléchargement d'un file :", error);
+      }
+    },
+    async deltModel(ctx,id) {
+      try {
+        const portfolioResponse = await axios.delete(
+          `http://localhost:8000/api/ModelPortfolio/delt/${id}`,
+          {
+            headers: { "Content-type": "application/json" },
+            withCredentials: true,
+          }
+        );        
+        console.log("Portfolio data:", portfolioResponse.data);
+      } catch (error) {
+        console.error("Error fetching portfolio:", error);
       }
     },
   },

@@ -5,18 +5,26 @@ import { mapState, mapActions, mapMutations } from "vuex";
 import DialogAjouter from "@/components/portfolio/DialogAjouter.vue";
 
 export default {
-  props: { voir: Boolean },
+  props: { voir: Boolean, model: Boolean },
   components: { DialogAjouter },
   computed: {
     ...mapState(["portfolio", "portfolioss"]),
     pages() {
-      return this.portfolioss.portfolios.pages;
+      if (this.model) {
+        return this.portfolioss.ModelPortf.pages;
+      } else {
+        return this.portfolioss.portfolios.pages;
+      }
     },
     selectedPage() {
       return this.portfolioss.portfolios.selectedPage;
     },
     navbar() {
-      return this.portfolioss.portfolios.navbar.settings;
+      if (this.model) {
+        return this.portfolioss.ModelPortf.navbar.settings;
+      } else {
+        return this.portfolioss.portfolios.navbar.settings;
+      }
     },
   },
   data: () => ({
@@ -41,12 +49,13 @@ export default {
       )}&display=swap`;
       document.head.appendChild(fontLink);
     },
-
   },
   watch: {
     tab(newValue) {
       // Met à jour l'affichage de la page quand l'onglet sélectionné change
-      if (this.voir) {
+      if (this.model) {
+        this.$router.push({ name: "voirModel", params: { page: newValue } });
+      } else if (this.voir && !this.model) {
         this.$router.push({ name: "voir", params: { page: newValue } });
       } else {
         this.$router.push({ name: "portfolio", params: { page: newValue } });
@@ -201,7 +210,10 @@ export default {
         color="white"
         class="animation bg-blue text-none rounded-pill"
         prepend-icon="mdi-plus"
-        @click="(portfolio.dialogA = !portfolio.dialogA) && (portfolio.isnavbar = true)"
+        @click="
+          (portfolio.dialogA = !portfolio.dialogA) &&
+            (portfolio.isnavbar = true)
+        "
         style="z-index: 3"
       >
         Ajouter un bloc

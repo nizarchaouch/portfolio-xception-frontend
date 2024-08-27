@@ -30,6 +30,7 @@ import ModelPortf from "@/views/admin/modeleProtfolio/ModelPortf.vue";
 import AddPortf from "@/views/admin/modeleProtfolio/AddPortf.vue";
 import VoirCandidateur from "@/components/user/recruteur/candidateur/VoirCandidateur.vue";
 import VoirPortfolio from "@/views/candidat/portfolio/VoirPortfolio.vue";
+import VoirModelPortfolio from "@/views/admin/modeleProtfolio/VoirModelPortfolio.vue";
 import ParametreView from "@/views/admin/ParametreView.vue";
 
 const routes = [
@@ -62,6 +63,15 @@ const routes = [
     path: "/offer",
     name: "offer",
     component: OfferView,
+  },
+  {
+    path: "/Model.:nom/:page?id=:id",
+    name: "voirModel",
+    component: VoirModelPortfolio,
+    props: (route) => ({
+      nom: route.params.nom,
+      id: route.params.id,
+    }),
   },
   // admin
   {

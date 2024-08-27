@@ -15,10 +15,6 @@ export default {
         ? `/portfolio_${this.portfolioss.portfolios.nom}/${this.portfolioss.portfolios.pages[0].name}`
         : "";
     },
-    portfolioView() {
-      // this.portfolioss.portfolios = this.portfolioss.modelPort[0];
-      return `/portfolio_${this.portfolioss.modelPort[0].nom}/${this.portfolioss.modelPort[0].pages[0].name}`;
-    },
   },
   components: {
     NavBar,
@@ -28,43 +24,22 @@ export default {
   },
   data: () => ({
     search: "",
-    games: [
-      {
-        img: "https://cdn.vuetifyjs.com/docs/images/graphics/games/4.png",
-        title: "Template 1",
-      },
-      {
-        img: "https://cdn.vuetifyjs.com/docs/images/graphics/games/2.png",
-        title: "Template 2",
-      },
-      {
-        img: "https://cdn.vuetifyjs.com/docs/images/graphics/games/3.png",
-        title: "Template 3",
-      },
-      {
-        img: "https://cdn.vuetifyjs.com/docs/images/graphics/games/5.png",
-        title: "Template 4",
-      },
-      {
-        img: "https://cdn.vuetifyjs.com/docs/images/graphics/games/6.png",
-        title: "Template 5",
-      },
-      {
-        img: "https://cdn.vuetifyjs.com/docs/images/graphics/games/7.png",
-        title: "Template 6",
-      },
-      {
-        img: "https://cdn.vuetifyjs.com/docs/images/graphics/games/1.png",
-        title: "Template 7",
-      },
-      {
-        img: "https://cdn.vuetifyjs.com/docs/images/graphics/games/8.png",
-        title: "Template 8",
-      },
-    ],
+    snackConf: false,
+    deleteId: null,
   }),
   methods: {
-    ...mapActions(["userAuth", "getAllModel"]),
+    ...mapActions(["userAuth", "getAllModel", "deltModel"]),
+    confirmDeletionDialog(id) {
+      this.deleteId = id;
+      this.snackConf = true;
+    },
+    delet() {
+      this.deltModel(this.deleteId);
+      this.snackConf = false;
+      setTimeout(() => {
+        window.location.reload();
+      }, 200);
+    },
   },
   mounted() {
     this.userAuth();
@@ -84,14 +59,39 @@ export default {
 };
 </script>
 <template lang="">
+  <v-snackbar
+    v-model="snackConf"
+    vertical
+    location="center"
+    color="light-blue-lighten-4"
+    :timeout="-1"
+  >
+    <div class="text-subtitle-1 font-weight-bold pa-2">
+      Voulez-vous vraiment supprimer ce modèle ?
+    </div>
+
+    <p class="text-medium-emphasis">
+      <v-icon>mdi-alert-octagon-outline</v-icon> cette action ne peut pas ètre
+      annulée
+    </p>
+
+    <template v-slot:actions>
+      <v-btn variant="text" @click="snackConf = false"> Non </v-btn>
+      <v-btn color="white" variant="tonal" class="mx-3 bg-red" @click="delet()">
+        Oui
+      </v-btn>
+    </template>
+  </v-snackbar>
   <NavBar hidea=" " />
   <SideAdmin />
   <v-container class="mt-16" fluid>
     <v-col cols="12" lg="10" offset-lg="2">
       <v-card>
-        <!-- <iframe src="/" width="500" height="250" frameborder="0"></iframe> -->
-        <!-- {{this.portfolioss.modelPort[0]}} -->
-        <v-data-iterator :items="games" :items-per-page="6" :search="search">
+        <v-data-iterator
+          :items="portfolioss.modelPort"
+          :items-per-page="6"
+          :search="search"
+        >
           <template v-slot:header>
             <v-toolbar class="pa-2">
               <v-text-field
@@ -124,7 +124,17 @@ export default {
                 <v-col v-for="item in items" :key="item.title" cols="12" md="4">
                   <v-hover v-slot="{ isHovering, props }">
                     <v-card class="mb-6" border flat v-bind="props">
-                      <v-img :src="item.raw.img"></v-img>
+                      <div style="overflow: hidden; width: 100%; height: 250px">
+                        <iframe
+                          :src="`http://localhost:8080/Model.${item.raw.nom}/page%201id=${item.raw._id}`"
+                          style="
+                            transform: scale(0.4);
+                            transform-origin: 0 0;
+                            width: 256.8%;
+                            height: 620px;
+                          "
+                        ></iframe>
+                      </div>
                       <v-overlay
                         :model-value="isHovering"
                         class="align-center justify-center"
@@ -133,7 +143,7 @@ export default {
                       >
                         <v-btn
                           variant="flat"
-                          class="text-none d-flex align-center ma-2 rounded-pill"
+                          class="text-none d-flex align-center ma-2 mx-auto rounded-pill"
                           size="large"
                           color="#5865f2"
                         >
@@ -141,10 +151,18 @@ export default {
                         </v-btn>
                         <v-btn
                           variant="outlined"
-                          class="text-none d-flex align-center ma-2 ms-6 rounded-pill"
+                          class="text-none d-flex align-center ma-2 mx-auto rounded-pill"
                           size="large"
                           color="white"
-                          :to="portfolioView"
+                          target="_blank"
+                          :to="{
+                            name: 'voirModel',
+                            params: {
+                              nom: item.raw.nom,
+                              page: 'page',
+                              id: item.raw._id,
+                            },
+                          }"
                         >
                           Voir
                         </v-btn>
@@ -154,12 +172,17 @@ export default {
 
                   <v-list-item class="mb-2">
                     <div>
-                      <v-btn color="red" variant="text" size="">
+                      <v-btn
+                        color="red"
+                        variant="text"
+                        size=""
+                        @click="confirmDeletionDialog(item.raw._id)"
+                      >
                         <v-icon color="red" size="x-large" class="mb-1"
                           >mdi-delete-circle</v-icon
                         >
                       </v-btn>
-                      {{ item.raw.title }}
+                      {{ item.raw.nom }}
                     </div>
                   </v-list-item>
                 </v-col>
