@@ -52,7 +52,11 @@ export default {
   },
   async mounted() {
     await this.userAuth();
-    this.getNotif(this.user.userData._id);
+    if (this.user.userData.role === "admin") {
+      this.getNotif('admin');
+    }else{
+      this.getNotif(this.user.userData._id);
+    }
   },
 };
 </script>

@@ -26,9 +26,13 @@ export default {
   watch: {
     menu(val) {
       if (val) {
-        this.markAll(this.user.userData._id);
+        if (this.userData.role === "admin") {
+          this.markAll("admin");
+        } else {
+          this.markAll(this.userData._id);
+        }
       }
-      if (this.notif.countNotif === 0 && val===false) {
+      if (this.notif.countNotif === 0 && val === false) {
         this.Badge = false;
       }
     },
@@ -70,7 +74,27 @@ export default {
             <p class="text-body-2">{{ not.date.split("T")[0] }}</p>
           </template>
           <template v-slot:actions>
-            <v-btn color="primary" class="text-none">Voir</v-btn>
+            <v-btn
+              v-if="this.user.userData.role === 'recruteur'"
+              to="/MesEmplois"
+              color="primary"
+              class="text-none"
+              >Voir</v-btn
+            >
+            <v-btn
+              v-if="this.user.userData.role === 'candidat'"
+              to="/candidature"
+              color="primary"
+              class="text-none"
+              >Voir</v-btn
+            >
+            <v-btn
+              v-if="this.user.userData.role === 'admin'"
+              to="/admin/recruteur"
+              color="primary"
+              class="text-none"
+              >Voir</v-btn
+            >
           </template>
         </v-banner>
       </v-card>
@@ -86,8 +110,8 @@ export default {
           <p class="text-h5">Recevoir vos notifications</p>
         </div>
         <div class="d-flex justify-center">
-          <p class="text-center mx-16 my-4">
-            Retrouvez toutes les notifications de réponses des recruteurs ici
+          <p class="text-center mx-10 my-4">
+            Aucune notification trouvée pour le moment
           </p>
         </div>
       </v-card>

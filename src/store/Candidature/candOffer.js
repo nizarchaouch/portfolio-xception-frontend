@@ -125,6 +125,7 @@ export default {
             withCredentials: true,
           }
         );
+        console.log(response.data.infoCands);
 
         // Assuming `candOffers` and `infoCands` are arrays and you want to combine them by matching ids
         const combinedData = response.data.candOffers.map((offer) => {
@@ -174,6 +175,15 @@ export default {
           const message = response.data.message;
           const color = "blue-darken-2";
           ctx.commit("setMes", { message, color });
+          const dataNotif = { idUser: data.idCandidat, contenu: data.contenu };
+          await axios.post(
+            "http://localhost:8000/api/notification/add",
+            JSON.stringify(dataNotif),
+            {
+              headers: { "Content-type": "application/json" },
+              withCredentials: true,
+            }
+          );
         } else {
           ctx.state.alert = true;
           const message = response.data.message;

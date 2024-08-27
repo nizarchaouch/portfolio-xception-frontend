@@ -56,6 +56,19 @@ export default {
         if (response.status == 201) {
           console.log("inscription réussie");
           ctx.commit("incrStep");
+          const dataNotif = {
+            idUser: "admin",
+            contenu:
+              "Un nouveau recruteur vient de s'inscrire. Veuillez vérifier et approuver son compte",
+          };
+          await axios.post(
+            "http://localhost:8000/api/notification/add",
+            JSON.stringify(dataNotif),
+            {
+              headers: { "Content-type": "application/json" },
+              withCredentials: true,
+            }
+          );
         }
       } catch (error) {
         console.error("Erreur lors de l'inscription :", error);

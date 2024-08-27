@@ -443,7 +443,7 @@ export default {
                             <v-icon size="large">mdi-chevron-right</v-icon>
                           </v-btn> -->
                           <!--  -->
-                          <VoirCandidateur :obj="item" />
+                          <VoirCandidateur :obj="item" :titre="selectedOffer.titre" />
                         </div>
                       </td>
                     </tr>

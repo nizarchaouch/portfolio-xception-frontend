@@ -7,7 +7,7 @@ import SideBar from "@/components/user/admin/SideAdmin.vue";
 import DialogDetail from "@/components/user/admin/candidat/VoirDetail.vue";
 export default {
   name: "VoirCandidateur",
-  props: { obj: Object },
+  props: { obj: Object, titre: String },
   components: { NavBar, SideBar, DialogDetail },
   computed: {
     ...mapState(["candOffer", "portfolioss"]),
@@ -28,13 +28,19 @@ export default {
         idOffer: this.obj.idOffer,
         reponse: reponse,
       };
+      if (reponse === "Accepte") {
+        data.contenu = "Vous êtes accepté pour l'offre " + this.titre;
+      } else {
+        data.contenu = "Vous n'avez pas été accepté pour l'offre " + this.titre;
+      }
+
       this.ChangeEtatCandOffer(data);
     },
   },
 };
 </script>
 <template>
-    <v-snackbar
+  <v-snackbar
     :timeout="1000"
     :color="candOffer.color"
     v-model="candOffer.alert"
@@ -61,6 +67,7 @@ export default {
         >Profil {{ obj.prenom }} {{ obj.nom }}</v-toolbar-title
       >
       <v-spacer></v-spacer>
+      {{ console.log(obj) }}
       <v-toolbar-items>
         <v-btn
           v-if="obj.cv === 'Portfolio'"
@@ -171,10 +178,7 @@ export default {
             <h3>Lettre de motivation</h3>
           </v-col>
           <v-card class="ma-3" rounded="xl" min-height="200">
-            <p
-              class="ma-3 pa-3 text-body-1"
-              style="white-space: pre-wrap"
-            >
+            <p class="ma-3 pa-3 text-body-1" style="white-space: pre-wrap">
               {{ obj.letter || "Il n'y a pas de lettre de motivation" }}
             </p>
           </v-card>
