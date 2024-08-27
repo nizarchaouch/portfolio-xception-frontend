@@ -1,47 +1,32 @@
 <script>
+import { mapActions, mapState } from "vuex";
 export default {
+  computed: {
+    ...mapState(["user", "portfolioss"]),
+    portfolioFirstPageLink() {
+      return this.portfolioss.portfolios.pages.length > 0
+        ? `/portfolio_${this.portfolioss.portfolios.nom}/${this.portfolioss.portfolios.pages[0].name}`
+        : "";
+    },
+  },
   data: () => ({
     search: "",
-    games: [
-      {
-        img: "https://cdn.vuetifyjs.com/docs/images/graphics/games/4.png",
-        title: "Template 1",
-      },
-      {
-        img: "https://cdn.vuetifyjs.com/docs/images/graphics/games/2.png",
-        title: "Template 2",
-      },
-      {
-        img: "https://cdn.vuetifyjs.com/docs/images/graphics/games/3.png",
-        title: "Template 3",
-      },
-      {
-        img: "https://cdn.vuetifyjs.com/docs/images/graphics/games/5.png",
-        title: "Template 4",
-      },
-      {
-        img: "https://cdn.vuetifyjs.com/docs/images/graphics/games/6.png",
-        title: "Template 5",
-      },
-      {
-        img: "https://cdn.vuetifyjs.com/docs/images/graphics/games/7.png",
-        title: "Template 6",
-      },
-      {
-        img: "https://cdn.vuetifyjs.com/docs/images/graphics/games/1.png",
-        title: "Template 7",
-      },
-      {
-        img: "https://cdn.vuetifyjs.com/docs/images/graphics/games/8.png",
-        title: "Template 8",
-      },
-    ],
   }),
+  methods: {
+    ...mapActions(["getAllModel"]),
+  },
+  async mounted() {
+    await this.getAllModel();
+  },
 };
 </script>
 <template>
   <v-card>
-    <v-data-iterator :items="games" :items-per-page="6" :search="search">
+    <v-data-iterator
+      :items="portfolioss.modelPort"
+      :items-per-page="6"
+      :search="search"
+    >
       <template v-slot:header>
         <v-toolbar class="px-2">
           <v-text-field
@@ -109,20 +94,10 @@ export default {
                 </v-card>
               </v-hover>
 
-              <v-list-item class="mb-2">
-                <div>
-                  <v-btn
-                    color="red"
-                    variant="text"
-                    size=""
-                    @click="confirmDeletionDialog(item.raw._id)"
-                  >
-                    <v-icon color="red" size="x-large" class="mb-1"
-                      >mdi-delete-circle</v-icon
-                    >
-                  </v-btn>
+              <v-list-item>
+                <p class="text-body-1 font-weight-bold">
                   {{ item.raw.nom }}
-                </div>
+                </p>
               </v-list-item>
             </v-col>
           </v-row>

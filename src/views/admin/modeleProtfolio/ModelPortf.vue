@@ -41,12 +41,8 @@ export default {
       }, 200);
     },
   },
-  mounted() {
-    this.userAuth();
-  },
   async mounted() {
     await this.userAuth();
-    await this.getAllModel();
     if (
       this.user.authenticated === false ||
       this.user.userData.role === "recruteur" ||
@@ -54,6 +50,7 @@ export default {
     ) {
       this.$router.push("login");
     } else {
+      await this.getAllModel();
     }
   },
 };
