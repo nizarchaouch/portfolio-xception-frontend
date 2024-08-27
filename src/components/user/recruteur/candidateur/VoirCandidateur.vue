@@ -67,7 +67,6 @@ export default {
         >Profil {{ obj.prenom }} {{ obj.nom }}</v-toolbar-title
       >
       <v-spacer></v-spacer>
-      {{ console.log(obj) }}
       <v-toolbar-items>
         <v-btn
           v-if="obj.cv === 'Portfolio'"

@@ -17,6 +17,7 @@ export default {
     logo: logo,
     nav: null,
     loading: false,
+    loadingSave: false,
     dialog: false,
     toggle: "laptop",
   }),
@@ -32,11 +33,30 @@ export default {
       }, 3000);
     },
     addPortf() {
-      this.loading = true;
+      this.loadingSave = true;
       this.addPortfolio();
       setTimeout(() => {
-        this.loading = false;
+        this.loadingSave = false;
       }, 3000);
+    },
+    handlePreview() {
+      this.loading = true;
+      setTimeout(() => {
+        this.loading = false;
+        const url = this.$router.resolve(this.getVoirRoute()).href;
+        window.open(url, "_blank");
+      }, 3000);
+    },
+    getVoirRoute() {
+      return {
+        name: "voir",
+        params: {
+          nom: this.user.userData.nom,
+          prenom: this.user.userData.prenom,
+          page: "page",
+        },
+        query: { id: this.user.userData._id },
+      };
     },
   },
   mounted() {
@@ -86,7 +106,7 @@ export default {
                   color="#651FFF"
                   variant="text"
                   class="mt-2 text-body-2"
-                  @click="loading = !loading"
+                  @click="handlePreview"
                   >Aperçu</v-btn
                 >
                 <v-progress-linear
@@ -98,7 +118,7 @@ export default {
               <v-btn
                 variant="text"
                 class="mt-2 text-body-2 text-none"
-                :loading="loading"
+                :loading="loadingSave"
                 @click="addPortf"
                 >Sauvegarder</v-btn
               >
