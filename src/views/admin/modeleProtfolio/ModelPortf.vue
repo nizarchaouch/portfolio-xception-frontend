@@ -4,7 +4,6 @@
 import { mapActions, mapState } from "vuex";
 import NavBar from "@/components/public/NavBar.vue";
 import SideAdmin from "@/components/user/admin/SideAdmin.vue";
-import CardTemplate from "@/components/template/CardTemplate.vue";
 import PortfView from "@/views/admin/modeleProtfolio/PortfView.vue";
 export default {
   name: "template",
@@ -19,7 +18,6 @@ export default {
   components: {
     NavBar,
     SideAdmin,
-    CardTemplate,
     PortfView,
   },
   data: () => ({
