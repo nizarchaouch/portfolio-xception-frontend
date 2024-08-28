@@ -1,6 +1,6 @@
 <script>
 import NavBar from "@/components/public/NavBar.vue";
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 export default {
   name: "template",
   components: {
@@ -15,7 +15,26 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["userAuth", "getAllModel"]),
+    ...mapActions(["userAuth", "getAllModel", "getModelPortfolio"]),
+    ...mapMutations(["setChoiModel"]),
+    async modTemplate(id) {
+      if (!this.user.userData.role) {
+        this.$router.push("login");
+      } else {
+        await this.getModelPortfolio(id);
+        let model = this.portfolioss.ModelPortf;
+        if (model.nom) {
+          model.idCandidat = this.user.userData._id;
+          delete model.nom;
+        }
+        this.setChoiModel(this.portfolioss.ModelPortf);
+        this.portfolioss.choixModel = true;
+        this.$router.push(
+          `/portfolio/${this.portfolioss.portfolios.pages[0].name}`
+        );
+        // console.log("model", this.portfolioss.portfolios);
+      }
+    },
   },
   async mounted() {
     await this.userAuth();
@@ -80,6 +99,7 @@ export default {
                         class="text-none d-flex align-center ma-2 mx-auto rounded-pill"
                         size="large"
                         color="#5865f2"
+                        @click="modTemplate(item.raw._id)"
                       >
                         Modifier
                       </v-btn>

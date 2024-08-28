@@ -135,6 +135,11 @@ const routes = [
     name: "ParametreView",
     component: ParametreView,
   },
+  {
+    path: "/portfolio_:nom/:page",
+    name: "addModel",
+    component: AddPortf,
+  },
   // candidat
   {
     path: "/profil",
@@ -146,11 +151,6 @@ const routes = [
     path: "/portfolio/:page",
     name: "portfolio",
     component: PortfolioView,
-  },
-  {
-    path: "/portfolio_:nom/:page",
-    name: "addModel",
-    component: AddPortf,
   },
   {
     path: "/candidature",

@@ -31,12 +31,14 @@ export default {
             withCredentials: true,
           }
         );
-        // Filter notifications where etat is true
-        const filteredNotifs = response.data.notif.filter(
-          (notif) => notif.etat === true
-        );
-        ctx.commit("setNotif", filteredNotifs);
-        ctx.commit("setCountNot", filteredNotifs.length);
+        if (response.status === 200) {
+          // Filter notifications where etat is true
+          const filteredNotifs = response.data.notif.filter(
+            (notif) => notif.etat === true
+          );
+          ctx.commit("setNotif", filteredNotifs);
+          ctx.commit("setCountNot", filteredNotifs.length);
+        }
       } catch (error) {
         console.error("Erreur lors de l'affichage des notif :", error);
       }

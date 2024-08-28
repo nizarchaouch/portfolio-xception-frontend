@@ -1,6 +1,7 @@
 import axios from "axios";
 export default {
   state: {
+    choixModel: false,
     alert: false,
     message: "",
     color: "",
@@ -19,7 +20,7 @@ export default {
             formaTitreNav: [],
             colorTitre: "white",
             colorBackTitre: "#0B242400",
-            titre: "Nizar Chaoucha",
+            titre: "model",
             selectStyle: "Titer 4", // en px
             sizeTitle: 25,
             selectPolice: "Potta One",
@@ -178,6 +179,9 @@ export default {
     setPortf(state, portfolio) {
       // Assuming the portfolio object is structured the same as state.portfolios
       state.portfolios = { ...portfolio };
+    },
+    setChoiModel(state, model) {
+      state.portfolios = { ...model };
     },
     addPage(state) {
       state.portfolios.pages.push({
@@ -382,7 +386,7 @@ export default {
         });
       }
     },
-    async getPortfolio(ctx,id) {
+    async getPortfolio(ctx, id) {
       try {
         const portfolioResponse = await axios.get(
           `http://localhost:8000/api/portfolio/get/${id}`,
@@ -392,15 +396,14 @@ export default {
           }
         );
         // console.log("id",id);
-        
-        
+
         ctx.commit("setPortf", portfolioResponse.data[0]);
         console.log("Portfolio data:", portfolioResponse.data[0]);
       } catch (error) {
         console.error("Error fetching portfolio:", error);
       }
     },
-    async getModelPortfolio(ctx,id) {
+    async getModelPortfolio(ctx, id) {
       try {
         const portfolioResponse = await axios.get(
           `http://localhost:8000/api/ModelPortfolio/get/${id}`,
@@ -410,11 +413,11 @@ export default {
           }
         );
         ctx.commit("setModelPort", portfolioResponse.data);
-        console.log("Portfolio data:", portfolioResponse.data);
+        // console.log("Portfolio data:", portfolioResponse.data);
       } catch (error) {
         console.error("Error fetching portfolio:", error);
       }
-    },    
+    },
     async checkPortfolio(ctx, id) {
       try {
         const response = await axios.get(
@@ -439,7 +442,7 @@ export default {
             withCredentials: true,
           }
         );
-        console.log(ModelResponse.data);
+        // console.log(ModelResponse.data);
         ctx.commit("setModels", ModelResponse.data);
       } catch (error) {
         console.error("Erreur lors de l'affiche de model :", error);
@@ -483,7 +486,7 @@ export default {
         console.error("Erreur lors du téléchargement d'un file :", error);
       }
     },
-    async deltModel(ctx,id) {
+    async deltModel(ctx, id) {
       try {
         const portfolioResponse = await axios.delete(
           `http://localhost:8000/api/ModelPortfolio/delt/${id}`,
@@ -491,7 +494,7 @@ export default {
             headers: { "Content-type": "application/json" },
             withCredentials: true,
           }
-        );        
+        );
         console.log("Portfolio data:", portfolioResponse.data);
       } catch (error) {
         console.error("Error fetching portfolio:", error);

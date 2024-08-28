@@ -45,7 +45,7 @@ export default {
     ...mapMutations([""]),
   },
   created() {
-    this.portfolioss.portfolios.idCandidat = this.user.userData._id;    
+    this.portfolioss.portfolios.idCandidat = this.user.userData._id;
     this.portfolioss.selectedPage = this.pages[0];
   },
 };

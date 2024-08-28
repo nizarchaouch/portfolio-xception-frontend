@@ -19,7 +19,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(["user", "portfolio"]),
+    ...mapState(["user", "portfolio","portfolioss"]),
   },
   methods: {
     ...mapActions(["userAuth", "getPortfolio", "checkPortfolio"]),
@@ -32,9 +32,9 @@ export default {
     ) {
       this.$router.push("/login");
     } else {
-      if (await this.checkPortfolio(this.user.userData._id)) {
+      if (await this.checkPortfolio(this.user.userData._id) && !this.portfolioss.choixModel) {
         await this.getPortfolio(this.user.userData._id);
-      }
+      }      
     }
   },
 };
