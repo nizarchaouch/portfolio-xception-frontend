@@ -2,6 +2,7 @@ import axios from "axios";
 export default {
   state: {
     choixModel: false,
+    checkPortfolio: null,
     alert: false,
     message: "",
     color: "",
@@ -169,6 +170,10 @@ export default {
     setMes(state, payload) {
       state.message = payload.message;
       state.color = payload.color;
+    },
+    setCheck(state, checked) {
+      state.checkPortfolio = checked;
+      console.log("check", checked);
     },
     setModels(state, model) {
       state.modelPort = model;
@@ -427,6 +432,7 @@ export default {
             withCredentials: true,
           }
         );
+        ctx.commit("setCheck", response.data);
         return response.data;
       } catch (error) {
         console.error("Error fetching portfolio:", error);

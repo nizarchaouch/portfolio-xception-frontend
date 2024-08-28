@@ -19,7 +19,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(["user", "portfolio","portfolioss"]),
+    ...mapState(["user", "portfolio", "portfolioss"]),
   },
   methods: {
     ...mapActions(["userAuth", "getPortfolio", "checkPortfolio"]),
@@ -32,9 +32,24 @@ export default {
     ) {
       this.$router.push("/login");
     } else {
-      if (await this.checkPortfolio(this.user.userData._id) && !this.portfolioss.choixModel) {
+      if (
+        (await this.checkPortfolio(this.user.userData._id)) &&
+        !this.portfolioss.choixModel
+      ) {
         await this.getPortfolio(this.user.userData._id);
-      }      
+      }
+      console.log(this.portfolioss.checkPortfolio === false);
+      console.log(this.portfolioss.choixModel);
+      
+      if (this.portfolioss.checkPortfolio === false && !this.portfolioss.choixModel) {
+        this.$router.push("/template");
+        setTimeout(() => {
+          window.alert(
+            "Aucun portfolio trouvé. Sélectionnez un modèle à modifier"
+          );
+        }, 500);
+      }
+
     }
   },
 };
