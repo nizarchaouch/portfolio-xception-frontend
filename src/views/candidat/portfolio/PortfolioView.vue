@@ -41,7 +41,7 @@ export default {
       console.log(this.portfolioss.checkPortfolio === false);
       console.log(this.portfolioss.choixModel);
       
-      if (this.portfolioss.checkPortfolio === false && !this.portfolioss.choixModel) {
+      if (this.portfolioss.checkPortfolio === false && !this.portfolioss.choixModel && this.user.userData.role==="candidat" ) {
         this.$router.push("/template");
         setTimeout(() => {
           window.alert(

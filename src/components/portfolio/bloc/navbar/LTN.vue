@@ -5,7 +5,7 @@ import { mapState, mapActions, mapMutations } from "vuex";
 import DialogAjouter from "@/components/portfolio/DialogAjouter.vue";
 
 export default {
-  props: { voir: Boolean, model: Boolean },
+  props: { voir: Boolean, model: Boolean, update: Boolean },
   components: { DialogAjouter },
   computed: {
     ...mapState(["portfolio", "portfolioss"]),
@@ -35,7 +35,7 @@ export default {
   }),
   methods: {
     ...mapActions(["fetchFonts"]),
-    ...mapMutations(["changeSidebarA", "changeSidebarM"]),
+    ...mapMutations(["changeSidebarA", "changeSidebarM", "setPortf"]),
     findPage(name) {
       this.portfolioss.selectedPage =
         this.pages.find((page) => page.name === name) || {};
@@ -53,10 +53,13 @@ export default {
   watch: {
     tab(newValue) {
       // Met à jour l'affichage de la page quand l'onglet sélectionné change
-      if (this.model) {
+
+      if (this.model && !this.update) {
         this.$router.push({ name: "voirModel", params: { page: newValue } });
       } else if (this.voir && !this.model) {
         this.$router.push({ name: "voir", params: { page: newValue } });
+      } else if (this.update) {
+        this.$router.push({ name: "ModfModel", params: { page: newValue } });
       } else {
         this.$router.push({ name: "portfolio", params: { page: newValue } });
       }
@@ -70,7 +73,12 @@ export default {
     setTimeout(() => {
       this.fetchFonts();
       this.loadFont();
+      if (this.update) {
+        this.setPortf(this.portfolioss.ModelPortf);
+        console.log(this.pages);
+      }
       this.findPage(this.pages[0].name);
+      this.tab = this.pages[0].name;
     }, 200);
   },
 };

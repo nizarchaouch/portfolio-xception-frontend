@@ -11,7 +11,6 @@ import CardExp from "./bloc/card/CardExp.vue";
 import CardSkil from "./bloc/card/CardSkil.vue";
 import CardProj from "./bloc/card/CardProj.vue";
 export default {
-  // props: { defaultSettings: Object },
   components: {
     TTBI,
     ITTB,
@@ -25,9 +24,6 @@ export default {
   },
   computed: {
     ...mapState(["portfolio", "portfolioss"]),
-    modifiedPropos() {
-      return this.propos.map((img) => this.extractFileName(img));
-    },
   },
   data: () => ({
     tab: 2,
@@ -44,11 +40,6 @@ export default {
   }),
   methods: {
     ...mapActions(["addBloc", "addBlocNav"]),
-    extractFileName(filePath) {
-      const fileNameWithExtension = filePath.split("/").pop();
-      const fileName = fileNameWithExtension.split(".").shift();
-      return fileName;
-    },
     onClickAddBloc(type) {
       console.log(this.portfolio.blocindex);
       if (this.portfolio.isnavbar) {
@@ -169,20 +160,6 @@ export default {
                 </v-col>
               </v-row>
             </v-window-item>
-            <!-- <v-window-item :value="3">
-              <v-row no-gutters>
-                <v-col
-                  v-for="(bloc, index) in titre"
-                  :key="index"
-                  cols="12"
-                  @click="onClickAddBloc(bloc)"
-                  class="pa-16 pt-3 cursor-pointer"
-                  style="max-width: 900px"
-                >
-                  <component :is="bloc"></component>
-                </v-col>
-              </v-row>
-            </v-window-item> -->
           </v-window>
         </div>
       </v-card>

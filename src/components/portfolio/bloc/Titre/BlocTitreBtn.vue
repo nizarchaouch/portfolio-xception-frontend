@@ -65,17 +65,25 @@ export default {
         url: "",
         doc: "",
       },
+      parg: {
+        color: "black",
+        selectStyle: "Titer 4",
+        selectPolice: "Roboto,sans-serif",
+        justify: "center",
+        nom: `Paragraphe. Cliquez ici pour ajouter votre propre texte.
+              Cliquez sur « Modifier Texte » ou double-cliquez ici pour
+              ajouter votre contenu et personnaliser les polices.`,
+      },
     },
   }),
   methods: {
     ...mapActions([
       "delBloc",
       "modBloc",
-      ,
       "moveBlocUp",
       "moveBlocDown",
       "uploadCv",
-      "fetchFonts"
+      "fetchFonts",
     ]),
     ...mapMutations(["changeSidebarA", "changeSidebarM"]),
     loadFont() {

@@ -23,13 +23,21 @@ export default {
   }),
   methods: {
     ...mapMutations(["addElement"]),
-    ...mapActions(["userAuth", "addModel", "addPortfolio"]),
+    ...mapActions(["userAuth", "addModel", "addPortfolio","updateModel"]),
     add() {
       this.loading = true;
       this.addModel();
       setTimeout(() => {
         this.loading = false;
         router.push("/admin/modele");
+      }, 3000);
+    },
+    update(id) {
+      this.loading = true;
+      this.updateModel(id);
+      setTimeout(() => {
+        this.loading = false;
+        // router.push("/admin/modele");
       }, 3000);
     },
     addPortf() {
@@ -74,9 +82,7 @@ export default {
           <v-col cols="1" class="d-flex">
             <router-link
               :to="
-                this.user.userData.role === 'candidat'
-                  ? '/'
-                  : '/admin/dashboard'
+                this.user.userData.role === 'candidat' ? '/' : '/admin/modele'
               "
             >
               <img
@@ -123,6 +129,7 @@ export default {
                 >Sauvegarder</v-btn
               >
             </template>
+            <!-- navbar admin -->
             <template v-else>
               <div>
                 <v-btn
@@ -158,6 +165,14 @@ export default {
           </template>
           <template v-slot:actions>
             <v-btn
+              v-if="this.$route.params.id"
+              :loading="loading"
+              class="ms-auto"
+              text="Publier"
+              @click="update(this.$route.params.id)"
+            ></v-btn>
+            <v-btn
+              v-else
               :loading="loading"
               class="ms-auto"
               text="Publier"

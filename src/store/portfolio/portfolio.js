@@ -48,7 +48,7 @@ export default {
       pages: [
         {
           id: 0,
-          name: "page 1",
+          name: "",
           bloc: [
             // {
             //   id: 0,
@@ -504,6 +504,50 @@ export default {
         console.log("Portfolio data:", portfolioResponse.data);
       } catch (error) {
         console.error("Error fetching portfolio:", error);
+      }
+    },
+    // async updateModel(ctx, data) {
+    //   try {
+    //     const portfolioResponse = await axios.put(
+    //       `http://localhost:8000/api/ModelPortfolio/update/${data.id}`,
+    //       JSON.stringify(data),
+    //       {
+    //         headers: { "Content-type": "application/json" },
+    //         withCredentials: true,
+    //       }
+    //     );
+    //     console.log("Portfolio data:", portfolioResponse.data);
+    //   } catch (error) {
+    //     console.error("Error fetching portfolio:", error);
+    //   }
+    // },
+    async updateModel(ctx,id) {
+      try {
+        const AddModelResponse = await axios.put(
+          `http://localhost:8000/api/ModelPortfolio/update/${id}`,
+          JSON.stringify(ctx.state.portfolios),
+          {
+            headers: { "Content-type": "application/json" },
+            withCredentials: true,
+          }
+        );
+        if (AddModelResponse.status === 201) {
+          console.log();
+          
+          console.log("Modifier model");
+          ctx.state.alert = true;
+          ctx.commit("setMes", {
+            message: "Modifier model réussie",
+            color: "blue-darken-2",
+          });
+        }
+      } catch (error) {
+        console.error("Erreur lors de l'ajout de model :", error);
+        ctx.state.alert = true;
+        ctx.commit("setMes", {
+          message: "problem",
+          color: "red",
+        });
       }
     },
   },

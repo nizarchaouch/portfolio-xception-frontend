@@ -31,6 +31,7 @@ import AddPortf from "@/views/admin/modeleProtfolio/AddPortf.vue";
 import VoirCandidateur from "@/components/user/recruteur/candidateur/VoirCandidateur.vue";
 import VoirPortfolio from "@/views/candidat/portfolio/VoirPortfolio.vue";
 import VoirModelPortfolio from "@/views/admin/modeleProtfolio/VoirModelPortfolio.vue";
+import ModfModelPortfolio from "@/views/admin/modeleProtfolio/ModfModelPortfolio.vue";
 import ParametreView from "@/views/admin/ParametreView.vue";
 
 const routes = [
@@ -139,6 +140,14 @@ const routes = [
     path: "/portfolio_:nom/:page",
     name: "addModel",
     component: AddPortf,
+  },
+  {
+    path: "/portfolioM/:page?id=:id",
+    name: "ModfModel",
+    component: ModfModelPortfolio,
+    props: (route) => ({
+      id: route.params.id,
+    }),
   },
   // candidat
   {

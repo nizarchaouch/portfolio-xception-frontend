@@ -5,6 +5,7 @@ import { mapState, mapActions, mapMutations } from "vuex";
 import LTN from "./bloc/navbar/LTN.vue";
 import NTL from "./bloc/navbar/NTL.vue";
 import CardText from "./bloc/entete/CardText.vue";
+import CardText1 from "./bloc/entete/CardText1.vue";
 import ITTB from "./bloc/apropos/ITTB.vue";
 import TTBI from "./bloc/apropos/TTBI.vue";
 import BlocTitre from "./bloc/Titre/BlocTitre.vue";
@@ -16,6 +17,7 @@ import CardProj from "./bloc/card/CardProj.vue";
 export default {
   components: {
     CardText,
+    CardText1,
     LTN,
     NTL,
     ITTB,
@@ -53,7 +55,8 @@ export default {
 
 <template>
   <component :is="navbar.type" />
-  <!-- <CardProj /> -->
+  <CardText1 />
+  <CardText />
   <div v-for="(bloc, index) in selectedPage.bloc" :key="index">
     <component :is="bloc.type" :id="bloc.id" :ok="true" />
   </div>

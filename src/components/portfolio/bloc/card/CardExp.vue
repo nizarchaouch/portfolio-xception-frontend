@@ -134,6 +134,7 @@ export default {
       "modBloc",
       "moveBlocUp",
       "moveBlocDown",
+      "uploadCv",
       "fetchFonts",
     ]),
     ...mapMutations(["changeSidebarA", "changeSidebarM"]),

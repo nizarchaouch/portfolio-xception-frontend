@@ -106,6 +106,7 @@ export default {
                 variant="tonal"
                 rounded
                 prepend-icon="mdi-plus"
+                target="_blank"
                 :to="portfolioFirstPageLink"
               >
                 Ajouter
@@ -141,6 +142,14 @@ export default {
                           class="text-none d-flex align-center ma-2 mx-auto rounded-pill"
                           size="large"
                           color="#5865f2"
+                          target="_blank"
+                          :to="{
+                            name: 'ModfModel',
+                            params: {
+                              page: 'page',
+                              id: item.raw._id,
+                            },
+                          }"
                         >
                           Modifier
                         </v-btn>
