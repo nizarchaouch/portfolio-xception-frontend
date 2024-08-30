@@ -6,7 +6,7 @@ import { mapState, mapActions, mapMutations } from "vuex";
 export default {
   props: { id: Number, voir: Boolean },
   computed: {
-    ...mapState(["portfolio", "portfolioss"]),
+    ...mapState(["portfolio", "portfolioss","fonts"]),
     settings() {
       const bloc = this.portfolioss.selectedPage.bloc[this.id];
       if (bloc && Object.keys(bloc.settings).length > 0) {
@@ -107,8 +107,35 @@ export default {
     },
   }),
   methods: {
-    ...mapActions(["delBloc", "modBloc", "moveBlocUp", "moveBlocDown"]),
+    ...mapActions([
+      "delBloc",
+      "modBloc",
+      "moveBlocUp",
+      "moveBlocDown",
+      "fetchFonts",
+    ]),
     ...mapMutations(["changeSidebarA", "changeSidebarM"]),
+    loadFont(fontType) {
+      let fontFamily;
+
+      if (fontType === "titre") {
+        fontFamily = this.settings.titre.selectPolice;
+      } else if (fontType === "sousTitre") {
+        fontFamily = this.settings.sousTitre.selectPolice;
+      } else if (fontType === "parg") {
+        fontFamily = this.settings.parg.selectPolice;
+      }
+
+      if (fontFamily) {
+        const fontLink = document.createElement("link");
+        fontLink.rel = "stylesheet";
+        fontLink.href = `https://fonts.googleapis.com/css?family=${fontFamily.replace(
+          / /g,
+          "+"
+        )}&display=swap`;
+        document.head.appendChild(fontLink);
+      }
+    },
     onClickDeltBloc() {
       this.delBloc({
         pageIndex: this.portfolioss.selectedPage.id,
@@ -208,6 +235,12 @@ export default {
       }
     },
   },
+  mounted() {
+    setTimeout(() => {
+      this.fetchFonts();
+      this.loadFont();
+    }, 200);
+  },
 };
 </script>
 <template>
@@ -283,7 +316,7 @@ export default {
       <v-col cols="auto" v-if="showTextareaTitre">
         <v-card max-width="600" style="z-index: 3">
           <v-row no-gutters>
-            <v-col cols="auto">
+            <!-- <v-col cols="auto">
               <v-btn
                 :ripple="false"
                 class="mt-2 text-none"
@@ -304,23 +337,29 @@ export default {
                 </v-menu>
               </v-btn>
             </v-col>
-            <v-divider vertical height="2"></v-divider>
+            <v-divider vertical height="2"></v-divider> -->
             <v-col cols="auto">
-              <v-btn
-                :ripple="false"
-                class="mt-2 text-none"
-                variant="plain"
-                append-icon="mdi-menu-down"
-                >Police
-                <v-menu activator="parent" max-height="300">
-                  <v-list>
-                    <v-list-item>
-                      <v-list-item-title>Potta One</v-list-item-title>
-                      <v-list-item-title>Potta One</v-list-item-title>
-                    </v-list-item>
-                  </v-list>
-                </v-menu>
-              </v-btn>
+              <v-autocomplete
+                style="width: 150px"
+                v-model="settings.titre.selectPolice"
+                :items="fonts.font"
+                class="mt-3 ms-1"
+                density="compact"
+                variant=""
+                hide-details
+                color="blue"
+                item-title="family"
+                item-value="family"
+              >
+                <template v-slot:item="{ props, item }">
+                  <v-list-item
+                    v-bind="props"
+                    @click="loadFont, saveForm('titre')"
+                    :title="item.raw.family"
+                    :style="{ fontFamily: item.raw.family }"
+                  ></v-list-item>
+                </template>
+              </v-autocomplete>
             </v-col>
             <v-divider vertical height="2"></v-divider>
             <v-col cols="auto">
@@ -412,7 +451,7 @@ export default {
       <v-col cols="auto" v-if="showTextareaSous">
         <v-card max-width="600" style="z-index: 3">
           <v-row no-gutters>
-            <v-col cols="auto">
+            <!-- <v-col cols="auto">
               <v-btn
                 :ripple="false"
                 class="mt-2 text-none"
@@ -433,23 +472,29 @@ export default {
                 </v-menu>
               </v-btn>
             </v-col>
-            <v-divider vertical height="2"></v-divider>
+            <v-divider vertical height="2"></v-divider> -->
             <v-col cols="auto">
-              <v-btn
-                :ripple="false"
-                class="mt-2 text-none"
-                variant="plain"
-                append-icon="mdi-menu-down"
-                >Police
-                <v-menu activator="parent" max-height="300">
-                  <v-list>
-                    <v-list-item>
-                      <v-list-item-title>Potta One</v-list-item-title>
-                      <v-list-item-title>Potta One</v-list-item-title>
-                    </v-list-item>
-                  </v-list>
-                </v-menu>
-              </v-btn>
+              <v-autocomplete
+                style="width: 150px"
+                v-model="settings.sousTitre.selectPolice"
+                :items="fonts.font"
+                class="mt-3 ms-1"
+                density="compact"
+                variant=""
+                hide-details
+                color="blue"
+                item-title="family"
+                item-value="family"
+              >
+                <template v-slot:item="{ props, item }">
+                  <v-list-item
+                    v-bind="props"
+                    @click="loadFont, saveForm('sousTitre')"
+                    :title="item.raw.family"
+                    :style="{ fontFamily: item.raw.family }"
+                  ></v-list-item>
+                </template>
+              </v-autocomplete>
             </v-col>
             <v-divider vertical height="2"></v-divider>
             <v-col cols="auto">
@@ -542,7 +587,7 @@ export default {
       <v-col cols="auto" v-if="showTextareaParg">
         <v-card max-width="600" style="z-index: 3">
           <v-row no-gutters>
-            <v-col cols="auto">
+            <!-- <v-col cols="auto">
               <v-btn
                 :ripple="false"
                 class="mt-2 text-none"
@@ -563,23 +608,29 @@ export default {
                 </v-menu>
               </v-btn>
             </v-col>
-            <v-divider vertical height="2"></v-divider>
+            <v-divider vertical height="2"></v-divider> -->
             <v-col cols="auto">
-              <v-btn
-                :ripple="false"
-                class="mt-2 text-none"
-                variant="plain"
-                append-icon="mdi-menu-down"
-                >Police
-                <v-menu activator="parent" max-height="300">
-                  <v-list>
-                    <v-list-item>
-                      <v-list-item-title>Potta One</v-list-item-title>
-                      <v-list-item-title>Potta One</v-list-item-title>
-                    </v-list-item>
-                  </v-list>
-                </v-menu>
-              </v-btn>
+              <v-autocomplete
+                style="width: 150px"
+                v-model="settings.parg.selectPolice"
+                :items="fonts.font"
+                class="mt-3 ms-1"
+                density="compact"
+                variant=""
+                hide-details
+                color="blue"
+                item-title="family"
+                item-value="family"
+              >
+                <template v-slot:item="{ props, item }">
+                  <v-list-item
+                    v-bind="props"
+                    @click="loadFont, saveForm('parg')"
+                    :title="item.raw.family"
+                    :style="{ fontFamily: item.raw.family }"
+                  ></v-list-item>
+                </template>
+              </v-autocomplete>
             </v-col>
             <v-divider vertical height="2"></v-divider>
             <v-col cols="auto">
@@ -717,7 +768,10 @@ export default {
             <div
               class="my-1 text-h6"
               v-html="settings.titre.nom"
-              :style="{ color: this.settings.titre.color }"
+              :style="{
+                color: this.settings.titre.color,
+                fontFamily: this.settings.titre.selectPolice,
+              }"
               :class="{
                 blocHover: !portfolio.dialogA && !voir,
                 ['text-' + settings.titre.justify]: true,
@@ -728,7 +782,10 @@ export default {
             <div
               class="my-1 text-subtitle-2"
               v-html="settings.sousTitre.nom"
-              :style="{ color: this.settings.sousTitre.color }"
+              :style="{
+                color: this.settings.sousTitre.color,
+                fontFamily: this.settings.sousTitre.selectPolice,
+              }"
               :class="{
                 blocHover: !portfolio.dialogA && !voir,
                 ['text-' + settings.sousTitre.justify]: true,
@@ -739,7 +796,10 @@ export default {
           <v-col cols="12" class="mt-7">
             <div
               v-html="settings.parg.nom"
-              :style="{ color: this.settings.parg.color }"
+              :style="{
+                color: this.settings.parg.color,
+                fontFamily: this.settings.parg.selectPolice,
+              }"
               :class="{
                 blocHover: !portfolio.dialogA && !voir,
                 ['text-' + settings.parg.justify]: true,

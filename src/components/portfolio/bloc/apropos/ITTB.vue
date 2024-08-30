@@ -4,7 +4,7 @@ import { mapState, mapActions, mapMutations } from "vuex";
 export default {
   props: { id: Number, ok: Boolean },
   computed: {
-    ...mapState(["portfolio", "portfolioss"]),
+    ...mapState(["portfolio", "portfolioss","fonts"]),
     settings() {
       const bloc = this.portfolioss.selectedPage.bloc[this.id];
       if (bloc && Object.keys(bloc.settings).length > 0) {
@@ -37,15 +37,10 @@ export default {
     showColorTitre: false,
     showTextareaParg: false,
     showColorParg: false,
-    style: [
-      { title: "Titre 1", value: 2, px: 100 },
-      { title: "Titre 2", value: 3, px: 35 },
-      { title: "Titre 3", value: 4, px: 27 },
-      { title: "Titre 4", value: 5, px: 25 },
-      { title: "Paragraphe 1", value: 6, px: 23 },
-      { title: "Paragraphe 2", value: 8, px: 20 },
-    ],
     setting: {
+      back: {
+        color: "white",
+      },
       titre: {
         color: "white",
         selectStyle: "Titer 4",
@@ -65,10 +60,47 @@ export default {
     },
   }),
   methods: {
-    ...mapActions(["delBloc", "modBloc"]),
+    ...mapActions([
+      "delBloc",
+      "modBloc",
+      "moveBlocUp",
+      "moveBlocDown",
+      "fetchFonts",
+    ]),
     ...mapMutations(["changeSidebarA", "changeSidebarM"]),
+    loadFont(fontType) {
+      let fontFamily;
+
+      if (fontType === "titre") {
+        fontFamily = this.settings.titre.selectPolice;
+      } else if (fontType === "parg") {
+        fontFamily = this.settings.parg.selectPolice;
+      }
+
+      if (fontFamily) {
+        const fontLink = document.createElement("link");
+        fontLink.rel = "stylesheet";
+        fontLink.href = `https://fonts.googleapis.com/css?family=${fontFamily.replace(
+          / /g,
+          "+"
+        )}&display=swap`;
+        document.head.appendChild(fontLink);
+      }
+    },
     onClickDeltBloc() {
       this.delBloc({
+        pageIndex: this.portfolioss.selectedPage.id,
+        blocIndex: this.id,
+      });
+    },
+    onClickMoveUpBloc() {
+      this.moveBlocUp({
+        pageIndex: this.portfolioss.selectedPage.id,
+        blocIndex: this.id,
+      });
+    },
+    onClickMoveDownBloc() {
+      this.moveBlocDown({
         pageIndex: this.portfolioss.selectedPage.id,
         blocIndex: this.id,
       });
@@ -88,7 +120,15 @@ export default {
         settings: this.settings,
       });
     },
+    saveForm() {
+      console.log("ok");
 
+      this.modBloc({
+        pageIndex: this.portfolioss.selectedPage.id,
+        blocIndex: this.id,
+        settings: this.settings,
+      });
+    },
     removeHtmlTags(html) {
       // Utilisation d'un élément temporaire pour supprimer les balises HTML
       const tempElement = document.createElement("div");
@@ -184,8 +224,11 @@ export default {
 
 <template>
   <v-row
-    no-gutters
-    @mouseover="showButton = true"
+    fluid
+    :class="voir ? '' : 'bloc'"
+    style="min-height: 350px"
+    :style="{ 'background-color': settings.back.color }"
+    @mouseover="voir ? (showButton = false) : (showButton = true)"
     @mouseleave="showButton = false"
   >
     <v-row style="height: 0" v-if="!portfolio.dialogA">
@@ -202,40 +245,49 @@ export default {
           prepend-icon="mdi-pencil"
           class="text-none"
           elevation="0"
-          @click="handleModBlock"
+          @click="showColorBack = !showColorBack"
         >
           Modifier le bloc
         </v-btn>
         <v-card class="pa-2 my-1 d-flex justify-space-between" flat border>
-          <v-btn variant="text" size="40">
-            <v-icon>mdi-content-copy</v-icon>
-            <v-tooltip activator="parent" location="bottom"
-              >Dupliquer</v-tooltip
-            >
-          </v-btn>
-          <v-btn variant="text" size="40">
+          <v-btn
+            variant="text"
+            size="40"
+            @click="onClickMoveUpBloc"
+            :disabled="this.id === 0"
+          >
             <v-icon>mdi-arrow-up</v-icon>
             <v-tooltip activator="parent" location="bottom"
               >Déplacer vers le haut</v-tooltip
             >
           </v-btn>
-          <v-btn variant="text" size="40">
+          <v-btn
+            variant="text"
+            size="40"
+            @click="onClickMoveDownBloc"
+            :disabled="
+              this.id === this.portfolioss.selectedPage.bloc.length - 1
+            "
+          >
             <v-icon>mdi-arrow-down</v-icon>
             <v-tooltip activator="parent" location="bottom"
               >Déplacer vers le bas</v-tooltip
             >
           </v-btn>
+          <v-btn variant="text" size="40" color="red" @click="onClickDeltBloc">
+            <v-icon>mdi-trash-can-outline</v-icon>
+            <v-tooltip activator="parent" location="bottom"
+              >Supprimer bloc</v-tooltip
+            >
+          </v-btn>
         </v-card>
-        <v-btn
-          border
-          color="white"
-          prepend-icon="mdi-trash-can-outline"
-          class="text-none text-red"
-          elevation="0"
-          @click="onClickDeltBloc"
-        >
-          Supprimer bloc
-        </v-btn>
+        <v-color-picker
+          v-if="showColorBack"
+          @click="saveForm()"
+          v-model="settings.back.color"
+          :modes="['hexa']"
+          class="mx-auto mb-2"
+        ></v-color-picker>
       </v-card>
     </v-row>
     <v-row no-gutters class="bloc">
@@ -254,43 +306,27 @@ export default {
             <v-card class="mx-auto" max-width="600" style="z-index: 3">
               <v-row no-gutters>
                 <v-col cols="auto">
-                  <v-btn
-                    :ripple="false"
-                    class="mt-2 text-none"
-                    variant="plain"
-                    append-icon="mdi-menu-down"
-                    >Titre 1
-                    <v-menu activator="parent" max-height="300">
-                      <v-list>
-                        <v-list-item>
-                          <v-list-item-title
-                            class="pa-2 cursor-pointer"
-                            v-for="item in style"
-                            :key="item"
-                            >{{ item.title }}</v-list-item-title
-                          >
-                        </v-list-item>
-                      </v-list>
-                    </v-menu>
-                  </v-btn>
-                </v-col>
-                <v-divider vertical height="2"></v-divider>
-                <v-col cols="auto">
-                  <v-btn
-                    :ripple="false"
-                    class="mt-2 text-none"
-                    variant="plain"
-                    append-icon="mdi-menu-down"
-                    >Police
-                    <v-menu activator="parent" max-height="300">
-                      <v-list>
-                        <v-list-item>
-                          <v-list-item-title>Potta One</v-list-item-title>
-                          <v-list-item-title>Potta One</v-list-item-title>
-                        </v-list-item>
-                      </v-list>
-                    </v-menu>
-                  </v-btn>
+                  <v-autocomplete
+                    style="width: 150px"
+                    v-model="this.settings.titre.selectPolice"
+                    :items="fonts.font"
+                    class="mt-3 ms-1"
+                    density="compact"
+                    variant=""
+                    hide-details
+                    color="blue"
+                    item-title="family"
+                    item-value="family"
+                  >
+                    <template v-slot:item="{ props, item }">
+                      <v-list-item
+                        v-bind="props"
+                        @click="loadFont, saveForm('titre')"
+                        :title="item.raw.family"
+                        :style="{ fontFamily: item.raw.family }"
+                      ></v-list-item>
+                    </template>
+                  </v-autocomplete>
                 </v-col>
                 <v-divider vertical height="2"></v-divider>
                 <v-col cols="auto">
@@ -387,43 +423,27 @@ export default {
             <v-card class="mx-auto" max-width="600" style="z-index: 3">
               <v-row no-gutters>
                 <v-col cols="auto">
-                  <v-btn
-                    :ripple="false"
-                    class="mt-2 text-none"
-                    variant="plain"
-                    append-icon="mdi-menu-down"
-                    >Titre 1
-                    <v-menu activator="parent" max-height="300">
-                      <v-list>
-                        <v-list-item>
-                          <v-list-item-title
-                            class="pa-2 cursor-pointer"
-                            v-for="item in style"
-                            :key="item"
-                            >{{ item.title }}</v-list-item-title
-                          >
-                        </v-list-item>
-                      </v-list>
-                    </v-menu>
-                  </v-btn>
-                </v-col>
-                <v-divider vertical height="2"></v-divider>
-                <v-col cols="auto">
-                  <v-btn
-                    :ripple="false"
-                    class="mt-2 text-none"
-                    variant="plain"
-                    append-icon="mdi-menu-down"
-                    >Police
-                    <v-menu activator="parent" max-height="300">
-                      <v-list>
-                        <v-list-item>
-                          <v-list-item-title>Potta One</v-list-item-title>
-                          <v-list-item-title>Potta One</v-list-item-title>
-                        </v-list-item>
-                      </v-list>
-                    </v-menu>
-                  </v-btn>
+                  <v-autocomplete
+                    style="width: 150px"
+                    v-model="this.settings.parg.selectPolice"
+                    :items="fonts.font"
+                    class="mt-3 ms-1"
+                    density="compact"
+                    variant=""
+                    hide-details
+                    color="blue"
+                    item-title="family"
+                    item-value="family"
+                  >
+                    <template v-slot:item="{ props, item }">
+                      <v-list-item
+                        v-bind="props"
+                        @click="loadFont, saveForm('parg')"
+                        :title="item.raw.family"
+                        :style="{ fontFamily: item.raw.family }"
+                      ></v-list-item>
+                    </template>
+                  </v-autocomplete>
                 </v-col>
                 <v-divider vertical height="2"></v-divider>
                 <v-col cols="auto">
@@ -533,14 +553,20 @@ export default {
               v-html="settings.titre.nom"
               class="text-md-h2 font-weight-thin mb-4 overflow-hidden blocHover"
               style="max-width: 800px"
-              :style="{ color: this.settings.titre.color }"
+              :style="{
+                color: this.settings.titre.color,
+                fontFamily: this.settings.titre.selectPolice,
+              }"
               @click="toggleTextareaTitre"
             ></div>
 
             <div
               v-html="this.settings.parg.nom"
               class="subheading text-justify mb-4 overflow-hidden blocHover"
-              :style="{ color: this.settings.parg.color }"
+              :style="{
+                color: this.settings.parg.color,
+                fontFamily: this.settings.parg.selectPolice,
+              }"
               @click="toggleTextareaParg"
             ></div>
             <v-btn color="success" class="text-none">En savoir plus</v-btn>

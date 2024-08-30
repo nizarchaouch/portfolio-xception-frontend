@@ -4,15 +4,15 @@
 import { mapState, mapActions } from "vuex";
 import NavBar from "@/components/portfolio/NavBar.vue";
 import PagePort from "@/components/portfolio/PagePort.vue";
-import SideModEntet from "@/components/portfolio/sidebar/SideModEntet.vue";
 import SidebarM from "@/components/portfolio/sidebar/SideBarM.vue";
+import SideModEntet from "@/components/portfolio/sidebar/SideModEntet.vue";
 import SideModAprop from "@/components/portfolio/sidebar/SideModAprop.vue";
 export default {
   components: {
     NavBar,
     PagePort,
-    SideModEntet,
     SidebarM,
+    SideModEntet,
     SideModAprop,
   },
   data() {
@@ -82,11 +82,11 @@ export default {
           <PagePort />
         </div>
       </v-col>
-      <v-col cols="3" v-if="portfolio.SideModEntet">
-        <SideModEntet />
-      </v-col>
       <v-col cols="3" v-if="portfolio.sideBarM">
         <SidebarM />
+      </v-col>
+      <v-col cols="3" v-if="portfolio.SideModEntet">
+        <SideModEntet />
       </v-col>
       <v-col cols="3" v-if="portfolio.modAprop">
         <SideModAprop />

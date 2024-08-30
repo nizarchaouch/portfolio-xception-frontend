@@ -506,7 +506,7 @@ export default {
               </v-col>
               <v-col cols="12">
                 <v-btn-toggle
-                  class="mt-2"
+                  class="mt-2 ms-8"
                   variant="outlined"
                   color="blue"
                   divided
@@ -536,20 +536,6 @@ export default {
                       ></v-sheet>
                     </div>
                   </v-btn>
-                  <v-btn
-                    @click="colorPickBackTitreNav = !colorPickBackTitreNav"
-                  >
-                    <div class="d-flex align-center flex-column justify-center">
-                      <v-icon icon="mdi-format-color-fill"></v-icon>
-
-                      <v-sheet
-                        :color="navbar.navbar.colorBackTitre"
-                        height="4"
-                        width="26"
-                        tile
-                      ></v-sheet>
-                    </div>
-                  </v-btn>
                 </v-btn-toggle>
 
                 <v-sheet class="pa-4 text-center">
@@ -569,12 +555,6 @@ export default {
               <v-color-picker
                 v-if="colorPickTitreNav"
                 v-model="navbar.navbar.colorTitre"
-                :modes="['hexa']"
-                class="mx-auto"
-              ></v-color-picker>
-              <v-color-picker
-                v-if="colorPickBackTitreNav"
-                v-model="navbar.navbar.colorBackTitre"
                 :modes="['hexa']"
                 class="mx-auto"
               ></v-color-picker>

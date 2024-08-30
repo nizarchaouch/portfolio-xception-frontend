@@ -71,7 +71,7 @@ export default {
       this.fetchFonts();
       this.loadFont();
       this.findPage(this.pages[0].name);
-    }, 100);
+    }, 200);
   },
 };
 </script>

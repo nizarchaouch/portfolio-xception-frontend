@@ -6,7 +6,7 @@ import { mapState, mapActions, mapMutations } from "vuex";
 export default {
   props: { id: Number, voir: Boolean },
   computed: {
-    ...mapState(["portfolio", "portfolioss"]),
+    ...mapState(["portfolio", "portfolioss", "fonts"]),
     settings() {
       const bloc = this.portfolioss.selectedPage.bloc[this.id];
       if (bloc && Object.keys(bloc.settings).length > 0) {
@@ -55,8 +55,17 @@ export default {
     },
   }),
   methods: {
-    ...mapActions(["delBloc", "modBloc", "moveBlocUp", "moveBlocDown"]),
+    ...mapActions(["delBloc", "modBloc", "moveBlocUp", "moveBlocDown","fetchFonts"]),
     ...mapMutations(["changeSidebarA", "changeSidebarM"]),
+    loadFont() {
+      const fontLink = document.createElement("link");
+      fontLink.rel = "stylesheet";
+      fontLink.href = `https://fonts.googleapis.com/css?family=${this.settings.titre.selectPolice.replace(
+        / /g,
+        "+"
+      )}&display=swap`;
+      document.head.appendChild(fontLink);
+    },
     onClickDeltBloc() {
       this.delBloc({
         pageIndex: this.portfolioss.selectedPage.id,
@@ -157,6 +166,12 @@ export default {
       }
     },
   },
+  mounted() {
+    setTimeout(() => {
+      this.fetchFonts();
+      this.loadFont();
+    }, 200);
+  },
 };
 </script>
 <template>
@@ -232,7 +247,7 @@ export default {
       <v-col cols="auto" v-if="showTextareaTitre">
         <v-card max-width="600" style="z-index: 3">
           <v-row no-gutters>
-            <v-col cols="auto">
+            <!-- <v-col cols="auto">
               <v-btn
                 :ripple="false"
                 class="mt-2 text-none"
@@ -253,23 +268,29 @@ export default {
                 </v-menu>
               </v-btn>
             </v-col>
-            <v-divider vertical height="2"></v-divider>
+            <v-divider vertical height="2"></v-divider>-->
             <v-col cols="auto">
-              <v-btn
-                :ripple="false"
-                class="mt-2 text-none"
-                variant="plain"
-                append-icon="mdi-menu-down"
-                >Police
-                <v-menu activator="parent" max-height="300">
-                  <v-list>
-                    <v-list-item>
-                      <v-list-item-title>Potta One</v-list-item-title>
-                      <v-list-item-title>Potta One</v-list-item-title>
-                    </v-list-item>
-                  </v-list>
-                </v-menu>
-              </v-btn>
+              <v-autocomplete
+                style="width: 150px"
+                v-model="this.settings.titre.selectPolice"
+                :items="fonts.font"
+                class="mt-3 ms-1"
+                density="compact"
+                variant=""
+                hide-details
+                color="blue"
+                item-title="family"
+                item-value="family"
+              >
+                <template v-slot:item="{ props, item }">
+                  <v-list-item
+                    v-bind="props"
+                    @click="loadFont, saveForm()"
+                    :title="item.raw.family"
+                    :style="{ fontFamily: item.raw.family }"
+                  ></v-list-item>
+                </template>
+              </v-autocomplete>
             </v-col>
             <v-divider vertical height="2"></v-divider>
             <v-col cols="auto">
@@ -367,7 +388,10 @@ export default {
             blocHover: !portfolio.dialogA && !voir,
           }"
           style="max-width: 800px"
-          :style="{ color: this.settings.titre.color }"
+          :style="{
+            color: this.settings.titre.color,
+            fontFamily: this.settings.titre.selectPolice,
+          }"
           @click="toggleTextareaTitre"
         ></div>
       </v-col>
