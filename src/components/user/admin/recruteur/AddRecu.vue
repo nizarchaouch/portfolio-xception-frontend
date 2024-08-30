@@ -122,15 +122,21 @@ export default {
             delete data.password;
           }
           this.updated(data);
+          setTimeout(() => {
+            this.loading = false;
+            if (this.profilRec.message === "Mise à jour réussie") {
+              window.location.reload();
+            }
+          }, 700);
         } else {
           this.addRecu(data);
+          setTimeout(() => {
+            this.loading = false;
+            if (this.profilRec.message === "Ajouté avec succès") {
+              window.location.reload();
+            }
+          }, 700);
         }
-        setTimeout(() => {
-          this.loading = false;
-          if (this.profilRec.message === "Ajouté avec succès") {
-            window.location.reload();
-          }
-        }, 500);
       } else {
         console.log("Form is invalid");
       }

@@ -67,7 +67,7 @@ export default {
           }
           await this.addOffer(this.data);
         }
-        // window.location.reload();
+        window.location.reload();
       } else {
         console.log("Form is invalid");
       }
