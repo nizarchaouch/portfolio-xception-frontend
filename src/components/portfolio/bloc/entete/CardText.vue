@@ -6,7 +6,7 @@ import BtnMod from "../../BtnBloc/BtnMod.vue";
 import BtnAjou from "../../BtnBloc/BtnAjou.vue";
 
 export default {
-  props: { id: Number, ok: Boolean },
+  props: { id: Number, ok: Boolean, voir: Boolean },
   components: { BtnMod, BtnAjou },
   computed: {
     ...mapState(["user", "portfolio", "portfolioss"]),
@@ -80,8 +80,32 @@ export default {
     },
   }),
   methods: {
-    ...mapActions(["findBlocById"]),
+    ...mapActions([
+      "findBlocById",
+      "delBloc",
+      "modBloc",
+      "moveBlocUp",
+      "moveBlocDown",
+    ]),
     ...mapMutations(["changeSidebarM"]),
+    onClickDeltBloc() {
+      this.delBloc({
+        pageIndex: this.portfolioss.selectedPage.id,
+        blocIndex: this.id,
+      });
+    },
+    onClickMoveUpBloc() {
+      this.moveBlocUp({
+        pageIndex: this.portfolioss.selectedPage.id,
+        blocIndex: this.id,
+      });
+    },
+    onClickMoveDownBloc() {
+      this.moveBlocDown({
+        pageIndex: this.portfolioss.selectedPage.id,
+        blocIndex: this.id,
+      });
+    },
   },
 };
 </script>
@@ -89,11 +113,69 @@ export default {
 <template>
   <v-row
     no-gutters
-    @mouseover="showButton = true"
+    @mouseover="voir ? (showButton = false) : (showButton = true)"
     @mouseleave="showButton = false"
   >
-    <BtnMod :showButton="showButton" :id="id" />
-    <v-row no-gutters class="bloc">
+    <v-row style="height: 0" v-if="!portfolio.dialogA">
+      <v-card
+        v-if="showButton"
+        class="animation ms-sm-auto me-6 mt-5 pa-2 ms-6"
+        flat
+        elevation="2"
+        style="z-index: 3"
+      >
+        <v-btn
+          border
+          color="white"
+          prepend-icon="mdi-pencil"
+          class="text-none"
+          elevation="0"
+          @click="showColorBack = !showColorBack"
+        >
+          Modifier le bloc
+        </v-btn>
+        <v-card class="pa-2 my-1 d-flex justify-space-between" flat border>
+          <v-btn
+            variant="text"
+            size="40"
+            @click="onClickMoveUpBloc"
+            :disabled="this.id === 0"
+          >
+            <v-icon>mdi-arrow-up</v-icon>
+            <v-tooltip activator="parent" location="bottom"
+              >Déplacer vers le haut</v-tooltip
+            >
+          </v-btn>
+          <v-btn
+            variant="text"
+            size="40"
+            @click="onClickMoveDownBloc"
+            :disabled="
+              this.id === this.portfolioss.selectedPage.bloc.length - 1
+            "
+          >
+            <v-icon>mdi-arrow-down</v-icon>
+            <v-tooltip activator="parent" location="bottom"
+              >Déplacer vers le bas</v-tooltip
+            >
+          </v-btn>
+          <v-btn variant="text" size="40" color="red" @click="onClickDeltBloc">
+            <v-icon>mdi-trash-can-outline</v-icon>
+            <v-tooltip activator="parent" location="bottom"
+              >Supprimer bloc</v-tooltip
+            >
+          </v-btn>
+        </v-card>
+        <v-color-picker
+          v-if="showColorBack"
+          @click="saveForm()"
+          v-model="settings.back.color"
+          :modes="['hexa']"
+          class="mx-auto mb-2"
+        ></v-color-picker>
+      </v-card>
+    </v-row>
+    <v-row no-gutters :class="voir ? '' : 'bloc'">
       <v-col
         cols="12"
         md="6"
@@ -113,7 +195,7 @@ export default {
             :width="180"
             class="mx-auto mt-8"
             :class="settings.card.imgarrond"
-            src="https://scontent.ftun10-1.fna.fbcdn.net/v/t39.30808-6/330180889_1348125799366307_3179994644660910263_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=kMDN6fKMNAUQ7kNvgFitZ4v&_nc_ht=scontent.ftun10-1.fna&oh=00_AYCUUsJ8JRpGPhSIlG3owh8OVpyN_GFo8VhHTixaDk7qHA&oe=66C330D0"
+            src="https://scontent.ftun9-1.fna.fbcdn.net/v/t39.30808-6/330180889_1348125799366307_3179994644660910263_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=wRJTVMs5i9gQ7kNvgEUnY1F&_nc_ht=scontent.ftun9-1.fna&oh=00_AYBM1fmWh86NPYzuWT2LFmobgzISi5RdHOPxuzcpLL9GGQ&oe=66D81090"
           ></v-img>
           <div
             v-html="settings.card.nom.nom"
@@ -143,11 +225,7 @@ export default {
               color: settings.card.poste.color,
             }"
           ></div>
-          <v-col
-            cols="12"
-            class="py-1 mt-16 bg-white d-flex justify-center"
-            v-if="settings.card.afficheLinksRes"
-          >
+          <v-col cols="12" class="py-1 mt-16 bg-white d-flex justify-center">
             <a
               :href="'https://' + link.url"
               target="_blank"
@@ -232,11 +310,21 @@ export default {
           </v-col>
         </v-row>
       </v-col>
-      <BtnAjou
-        :showButton="showButton"
-        :id="id"
-        :defaultSettings="defaultSettings"
-      />
+      <v-row style="height: 0" justify="center" v-if="!portfolio.dialogA">
+        <v-btn
+          v-if="showButton"
+          color="white"
+          prepend-icon="mdi-plus"
+          class="animation text-none bg-blue rounded-pill"
+          @click="
+            (portfolio.dialogA = !portfolio.dialogA) &&
+              (portfolio.blocindex = id)
+          "
+          style="z-index: 3; bottom: 0px"
+        >
+          Ajouter un bloc
+        </v-btn>
+      </v-row>
     </v-row>
   </v-row>
 </template>

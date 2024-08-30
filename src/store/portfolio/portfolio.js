@@ -100,7 +100,7 @@ export default {
             formaTitreNav: [],
             colorTitre: "white",
             colorBackTitre: "#0B242400",
-            titre: "Nizar Chaoucha",
+            titre: "Portfolios",
             selectStyle: "Titer 4", // en px
             sizeTitle: 25,
             selectPolice: "Potta One",
@@ -506,21 +506,6 @@ export default {
         console.error("Error fetching portfolio:", error);
       }
     },
-    // async updateModel(ctx, data) {
-    //   try {
-    //     const portfolioResponse = await axios.put(
-    //       `http://localhost:8000/api/ModelPortfolio/update/${data.id}`,
-    //       JSON.stringify(data),
-    //       {
-    //         headers: { "Content-type": "application/json" },
-    //         withCredentials: true,
-    //       }
-    //     );
-    //     console.log("Portfolio data:", portfolioResponse.data);
-    //   } catch (error) {
-    //     console.error("Error fetching portfolio:", error);
-    //   }
-    // },
     async updateModel(ctx,id) {
       try {
         const AddModelResponse = await axios.put(

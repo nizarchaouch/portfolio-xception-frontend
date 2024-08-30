@@ -214,7 +214,7 @@ export default {
                   </v-switch>
                 </div>
               </v-col>
-              <v-col cols="12">
+              <!-- <v-col cols="12">
                 <div class="d-flex">
                   <h4 class="mt-4">Barre de navigation inversée</h4>
                   <v-switch
@@ -225,7 +225,7 @@ export default {
                   >
                   </v-switch>
                 </div>
-              </v-col>
+              </v-col> -->
             </v-row>
             <!--  -->
             <v-row no-gutters>
