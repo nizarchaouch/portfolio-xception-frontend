@@ -48,7 +48,7 @@ export default {
       },
       rules: {
         required: (value) => !!value || "Champ requis.",
-        counter: (value) => value.length >= 2 || "Minimum 200 caractères",
+        counter: (value) => value.length >= 200 || "Minimum 200 caractères",
       },
     };
   },
