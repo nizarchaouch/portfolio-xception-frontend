@@ -1,6 +1,7 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import NavBar from "@/components/public/NavBar.vue";
+import VoirDetail from "@/components/user/admin/candidat/VoirDetail.vue";
 export default {
   name: "candidatures",
   computed: {
@@ -13,6 +14,7 @@ export default {
   }),
   components: {
     NavBar,
+    VoirDetail,
   },
 
   methods: {
@@ -42,7 +44,7 @@ export default {
             return null;
           }
         })
-        .filter((item) => item !== null); 
+        .filter((item) => item !== null);
     },
 
     filterItems() {
@@ -181,11 +183,22 @@ export default {
               </v-expansion-panel-title>
               <v-expansion-panel-text v-if="item.etat === 'En Attend'">
                 <p class="text-h6">En Attend de réponse à votre demande</p>
+                <VoirDetail :obj="this.candOffer.infoData[index]" />
+              </v-expansion-panel-text>
+              <v-expansion-panel-text v-else-if="item.etat === 'Accepte'">
+                <p class="text-h6">
+                  Félicitations {{ item.nomEntreprise }} a accepté votre demande
+                  d'offre "{{ item.titre }}"
+                </p>
+                <VoirDetail :obj="this.candOffer.infoData[index]" />
               </v-expansion-panel-text>
               <v-expansion-panel-text v-else>
                 <p class="text-h6">
-                  {{ item.nomEntreprise }} répond à votre demande: accepte
+                  Malheureusement, {{ item.nomEntreprise }} a refusé votre
+                  demande d'offre pour "{{ item.titre }}". Nous vous souhaitons
+                  bonne chance pour vos futures candidatures.
                 </p>
+                <VoirDetail :obj="this.candOffer.infoData[index]" />
               </v-expansion-panel-text>
             </v-expansion-panel>
           </v-expansion-panels>
