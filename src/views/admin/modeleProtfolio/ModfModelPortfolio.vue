@@ -2,6 +2,7 @@
 // eslint-disable-next-line
 /* eslint-disable */
 import { mapState, mapActions, mapMutations } from "vuex";
+import SidebarM from "@/components/portfolio/sidebar/SideBarM.vue";
 import NavBar from "@/components/portfolio/NavBar.vue";
 import LTN from "@/components/portfolio/bloc/navbar/LTN.vue";
 import NTL from "@/components/portfolio/bloc/navbar/NTL.vue";
@@ -17,6 +18,7 @@ import CardProj from "@/components/portfolio/bloc/card/CardProj.vue";
 export default {
   props: { id: String },
   components: {
+    SidebarM,
     NavBar,
     CardText,
     LTN,
@@ -31,7 +33,7 @@ export default {
     CardProj,
   },
   computed: {
-    ...mapState(["portfolioss"]),
+    ...mapState(["portfolioss","portfolio"]),
     selectedPage() {
       return this.portfolioss.selectedPage;
     },
@@ -59,13 +61,23 @@ export default {
 </script>
 
 <template>
-  <v-row class="mb-16">
-    <NavBar />
-  </v-row>
-  <component :is="navbar.type" :update="true" />
-  <div v-for="(bloc, index) in selectedPage.bloc" :key="index">
-    <component :is="bloc.type" :id="bloc.id" :ok="true" />
-  </div>
+  <v-col
+    :cols="portfolio.sideBarM ? 10 : 12"
+    :class="!portfolio.sideBarM ? 'mx-auto' : ''"
+  >
+    <div :class="portfolio.sideBarM ? 'me-13' : ''">
+      <v-row class="mb-16">
+        <NavBar />
+      </v-row>
+      <component :is="navbar.type" :update="true" />
+      <div v-for="(bloc, index) in selectedPage.bloc" :key="index">
+        <component :is="bloc.type" :id="bloc.id" :ok="true" />
+      </div>
+    </div>
+  </v-col>
+  <v-col cols="3" v-if="portfolio.sideBarM">
+    <SidebarM />
+  </v-col>
 </template>
 
 <style lang="scss" scoped></style>
