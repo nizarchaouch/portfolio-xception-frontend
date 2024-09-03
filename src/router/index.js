@@ -92,12 +92,12 @@ const routes = [
   },
   {
     path: "/reset_password/:token",
-    name: "resetpwd",
+    name: "resetpwdUser",
     component: ResetPwd,
   },
   {
     path: "/admin/reset_password/:token",
-    name: "resetpwd",
+    name: "resetpwdAdmin",
     component: ResetPwdAdmin,
   },
   {
