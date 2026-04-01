@@ -113,7 +113,6 @@ portfolio-xception-frontend/
 Backend repository: https://github.com/nizarchaouch/portfolio-xception-backend
 
 ## Author
-
 **Nizar Chaouch**
 
 ## License
